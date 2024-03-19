@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="TemplateMo">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
+{% block title %}
+<!--    <title>Stand CSS Blog by TemplateMo</title>-->
+{% endblock %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'app/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="{% static 'app/assets/css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'app/assets/css/templatemo-stand-blog.css' %}">
+    <link rel="stylesheet" href="{% static 'app/assets/css/owl.css' %}">
+<!--
+
+TemplateMo 551 Stand Blog
+
+https://templatemo.com/tm-551-stand-blog
+
+-->
+{% endblock %}
+  </head>
+
+  <body>
+{% block header %}
+    {% block loader %}
+    <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+    {% endblock %}
+    <!-- Header -->
+    <header class="">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'app:index' %}"><h2>Блог-платформа</h2></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'train:index' %}">Запросы</a>
+              </li>
+              {% if user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/">В админ панель</a>
+                </li >
+              {% endif %}
+              {% if not user.is_authenticated %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:login' 'signin'%}">Авторизироваться</a>
+                </li>
+              {% else %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:personal-account' %}">Личный кабинет</a>
+                </li >
+                <li class="nav-item">
+                <span class="nav-link">Привет, {{ user.username }}!</span>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:logout' %}">Выйти</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+{% endblock %}
+    <!-- Page Content -->
+    <!-- Banner Starts Here -->
+{% block banner %}
+
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block footer %}
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="social-icons">
+              <li><a href="#">Facebook</a></li>
+              <li><a href="#">Twitter</a></li>
+              <li><a href="#">Behance</a></li>
+              <li><a href="#">Linkedin</a></li>
+              <li><a href="#">Dribbble</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-12">
+            <div class="copyright-text">
+              <p>Copyright 2020 Stand Blog Co.
+
+                 | Дизайн: <a rel="nofollow" href="https://templatemo.com/tm-551-stand-blog" target="_parent">TemplateMo</a>
+                  | Разработано в ознакомительных целях на:  <a href="https://www.djangoproject.com/" target="_parent">Django</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+{% endblock %}
+
+{% block script %}
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'app/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'app/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Additional Scripts -->
+    <script src="{% static 'app/assets/js/custom.js' %}"></script>
+    <script src="{% static 'app/assets/js/owl.js' %}"></script>
+    <script src="{% static 'app/assets/js/slick.js' %}"></script>
+    <script src="{% static 'app/assets/js/isotope.js' %}"></script>
+    <script src="{% static 'app/assets/js/accordions.js' %}"></script>
+
+{% endblock %}
+{% block add_script %}
+
+{% endblock %}
+  </body>
+</html>
