@@ -275,7 +275,7 @@ ORM Django поддерживает множество типов полей р�
 | имя                                 | first_name   | строковое        | models.CharField     |
 | фамилия                             | last_name    | строковое        | models.CharField     |
 | отчество                            | middle_name  | строковое        | models.CharField     |
-| пол                                 | gender       | строковое        | models.BooleanField  |
+| пол                                 | gender       | строковое        | models.CharField     |
 | уровень самооценки                  | self_esteem  | decimal          | models.DecimalField  |
 | телефон                             | phone_number | строковое        | models.CharField     |
 | город                               | city         | строковое        | models.CharField     |
