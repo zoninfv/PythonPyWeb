@@ -784,6 +784,8 @@ python manage.py migrate
 Добавьте данный код в класс `Author`
 
 ```python
+from datetime import datetime
+
 class Author(models.Model):
     # ...    
     def save(self, *args, **kwargs):
