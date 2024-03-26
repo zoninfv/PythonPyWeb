@@ -1,8 +1,8 @@
 Ранее рассматривали создание таблиц в БД и запросов, теперь рассмотрим как сформировать отношения между таблицами
 
-Сделайте `merge` ветки `lab2` в ветку `master`, чтобы подгрузить руководство для второй практики. 
+Сделайте merge ветки lab2 в ветку master, чтобы подгрузить руководство для второй практики. 
 
-![img.png](img.png)
+![img.png](pic/img.png)
 
 Затем вернем авторов на место, так как ранее частично удаляли их
 
@@ -43,7 +43,7 @@ class AuthorProfile(models.Model):
 
 Через некоторое время выйдет предупреждение, что пропущен позиционный аргумент `'on_delete'`, Django хочет знать, что делать с данным связанным полем после удаления.
 
-![img_1.png](img_1.png)
+![img_1.png](pic/img_1.png)
 
 В контексте Django, параметр `on_delete` относится к внешнему ключу (foreign key), который определяет связь между двумя таблицами. 
 Он указывает, что произойдет с записями в связанной таблице, если запись в родительской таблице будет удалена.
@@ -203,7 +203,7 @@ python -Xutf8 manage.py dumpdata --indent 4 db_train > my_db_train.json
 python manage.py loaddata files/lab2/db_train.json
 ```
 
-![img_2.png](img_2.png)
+![img_2.png](pic/img_2.png)
 
 
 ## 2. Создание запросов
@@ -226,7 +226,7 @@ python manage.py migrate
 И начнем заполнять БД при помощи python скрипта. Для упрощения работы создадим json файл с данными для записи, а затем уже считаем этот файл 
 и построчно запишем данные в БД.
 
-Скопируйте файлы `convert_data_alter_to_json.py` и `fill_data_alter_in_db.py` из `files/lab2` в корень проекта.
+Скопируйте файлы `convert_data_alter_to_json.py` и `fill_data_alter_in_db.py` из `task/lab2` в корень проекта.
 
 Запустите `convert_data_alter_to_json.py` - он переведет списки словарей описанные в файле в json файлы.
 
@@ -254,7 +254,7 @@ python manage.py migrate db_train_alternative zero
 В данном случае `zero` означает полный откат всех миграций что были в приложении `db_train_alternative`, если нужно было бы откатить к какой-то конкретной, то
 в таком случае написали бы номер миграции, допустим 0001.
 
-![img_3.png](img_3.png)
+![img_3.png](pic/img_3.png)
 
 Теперь просто заново применим миграцию
 
@@ -262,7 +262,7 @@ python manage.py migrate db_train_alternative zero
 python manage.py migrate
 ```
 
-![img_4.png](img_4.png)
+![img_4.png](pic/img_4.png)
 
 И заново запустим скрипт записи данных в БД `fill_data_alter_in_db.py`
 
@@ -275,28 +275,186 @@ python manage.py migrate
 Почитайте и выполните запросы из файла `queryes.md` из `tasks/lab2`. Запросы выполняйте в файле `queryes.py`, который скопировали
 в корень проекта ранее.
 
+## 3. Отображение запросов на HTML странице
+
+После того как появилась ясность с созданием запросов, то осталось отобразить этот результат не в консоли, а на странице,
+чтобы было удобнее и нагляднее. После того как получили ответ из базы данных, то передача в шаблон делается просто, ровно так же
+как и при передаче обычных значений в шаблон, через `context`.
+
+Замените файл `training_db.html` в папке `apps/db_train/templates/train_db`, на аналогичный файл `training_db.html` 
+из папки `files/lab2`
+
+Для начала необходимо подгрузить модели
+
+Во `views.py` приложения `db_train` пропишем:
+
+```python
+from .models import Author, AuthorProfile, Entry, Tag
+```
+
+Затем в класс `TrainView` внесите следующие изменения:
+
+```python
+from django.db.models import Q, Max, Min, Avg, Count
+
+class TrainView(View):
+    def get(self, request):
+        # Создайте здесь запросы к БД
+        self.answer1 = None  # TODO Какие авторы имеют самую высокую уровень самооценки(self_esteem)?
+        self.answer2 = None  # TODO Какой автор имеет наибольшее количество опубликованных статей?
+        self.answer3 = None  # TODO Какие статьи содержат тег 'Кино' или 'Музыка' ?
+        self.answer4 = None  # TODO Сколько авторов женского пола зарегистрировано в системе?
+        self.answer5 = None  # TODO Какой процент авторов согласился с правилами при регистрации?
+        self.answer6 = None  # TODO Какие авторы имеют стаж от 1 до 5 лет?
+        self.answer7 = None  # TODO Какой автор имеет наибольший возраст?
+        self.answer8 = None  # TODO Сколько авторов указали свой номер телефона?
+        self.answer9 = None  # TODO Какие авторы имеют возраст младше 25 лет?
+        self.answer10 = None  # TODO Сколько статей написано каждым автором?
+
+        context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
+
+        return render(request, 'train_db/training_db.html', context=context)
+```
+
+Данная конструкция 
+
+```python
+context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
+```
+
+была написана из-за лени, чтобы не создавать словарь большого размера вручную.
+
+Для тренировки напишите запросы и ответьте на следующие вопросы(Ответ на первый вопрос будет ниже, над остальными думаем самостоятельно):
+1. Какие авторы имеют самую высокую уровень самооценки(self_esteem)?
+2. Какой автор имеет наибольшее количество опубликованных статей?
+3. Какие статьи содержат тег 'Кино' или 'Музыка'?
+4. Сколько авторов женского пола зарегистрировано в системе?
+5. Какой процент авторов согласился с правилами при регистрации?
+6. Какие авторы имеют стаж от 1 до 5 лет?
+7. Какой автор имеет наибольший возраст?
+8. Сколько авторов указали свой номер телефона?
+9. Какие авторы имеют возраст младше 25 лет?
+10. Сколько статей написано каждым автором?
+
+Ответом на первый вопрос будет
+
+```python
+max_self_esteem = Author.objects.aggregate(max_self_esteem=Max('self_esteem'))
+self.answer1 = Author.objects.filter(self_esteem=max_self_esteem['max_self_esteem'])
+```
+
+![img_5.png](pic/img_5.png)
+
+
+При переходе на главную страницу на вкладку `Запросы` или по адресу http://127.0.0.1:8000/train/db/
+появятся ваши отображения результатов запросов.
+
+![img_6.png](pic/img_6.png)
+
+Остальные ответы заполните самостоятельно. Можете менять шаблон `training_db.html` под ваши нужны и запросы.
+
+## 4. Работа с Django debug tool bar
+
+Последнее, что осталось, это как-то мониторить то, что делаете в БД, для этого 
+воспользуемся библиотекой `django debug toolbar` 
+
+https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+
+```
+pip install django-debug-toolbar
+```
+
+Затем в settings.py необходимо прописать
+
+в INSTALLED_APPS
+
+```python
+INSTALLED_APPS = [
+    # ...
+    "debug_toolbar",
+    # ...
+]
+```
+
+в MIDDLEWARE в конец списка добавьте
+
+```python
+MIDDLEWARE = [
+    # ...
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+]
+```
+![img_7.png](pic/img_7.png)
+
+В конце `settings.py` добавьте
+
+```python
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+```
+
+В корневой `urls.py` в `if settings.DEBUG:` необходимо добавить
+
+```python
+# После urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [
+    path("__debug__/", include("debug_toolbar.urls")),
+]
+```
+
+![img_8.png](pic/img_8.png)
+
+Теперь если зайти на любую страницу, то появится дополнительное окно, где можно 
+получить дополнительную информацию, допустим такую как время выполнения SQL запроса 
+и что конкретно выполнялось
+
+Пример для главной страницы
+
+![img_9.png](pic/img_9.png)
+
+Для страницы http://127.0.0.1:8000/train/db/ при одном ответе будет такой результат
+
+![img_10.png](pic/img_10.png)
+
+
+Посмотрите как в зависимости от сложности запросов будет отличаться время и число запросов в БД.
+
+
+### Отображение запросов в консоли
+
+Также есть возможность отображения дополнительный информации в консоли при работе с ORM
+
+Для этого вызовите 
+
+```python
+python manage.py debugsqlshell
+```
+
+Появится интерактивная консоль с возможность создания запросов и отображения их через ORM
+
+Выполните следующий запрос в этой консоле
+```python
+from apps.db_train.models import Entry
+Entry.objects.get(id=1)
+```
+
+![img_11.png](pic/img_11.png)
+
+Посмотрите как ORM трансформирует запрос в SQL запрос для других запросов, допустим тех, что вы писали при ответе на вопросы. 
+
+```python
+Entry.objects.values('author__username', 'text').get(id=1)
+```
+
+![img_12.png](pic/img_12.png)
+
 
 # Практика окончена
 
 
-Вывод результатов в HTML
+# **Необязательный блок (выполнение по желанию)**
 
-Создание запросов к db_train
+## 5. Подключение к PostgreSQL
 
-
-## 3. Подключение PostgreSQL
-
-
-## 4. Работа с Django debug tool bar
-
-
-# Необязательный блок
-
-## Подключение к БД через модули python
-
-sqlite3
-
-SQLAlchemy
-
-
-
+## 6. Подключение к БД через модули python
