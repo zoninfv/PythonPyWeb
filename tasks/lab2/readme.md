@@ -457,4 +457,7 @@ Entry.objects.values('author__username', 'text').get(id=1)
 
 ## 5. Подключение к PostgreSQL
 
+Можете пройти по [руководству](https://docs.google.com/document/d/1AZAQSEcPhRBPNRxMIKSxN0_4TF4AlOG0kMxEP1e3CTM/edit#heading=h.85bc4nbl9ubi) из немного другого приложения. 
+Но основные действия те же.
+
 ## 6. Подключение к БД через модули python
