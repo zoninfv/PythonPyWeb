@@ -628,6 +628,8 @@ if __name__ == "__main__":
     from json import dump
     import os
 
+    if not os.path.exists("data"):
+        os.mkdir("data")
     if not os.path.exists("data/alter"):
         os.mkdir("data/alter")
 
