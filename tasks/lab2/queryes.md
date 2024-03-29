@@ -459,7 +459,7 @@ print(filtered_data.order_by("-name", "id"))  # упорядочивание п�
 from django.db.models import Count
 # Запрос, аннотирующий количество статей для каждого блога, 
 # при этом добавляется новая колонка number_of_entries для вывода
-entry = Blog.objects.annotate(number_of_entries=Count('entry')).values('name', 'number_of_entries')
+entry = Blog.objects.annotate(number_of_entries=Count('entries')).values('name', 'number_of_entries')
 print(entry)
 """
 <QuerySet [
@@ -485,7 +485,7 @@ print(entry)
 для создания псевдонимов для полей или связей в запросе, чтобы использовать их в других частях запроса.
 ```python
 from django.db.models import Count
-blogs = Blog.objects.alias(entries=Count('entry')).filter(entries__gt=4)
+blogs = Blog.objects.alias(number_of_entries=Count('entries')).filter(number_of_entries__gt=4)
 print(blogs)
 """
 <QuerySet [
@@ -497,8 +497,8 @@ print(blogs)
 ]>
 """
 
-## Выведет ошибку, так как поле entries не существует, виду различий между alias и annotate
-# blogs = Blog.objects.alias(entries=Count('entry')).filter(entries__gt=4).values('blog', 'entries')
+## Выведет ошибку, так как поле number_of_entries не существует, виду различий между alias и annotate
+# blogs = Blog.objects.alias(number_of_entries_new=Count('entries')).filter(number_of_entries__gt=4).values('blog', 'entries_new')
 ```
 
 ### aggregate()
@@ -678,8 +678,6 @@ print(filtered_data.reverse())
 Возвращает новый QuerySet, который использует SELECT DISTINCT в своем SQL-запросе. 
 Это исключает повторяющиеся строки из результатов запроса. 
 
-Если вы используете серверную часть базы данных, отличную от PostgreSQL, например MySQL или SQLite, вы столкнетесь 
-ошибкой, поскольку эти системы баз данных не поддерживают предложение DISTINCT ON.
 ```python
 print(Entry.objects.order_by('author', 'pub_date').distinct('author', 'pub_date'))  # Не работает в SQLite
 # distinct('author', 'pub_date') - оставляет уникальные строки по колонкам author, pub_date
@@ -1334,7 +1332,7 @@ from django.db import connection
 # Составляем SQL-запрос
 sql = """
 SELECT id, headline
-FROM db_entry
+FROM db_train_alternative_entry
 WHERE headline LIKE '%%тайны%%' OR body_text LIKE '%%город%%'
 """
 
@@ -1358,7 +1356,7 @@ for result in results:
 results = Entry.objects.raw(
     """
     SELECT id, headline
-    FROM db_entry
+    FROM db_train_alternative_entry
     WHERE headline LIKE '%%тайны%%' OR body_text LIKE '%%город%%'
     """
 )
