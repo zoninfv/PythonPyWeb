@@ -22,13 +22,11 @@
 <br>
 <h2> Вопрос 2. Какой автор имеет наибольшее количество опубликованных статей?<h2>
 {% if answer2 %}
-    {% for answer in answer2 %}
     <ul>
     <li>
-        Автор: <span style="color: red">{{ answer.username }}</span>
+        Автор: <span style="color: red">{{ answer2.username }}</span>
     </li>
     </ul>
-    {% endfor %}
 {% else %}
     <p style="color: #1c7430; margin-left: 30px">Пока нет ответа</p>
 {% endif %}
@@ -55,7 +53,7 @@
 <br>
 <h2> Вопрос 5. Какой процент авторов согласился с правилами при регистрации?<h2>
 {% if answer5 %}
-    Процент авторов: <span style="color: red">{{ answer5 }}</span>
+    Процент авторов: <span style="color: red">{{ answer5 }} %</span>
 {% else %}
     <p style="color: #1c7430; margin-left: 30px">Пока нет ответа</p>
 {% endif %}
