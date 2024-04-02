@@ -1,0 +1,470 @@
+[
+{
+    "model": "db_train.authorprofile",
+    "pk": 1,
+    "fields": {
+        "author": 1,
+        "stage": 4
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 2,
+    "fields": {
+        "author": 2,
+        "stage": 2
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 3,
+    "fields": {
+        "author": 3,
+        "stage": 8
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 4,
+    "fields": {
+        "author": 6,
+        "stage": 0
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 5,
+    "fields": {
+        "author": 8,
+        "stage": 0
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 6,
+    "fields": {
+        "author": 5,
+        "stage": 3
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 7,
+    "fields": {
+        "author": 10,
+        "stage": 0
+    }
+},
+{
+    "model": "db_train.authorprofile",
+    "pk": 8,
+    "fields": {
+        "author": 11,
+        "stage": 15
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 1,
+    "fields": {
+        "text": "Музыка в кино",
+        "author": 1,
+        "tags": [
+            1,
+            2
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 2,
+    "fields": {
+        "text": "Современное искусство",
+        "author": 2,
+        "tags": [
+            3
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 3,
+    "fields": {
+        "text": "Кино - это искусство!",
+        "author": 3,
+        "tags": [
+            1,
+            3
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 4,
+    "fields": {
+        "text": "Только о кино",
+        "author": 1,
+        "tags": [
+            1
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 5,
+    "fields": {
+        "text": "Статья о кино, музыке и искусстве",
+        "author": 1,
+        "tags": [
+            1,
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 6,
+    "fields": {
+        "text": "Любимое хобби актеров кино",
+        "author": 5,
+        "tags": [
+            1,
+            6
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 7,
+    "fields": {
+        "text": "Новости о самом главном",
+        "author": 6,
+        "tags": [
+            4
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 8,
+    "fields": {
+        "text": "Новости медицины",
+        "author": 2,
+        "tags": [
+            4,
+            5
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 9,
+    "fields": {
+        "text": "Кто больше?",
+        "author": 3,
+        "tags": [
+            1,
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "db_train.entry",
+    "pk": 10,
+    "fields": {
+        "text": "Вязание свитеров для статуй - хобби или искусство?",
+        "author": 6,
+        "tags": [
+            3,
+            6
+        ]
+    }
+},
+{
+    "model": "db_train.tag",
+    "pk": 1,
+    "fields": {
+        "name": "Кино"
+    }
+},
+{
+    "model": "db_train.tag",
+    "pk": 2,
+    "fields": {
+        "name": "Музыка"
+    }
+},
+{
+    "model": "db_train.tag",
+    "pk": 3,
+    "fields": {
+        "name": "Искусство"
+    }
+},
+{
+    "model": "db_train.tag",
+    "pk": 4,
+    "fields": {
+        "name": "Новости"
+    }
+},
+{
+    "model": "db_train.tag",
+    "pk": 5,
+    "fields": {
+        "name": "Медицина"
+    }
+},
+{
+    "model": "db_train.tag",
+    "pk": 6,
+    "fields": {
+        "name": "Хобби"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 1,
+    "fields": {
+        "username": "admin",
+        "email": "admin@admin.com",
+        "first_name": "Админ",
+        "last_name": "Админов",
+        "middle_name": "Админович",
+        "gender": "м",
+        "self_esteem": "5.0",
+        "phone_number": "+79123456789",
+        "city": "Мой город",
+        "bio": "Быть админом тяжело",
+        "age": 43,
+        "date_birth": "1980-12-31",
+        "status_rule": false,
+        "image": "foto_profile/free-icon-x-mark-1617296.png",
+        "create_at": "2024-03-19T05:08:58.007Z",
+        "update_at": "2024-03-19T13:38:50.129Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 2,
+    "fields": {
+        "username": "not_admin",
+        "email": "not_admin@django.com",
+        "first_name": "Неадмин",
+        "last_name": null,
+        "middle_name": null,
+        "gender": "м",
+        "self_esteem": "0.0",
+        "phone_number": null,
+        "city": null,
+        "bio": "",
+        "age": null,
+        "date_birth": null,
+        "status_rule": false,
+        "image": "",
+        "create_at": "2024-03-19T14:45:35.956Z",
+        "update_at": "2024-03-19T14:45:35.956Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 3,
+    "fields": {
+        "username": "user",
+        "email": "user@user.ru",
+        "first_name": null,
+        "last_name": null,
+        "middle_name": null,
+        "gender": null,
+        "self_esteem": null,
+        "phone_number": null,
+        "city": null,
+        "bio": "",
+        "age": null,
+        "date_birth": null,
+        "status_rule": false,
+        "image": "",
+        "create_at": "2024-03-19T14:46:45.992Z",
+        "update_at": "2024-03-19T14:46:45.992Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 4,
+    "fields": {
+        "username": "user1",
+        "email": "user1@user.com",
+        "first_name": "Иван",
+        "last_name": "Иванов",
+        "middle_name": "Иванович",
+        "gender": null,
+        "self_esteem": null,
+        "phone_number": "+79998887766",
+        "city": "Санкт-Петербург",
+        "bio": "Просто Иван",
+        "age": 18,
+        "date_birth": "2006-01-30",
+        "status_rule": true,
+        "image": "foto_profile/кот1.jpg",
+        "create_at": "2024-03-19T14:52:05.492Z",
+        "update_at": "2024-03-19T14:52:05.492Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 5,
+    "fields": {
+        "username": "user2",
+        "email": "user2@user.ru",
+        "first_name": "Маргарита",
+        "last_name": "Марго",
+        "middle_name": "Марковна",
+        "gender": "ж",
+        "self_esteem": "4.9",
+        "phone_number": null,
+        "city": "Москва",
+        "bio": "Люблю мечтать",
+        "age": 24,
+        "date_birth": "2000-03-03",
+        "status_rule": false,
+        "image": "foto_profile/кот2.jpg",
+        "create_at": "2024-03-19T14:54:31.213Z",
+        "update_at": "2024-03-19T14:54:31.213Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 6,
+    "fields": {
+        "username": "user3",
+        "email": "user3@user.ru",
+        "first_name": "Андрей",
+        "last_name": "Андреев",
+        "middle_name": null,
+        "gender": "м",
+        "self_esteem": null,
+        "phone_number": null,
+        "city": null,
+        "bio": "",
+        "age": null,
+        "date_birth": null,
+        "status_rule": false,
+        "image": "",
+        "create_at": "2024-03-19T14:55:36.058Z",
+        "update_at": "2024-03-19T14:55:36.058Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 7,
+    "fields": {
+        "username": "user4",
+        "email": "user4@user.com",
+        "first_name": null,
+        "last_name": null,
+        "middle_name": null,
+        "gender": null,
+        "self_esteem": null,
+        "phone_number": null,
+        "city": null,
+        "bio": "",
+        "age": null,
+        "date_birth": null,
+        "status_rule": false,
+        "image": "foto_profile/собака1.jpg",
+        "create_at": "2024-03-19T14:56:19.771Z",
+        "update_at": "2024-03-19T14:56:19.771Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 8,
+    "fields": {
+        "username": "user5",
+        "email": "user5@user.com",
+        "first_name": "Анна",
+        "last_name": "Романова",
+        "middle_name": "Вячеславовна",
+        "gender": "ж",
+        "self_esteem": null,
+        "phone_number": null,
+        "city": "Санкт-Петербург",
+        "bio": "",
+        "age": 14,
+        "date_birth": "2010-01-01",
+        "status_rule": true,
+        "image": "",
+        "create_at": "2024-03-19T14:57:50.194Z",
+        "update_at": "2024-03-19T14:57:50.194Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 9,
+    "fields": {
+        "username": "user6",
+        "email": "user6@test.com",
+        "first_name": "Виктория",
+        "last_name": null,
+        "middle_name": null,
+        "gender": "ж",
+        "self_esteem": null,
+        "phone_number": null,
+        "city": null,
+        "bio": "Мечтательная и талантливая",
+        "age": 33,
+        "date_birth": "1990-05-05",
+        "status_rule": true,
+        "image": "foto_profile/собака2.jpg",
+        "create_at": "2024-03-19T14:59:18.860Z",
+        "update_at": "2024-03-19T14:59:18.860Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 10,
+    "fields": {
+        "username": "user7",
+        "email": "user7@test.com",
+        "first_name": null,
+        "last_name": null,
+        "middle_name": null,
+        "gender": "м",
+        "self_esteem": "5.0",
+        "phone_number": "+79999999999",
+        "city": "Москва",
+        "bio": "Творю разное, чаще всего за это краснею",
+        "age": 38,
+        "date_birth": "1985-08-09",
+        "status_rule": false,
+        "image": "",
+        "create_at": "2024-03-19T15:01:09.148Z",
+        "update_at": "2024-03-19T15:01:09.148Z"
+    }
+},
+{
+    "model": "db_train.author",
+    "pk": 11,
+    "fields": {
+        "username": "user8",
+        "email": "user8@test.com",
+        "first_name": "Алла",
+        "last_name": "Иванова",
+        "middle_name": "Марковна",
+        "gender": "ж",
+        "self_esteem": null,
+        "phone_number": "+79995555555",
+        "city": "Москва",
+        "bio": "Точно знаю свои сильные стороны",
+        "age": 28,
+        "date_birth": "1995-08-30",
+        "status_rule": true,
+        "image": "foto_profile/кот1_QhskMwK.jpg",
+        "create_at": "2024-03-19T15:38:29.282Z",
+        "update_at": "2024-03-19T15:38:29.282Z"
+    }
+}
+]
