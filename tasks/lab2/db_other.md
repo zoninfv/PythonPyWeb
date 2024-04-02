@@ -384,7 +384,7 @@ pip install mysql-connector-python
 В общем случае, обе библиотеки, `mysql-connector-python` (для работы с MySQL) и `sqlite3`, 
 предоставляют схожий функционал для работы с базами данных, но есть некоторые различия, вызванные спецификой каждой СУБД.
 
-Подключение к `MySQL`
+Пример подключения к `MySQL`
 
 ```python
 import mysql.connector
