@@ -410,6 +410,30 @@ urlpatterns += [
 получить дополнительную информацию, допустим такую как время выполнения SQL запроса 
 и что конкретно выполнялось
 
+---
+
+Если панель не появилась, а в консоле вылезло следующее пердупреждение
+
+![img.png](pic/img_13.png)
+
+То решение этой задачи следующее:
+
+Зайдите в `settings.py` папки `project` и в конце файла пропишите
+
+
+```python
+import mimetypes
+
+mimetypes.add_type("application/javascript", ".js", True)
+
+DEBUG_TOOLBAR_CONFIG = {
+    "INTERCEPT_REDIRECTS": False,
+}
+```
+
+Теперь панель должна отображаться
+
+---
 Пример для главной страницы
 
 ![img_9.png](pic/img_9.png)
