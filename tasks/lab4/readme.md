@@ -717,7 +717,7 @@ DRF также поддерживает стороннюю библиотеку 
 pip install django-filter
 ```
 
-Затем добавьте `'django_filters'` к `INSTALLED_APPS` в корневой `urls.py`:
+Затем добавьте `'django_filters'` к `INSTALLED_APPS` в корневой `settings.py`:
 
 Расширим `AuthorViewSet` во `views.py` приложения `api` 
 
@@ -851,7 +851,7 @@ http://127.0.0.1:8000/api/authors_viewset/?search=user&ordering=-email
 Тесты в Django пишутся в специальном файле `tests.py` в соответственном приложении. При запуске тестов в Django автоматически 
 формируется новая тестовая БД, с той же самой структурой что есть, но совершенно незаполненная.
 
-В файле `tests.py` приложения `app` пропишите
+В файле `tests.py` приложения `api` пропишите
 
 ```python
 from django.test import TestCase
@@ -863,6 +863,8 @@ from .serializers import AuthorModelSerializer
 
 
 class AuthorViewSetTestCase(APITestCase):
+    fixtures = ['testdata.json']
+
     def setUp(self):
         print("Создаём данные в БД")
         self.author1 = Author.objects.create(name='John', email='john@example.com')
@@ -871,7 +873,8 @@ class AuthorViewSetTestCase(APITestCase):
     def test_list_authors(self):
         print("Запуск теста test_list_authors")
         print("______________________________")
-        url = reverse('author-list')  # Получаем URL ссылку
+        print(f'В таблице автор {Author.objects.count()} значения')
+        url = reverse('authors-viewset-list')  # Получаем URL ссылку
         print(f"Проверяемы маршрут: {url}")
         response = self.client.get(url)
         print(f"Ответ от сервера: {response.status_code}")
@@ -879,13 +882,13 @@ class AuthorViewSetTestCase(APITestCase):
         authors = Author.objects.all()
         serializer = AuthorModelSerializer(authors, many=True)
         print(f"Сериализатор вернул из БД: {serializer.data}")
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data['results'], serializer.data)
 
 
     def test_retrieve_author(self):
         print("Запуск теста test_retrieve_author")
         print("______________________________")
-        url = reverse('author-detail', kwargs={'pk': self.author1.pk})  # Укажите имя URL-шаблона и параметры
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})  # Укажите имя URL-шаблона и параметры
         print(f"Проверяемы маршрут: {url}")
         response = self.client.get(url)
         print(f"Ответ от сервера: {response.status_code}")
@@ -898,7 +901,7 @@ class AuthorViewSetTestCase(APITestCase):
     def test_create_author(self):
         print("Запуск теста test_create_author")
         print("______________________________")
-        url = reverse('author-list')  # Получаем URL ссылку
+        url = reverse('authors-viewset-list')  # Получаем URL ссылку
         print(f"Проверяемы маршрут: {url}")
         data = {'name': 'Bob', 'email': 'bob@example.com'}
         response = self.client.post(url, data)
@@ -912,7 +915,7 @@ class AuthorViewSetTestCase(APITestCase):
     def test_update_author(self):
         print("Запуск теста test_update_author")
         print("______________________________")
-        url = reverse('author-detail', kwargs={'pk': self.author1.pk})
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})
         print(f"Проверяемы маршрут: {url}")
         data = {'name': 'John Doe', 'email': 'john.doe@example.com'}
         response = self.client.put(url, data)
@@ -926,7 +929,7 @@ class AuthorViewSetTestCase(APITestCase):
     def test_partial_update_author(self):
         print("Запуск теста test_partial_update_author")
         print("______________________________")
-        url = reverse('author-detail', kwargs={'pk': self.author1.pk})
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})
         print(f"Проверяемы маршрут: {url}")
         data = {'name': 'John Doe'}
         response = self.client.patch(url, data)
@@ -940,7 +943,7 @@ class AuthorViewSetTestCase(APITestCase):
     def test_delete_author(self):
         print("Запуск теста test_delete_author")
         print("______________________________")
-        url = reverse('author-detail', kwargs={'pk': self.author1.pk})
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})
         print(f"Проверяемы маршрут: {url}")
         response = self.client.delete(url)
         print(f"Ответ от сервера: {response.status_code}")
@@ -954,7 +957,7 @@ class AuthorViewSetTestCase(APITestCase):
 При проверке методов API чаще следуют следующему алгоритму:
 1. Определяют путь по которому будут проверять доступность endpoint, для этого можно написать путь вручную или воспользоваться функцией
 `reverse` из `from django.urls import reverse`, чтобы по имени маршрута получить URL путь этого маршрута, как пример 
-`url = reverse('author-list')` запишет в переменную `url` значение `/api/authors/`
+`url = reverse('authors-viewset-list')` запишет в переменную `url` значение `/api/authors_viewset/`
 
 
 2. Как определились с маршрутом, то если это необходимо, то формируем данные которые будем передавать в запросе, допустим для POST, PUT, PATCH запроса
@@ -976,7 +979,13 @@ class AuthorViewSetTestCase(APITestCase):
 
 ___
 
-Запустите файл `tests.py` приложения `api`
+Запустите тесты командой в терминале
+
+```python
+python manage.py test apps.api
+```
+
+Не обращайте внимание на предупреждения со стороны модуля пагинации.
 
 ![img_31.png](pic/img_31.png)
 
@@ -1041,15 +1050,6 @@ def test_list_authors(self):
 В итоге при запуске тестов будет 4 значения
 
 ![img_33.png](pic/img_33.png)
-
-
-Последнее, что осталось, так это запустить тесты через команду 
-
-```python
-python manage.py test apps api
-```
-
-![img_34.png](pic/img_34.png)
 
 Если было бы необходимо запускать все тесты в проект, то просто не указываем конкретный проект в котором Django будет искать тесты.
 
