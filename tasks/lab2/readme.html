@@ -1,0 +1,376 @@
+
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Оглавление</title>
+
+            <link rel="stylesheet" href="/js_css/main.css">
+            <link rel="stylesheet" href="/js_css/default.min.css">
+            <!-- Подключаем js -->
+            <script src="/js_css/copy.js"></script>
+            <script src="/js_css/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
+        </head>
+        <body>
+            <div class="sidebar">
+<ul>
+<li><a href="#1">1. Отношения таблиц</a><ul>
+<li><a href="#11-one-to-one">1.1 Связь Один-к-одному (One-to-One):</a></li>
+<li><a href="#12-one-to-many">1.2. Связь Один-ко-многим (One-to-Many):</a></li>
+<li><a href="#13-many-to-many">1.3. Связь Многие-ко-многим (Many-to-Many):</a></li>
+</ul>
+</li>
+<li><a href="#2">2. Создание запросов</a></li>
+<li><a href="#3-html">3. Отображение запросов на HTML странице</a></li>
+<li><a href="#4-django-debug-tool-bar">4. Работа с Django debug tool bar</a><ul>
+<li><a href="#41">4.1 Отображение запросов в консоли</a></li>
+</ul>
+</li>
+<li><a href="#_1">Практика окончена</a></li>
+<li><a href="#5">5. Необязательный блок (выполнение по желанию, на результат следующих практик влиять не будет)</a><ul>
+<li><a href="#51-postgresql">5.1 Подключение к PostgreSQL</a></li>
+<li><a href="#52-python">5.2 Подключение к БД через модули python</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="content">
+<p>Вернем авторов на место (загрузим их из фикстуры), так как ранее частично удаляли их</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py loaddata files/lab1/data_author.json
+</code></pre>
+
+<h1 id="1">1. Отношения таблиц</h1>
+<p>В Django, существует несколько типов отношений между таблицами, которые 
+определяются с помощью ORM модели данных. Отношения могут быть:
+* один-к-одному(One-to-One), 
+* один-ко-многим(One-to-Many),
+* многие-ко-многим(Many-to-Many). </p>
+<p>Давайте рассмотрим каждый тип:</p>
+<h2 id="11-one-to-one">1.1 Связь <code>Один-к-одному (One-to-One)</code>:</h2>
+<p>В отношении "один-к-одному" каждая запись одной таблицы связана с одной записью в другой таблице.
+Часто такая таблица используется для расширения другой таблицы без изменения первоначальной. 
+В Django это можно реализовать с помощью поля <code>OneToOneField</code>.</p>
+<p>Вот пример, допустим мы захотели добавить данных в таблицу <code>Author</code>, но там и так уже очень много колонок. Можно создать отдельную
+таблицу <code>AuthorProfile</code> и связать её с <code>Author</code> отношением один-к-одному. Таким образом ещё возможно разграничить доступ к таблицам, 
+допустим к таблице <code>Author</code> есть доступ у всех, а к <code>AuthorProfile</code>, только у определенных пользователей.</p>
+<p>В <code>models.py</code> приложения <code>apps/db_train</code> добавьте следующую таблицу.</p>
+<pre class="highlight"><code class="language-python linenums">class AuthorProfile(models.Model):
+    author = models.OneToOneField('Author')
+    stage = models.IntegerField(default=0, 
+                                blank=True,
+                                verbose_name=&quot;Стаж&quot;,
+                                help_text=&quot;Стаж в годах&quot;)
+</code></pre>
+
+<p>Через некоторое время выйдет предупреждение, что пропущен позиционный аргумент <code>'on_delete'</code>, Django хочет знать, что делать с данным связанным полем после удаления.</p>
+<p><img alt="img_1.png" src="pic/img_1.png" /></p>
+<p>В контексте Django, параметр <code>on_delete</code> относится к внешнему ключу (foreign key), который определяет связь между двумя таблицами. 
+Он указывает, что произойдет с записями в связанной таблице, если запись в родительской таблице будет удалена.</p>
+<p>Т.е. в данном примере, необходимо указать, что делать со значением поля <code>author</code> в таблице <code>AuthorProfile</code> в случае удаления
+связанной с ней строки таблицы <code>Author</code></p>
+<p>Параметр <code>on_delete</code> может принимать различные значения в зависимости от желаемого поведения при удалении связанной записи:</p>
+<ul>
+<li>
+<p><code>CASCADE</code>: Если запись в родительской таблице удаляется, все связанные записи в дочерней таблице также будут удалены.</p>
+</li>
+<li>
+<p><code>PROTECT</code>: Запрещает удаление записи в родительской таблице, если на нее есть ссылки из дочерних таблиц. В этом случае будет вызвано исключение ProtectedError.</p>
+</li>
+<li>
+<p><code>SET_NULL</code>: При удалении записи в родительской таблице, внешний ключ в дочерней таблице будет установлен в NULL. Это предполагает, что поле внешнего ключа разрешает значение NULL.</p>
+</li>
+<li>
+<p><code>SET_DEFAULT</code>: При удалении записи в родительской таблице, внешний ключ в дочерней таблице будет установлен в значение по умолчанию.</p>
+</li>
+<li>
+<p><code>SET</code>: При удалении записи в родительской таблице, внешний ключ в дочерней таблице будет установлен в указанное значение.</p>
+</li>
+<li>
+<p><code>DO_NOTHING</code>: Ничего не делать. В этом случае будет оставлено на усмотрение базы данных обработка удаления записи в родительской таблице.</p>
+</li>
+</ul>
+<p>Воспользуемся чаще всего используемым параметром <code>models.CASCADE</code>, говорящей о том, что если автор будет удалён, то и его профиль тоже будет удалён.</p>
+<pre class="highlight"><code class="language-python linenums">class AuthorProfile(models.Model):
+    author = models.OneToOneField('Author', on_delete=models.CASCADE)
+    stage = models.IntegerField(default=0, 
+                                blank=True,
+                                verbose_name=&quot;Стаж&quot;,
+                                help_text=&quot;Стаж в годах&quot;)
+</code></pre>
+
+<p>Теперь две таблицы связаны отношением один к одному.</p>
+<p>Создайте миграцию</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
+</code></pre>
+
+<p>И перенесите её в БД</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<h2 id="12-one-to-many">1.2. Связь <code>Один-ко-многим (One-to-Many)</code>:</h2>
+<p>В отношении "один-ко-многим" каждая запись одной таблицы связана с несколькими записями в другой таблице. В Django это можно реализовать с помощью поля <code>ForeignKey</code>.</p>
+<p>Пример: Создадим таблицу Entry(статья) которая будет связана с автором, но автор может создать несколько статей, и все они будут привязаны к автору, здесь
+поможет отношение "один-ко-многим", где один автор может написать много статей.</p>
+<p>В <code>models.py</code> приложения <code>apps/db_train</code> добавьте следующую таблицу.</p>
+<pre class="highlight"><code class="language-python linenums">class Entry(models.Model):
+    text = models.TextField(verbose_name=&quot;Текст статьи&quot;,
+                            )
+    author = models.ForeignKey(&quot;Author&quot;, on_delete=models.CASCADE, related_name='entries')
+</code></pre>
+
+<p>Здесь <code>related_name</code> используется для более удобному обращению к записям, через автора, т.е. в объекта автор появится мнимое поле, 
+которого не существует в БД, но будет связь со всеми его статьями через поле <code>'entries'</code> эту связь также называют обратная связь.</p>
+<p>Создайте миграцию</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
+</code></pre>
+
+<p>И перенесите её в БД</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<h2 id="13-many-to-many">1.3. Связь <code>Многие-ко-многим (Many-to-Many)</code>:</h2>
+<p>В отношении "многие-ко-многим" несколько записей одной таблицы связаны с несколькими записями в другой таблице. В Django это реализуется с использованием поля <code>ManyToManyField</code>.</p>
+<p>Пример: Создадим таблицу Tag(тэг) которая будет связана со статьей, но в одной статье может быть несколько тегов, а один тег использоваться в нескольких статьях, 
+здесь поможет отношение "многие-ко-многим".</p>
+<p>В <code>models.py</code> приложения <code>apps/db_train</code> добавьте следующую таблицу.</p>
+<pre class="highlight"><code class="language-python linenums">class Tag(models.Model):
+    name = models.CharField(max_length=50,
+                            verbose_name=&quot;Название&quot;,
+                            )
+</code></pre>
+
+<p>Теперь в <code>Entry</code> добавим поле <code>tags</code> чтобы хранить там ключи к тегам.</p>
+<pre class="highlight"><code class="language-python linenums">class Entry(models.Model):
+    # ...
+    tags = models.ManyToManyField(&quot;Tag&quot;, related_name='entries')
+</code></pre>
+
+<p>Создайте миграцию</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
+</code></pre>
+
+<p>И перенесите её в БД</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<p>Далее покажем созданные таблицы в админ панели. (Вспомните на основе прошлой практики как регистрировать модели в <code>admin.py</code> для отображения в админ панели)</p>
+<p>Теперь зайдём через админ панель и создадим пару строк в БД.</p>
+<p>Начнем с тегов. Создадим 3 тега. "Кино", "Музыка", "Искусство"</p>
+<p>Переопределите метод <code>__str__</code> в классах <code>AuthorProfile</code>, <code>Entry</code>, <code>Tag</code> по своему желанию, для более читаемого отображения строк в админ панели.</p>
+<p>Если это необходимо, то к полям связанной модели можно обращаться через <code>.</code>, допустим так для <code>__str__</code> модели <code>AuthorProfile</code></p>
+<pre class="highlight"><code class="language-python linenums">class AuthorProfile(models.Model):
+    # ...
+
+    def __str__(self):
+        return f&quot;Автор: {self.author.username}; Стаж: {self.stage} лет&quot;
+</code></pre>
+
+<p>Затем создайте пару записей в таблице <code>Entrys</code> в админ панели. Чтобы выбрать несколько тегов, зажмите <code>Ctrl</code>.</p>
+<p>И создайте пару записей в <code>Authors profile</code></p>
+<p>Далее будем работать с запросами с БД, и нужны общие данные, чтобы проверить правильность выполнения запросов, поэтому чтобы не терять ваш
+труд, то скопируем (<code>dumpdata</code>) данные из таблицы <code>db_train</code> в фикстуру, для этого выполним команду</p>
+<pre class="highlight"><code class="language-python linenums">python -Xutf8 manage.py dumpdata --indent 4 db_train &gt; my_db_train.json
+</code></pre>
+
+<p>Можете посмотреть созданный файл, что скопировалась только таблица <code>db_train</code> с вашими данными. Флаг <code>-Xutf8</code> используется
+для переноса в кодировке utf-8, чтобы кириллица нормально отображалась.</p>
+<p>Затем вставим данные в БД, чтобы заполнение было одинаковое.</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py loaddata files/lab2/db_train.json
+</code></pre>
+
+<p><img alt="img_2.png" src="pic/img_2.png" /></p>
+<h1 id="2">2. Создание запросов</h1>
+<p>Чтобы полноценно ознакомиться с запросами и работой со связанными таблицами скопируем приложение <code>db_train_alternative</code> из
+<code>files/lab2</code> в папку <code>apps</code>, затем добавим <code>'apps.db_train_alternative'</code> в <code>settings.py</code> в <code>INSTALLED_APPS</code></p>
+<p>Затем создадим миграции</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
+</code></pre>
+
+<p>Применим эти миграции</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<p>И начнем заполнять БД при помощи python скрипта. Для упрощения работы создадим json файл с данными для записи, а затем уже считаем этот файл 
+и построчно запишем данные в БД.</p>
+<p>Скопируйте файлы <code>convert_data_alter_to_json.py</code> и <code>fill_data_alter_in_db.py</code> из <code>files/lab2</code> в корень проекта.</p>
+<p>Запустите <code>convert_data_alter_to_json.py</code> - он переведет списки словарей описанные в файле в json файлы.</p>
+<p>Запустите <code>fill_data_alter_in_db.py</code> (особо не вчитываемся в код, только поверхностно, чтобы посмотреть, что через скрипт можно записывать, 
+но иногда приходится применять сложные конструкции)- он прочитает json файлы, создаст из них списки словарей и запишет данные в БД.</p>
+<p>Заметьте, что выполнение записи в <code>Author</code> намного быстрее, чем в другие из-за пакетной записи. Это потому, что запись всех значений происходит в одной транзакции.</p>
+<p>Зачем было использовать промежуточный json? Просто, чтобы показать, откуда появились данные для записи</p>
+<p>Бывает такое, что при записи могут произойти ошибки и заново проблематично запустить скрипт, так как некоторые поля содержат ограничения на уникальные значения, и
+записать заново не выйдет. В таком случае применим механизм отката миграций, так как он позволяет откатить и данные записанные после миграции.</p>
+<p>Проверим, что заново запустить скрипт не выйдет. </p>
+<p>Запустите <code>fill_data_alter_in_db.py</code> и получите ошибку, что значения не соответствуют требованиям уникальности.</p>
+<p>Затем откатим миграцию. Так как в приложение <code>db_train_alternative</code> была всего одна миграция, то откатим первую, т.е. вернем к состоянию до добавления миграции. Соответственно 
+все данные связанные с данным приложением добавленные после миграции тоже исчезнут.</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate db_train_alternative zero 
+</code></pre>
+
+<p>В данном случае <code>zero</code> означает полный откат всех миграций что были в приложении <code>db_train_alternative</code>, если нужно было бы откатить к какой-то конкретной, то
+в таком случае написали бы номер миграции, допустим 0001.</p>
+<p><img alt="img_3.png" src="pic/img_3.png" /></p>
+<p>Теперь просто заново применим миграцию</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<p><img alt="img_4.png" src="pic/img_4.png" /></p>
+<p>И заново запустим скрипт записи данных в БД <code>fill_data_alter_in_db.py</code></p>
+<p>Альтернативная БД заполнена, теперь настало время делать запросы.</p>
+<p>В прошлый раз, мы работали через консоль (<code>python manage.py shell</code>). Теперь поработаем через скрипт python</p>
+<p>Скопируйте файл <code>queryes.py</code> из <code>files/lab2</code> в корень проекта. Запросы будете производить в нём.</p>
+<p>Почитайте и выполните запросы из файла <code>queryes.md</code> из <code>tasks/lab2</code>. Запросы выполняйте в файле <code>queryes.py</code>, который скопировали
+в корень проекта ранее.</p>
+<h1 id="3-html">3. Отображение запросов на HTML странице</h1>
+<p>После того как появилась ясность с созданием запросов, то осталось отобразить этот результат не в консоли, а на странице,
+чтобы было удобнее и нагляднее. После того как получили ответ из базы данных, то передача в шаблон делается просто, ровно так же
+как и при передаче обычных значений в шаблон, через <code>context</code>.</p>
+<p>Замените файл <code>training_db.html</code> в папке <code>apps/db_train/templates/train_db</code>, на аналогичный файл <code>training_db.html</code> 
+из папки <code>files/lab2</code></p>
+<p>Для начала необходимо подгрузить модели</p>
+<p>Во <code>views.py</code> приложения <code>db_train</code> пропишем:</p>
+<pre class="highlight"><code class="language-python linenums">from .models import Author, AuthorProfile, Entry, Tag
+</code></pre>
+
+<p>Затем в класс <code>TrainView</code> внесите следующие изменения:</p>
+<pre class="highlight"><code class="language-python linenums">from django.db.models import Q, Max, Min, Avg, Count
+
+class TrainView(View):
+    def get(self, request):
+        # Создайте здесь запросы к БД
+        self.answer1 = None  # TODO Какие авторы имеют самую высокую уровень самооценки(self_esteem)?
+        self.answer2 = None  # TODO Какой автор имеет наибольшее количество опубликованных статей?
+        self.answer3 = None  # TODO Какие статьи содержат тег 'Кино' или 'Музыка' ?
+        self.answer4 = None  # TODO Сколько авторов женского пола зарегистрировано в системе?
+        self.answer5 = None  # TODO Какой процент авторов согласился с правилами при регистрации?
+        self.answer6 = None  # TODO Какие авторы имеют стаж от 1 до 5 лет?
+        self.answer7 = None  # TODO Какой автор имеет наибольший возраст?
+        self.answer8 = None  # TODO Сколько авторов указали свой номер телефона?
+        self.answer9 = None  # TODO Какие авторы имеют возраст младше 25 лет?
+        self.answer10 = None  # TODO Сколько статей написано каждым автором?
+
+        context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
+
+        return render(request, 'train_db/training_db.html', context=context)
+</code></pre>
+
+<p>Данная конструкция </p>
+<pre class="highlight"><code class="language-python linenums">context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
+</code></pre>
+
+<p>была написана из-за лени, чтобы не создавать словарь большого размера вручную.</p>
+<p>Для тренировки напишите запросы и ответьте на следующие вопросы (Ответ на первый вопрос будет ниже, над остальными думаем самостоятельно.
+<code>Не нужно стараться сделать запрос в одну строку. Вполне допустимо использование промежуточных переменных, если это необходимо</code>):
+1. Какие авторы имеют самую высокую уровень самооценки(self_esteem)?
+2. Какой автор имеет наибольшее количество опубликованных статей?
+3. Какие статьи содержат тег 'Кино' или 'Музыка'?
+4. Сколько авторов женского пола зарегистрировано в системе?
+5. Какой процент авторов согласился с правилами при регистрации?
+6. Какие авторы имеют стаж от 1 до 5 лет?
+7. Какой автор имеет наибольший возраст?
+8. Сколько авторов указали свой номер телефона?
+9. Какие авторы имеют возраст младше 25 лет?
+10. Сколько статей написано каждым автором?</p>
+<p>Ответом на первый вопрос будет</p>
+<pre class="highlight"><code class="language-python linenums">max_self_esteem = Author.objects.aggregate(max_self_esteem=Max('self_esteem'))
+self.answer1 = Author.objects.filter(self_esteem=max_self_esteem['max_self_esteem'])
+</code></pre>
+
+<p><img alt="img_5.png" src="pic/img_5.png" /></p>
+<p>При переходе на главную страницу на вкладку <code>Запросы</code> или по адресу http://127.0.0.1:8000/train/db/
+появятся ваши отображения результатов запросов.</p>
+<p><img alt="img_6.png" src="pic/img_6.png" /></p>
+<p>Остальные ответы заполните самостоятельно. Можете менять шаблон <code>training_db.html</code> под ваши нужны и запросы.</p>
+<h1 id="4-django-debug-tool-bar">4. Работа с Django debug tool bar</h1>
+<p>Последнее, что осталось, это как-то мониторить то, что делаете в БД, для этого 
+воспользуемся библиотекой <code>django debug toolbar</code> </p>
+<p>https://django-debug-toolbar.readthedocs.io/en/latest/installation.html</p>
+<pre class="highlight"><code class="linenums">pip install django-debug-toolbar
+</code></pre>
+
+<p>Затем в settings.py необходимо прописать</p>
+<p>в INSTALLED_APPS</p>
+<pre class="highlight"><code class="language-python linenums">INSTALLED_APPS = [
+    # ...
+    &quot;debug_toolbar&quot;,
+    # ...
+]
+</code></pre>
+
+<p>в MIDDLEWARE в конец списка добавьте</p>
+<pre class="highlight"><code class="language-python linenums">MIDDLEWARE = [
+    # ...
+    &quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;,
+]
+</code></pre>
+
+<p><img alt="img_7.png" src="pic/img_7.png" /></p>
+<p>В конце <code>settings.py</code> добавьте</p>
+<pre class="highlight"><code class="language-python linenums">INTERNAL_IPS = [
+    &quot;127.0.0.1&quot;,
+]
+</code></pre>
+
+<p>В корневой <code>urls.py</code> в <code>if settings.DEBUG:</code> необходимо добавить</p>
+<pre class="highlight"><code class="language-python linenums"># После urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [
+    path(&quot;__debug__/&quot;, include(&quot;debug_toolbar.urls&quot;)),
+]
+</code></pre>
+
+<p><img alt="img_8.png" src="pic/img_8.png" /></p>
+<p>Теперь если зайти на любую страницу, то появится дополнительное окно, где можно 
+получить дополнительную информацию, допустим такую как время выполнения SQL запроса 
+и что конкретно выполнялось</p>
+<hr />
+<p>Если панель не появилась, а в консоле вылезло следующее пердупреждение</p>
+<p><img alt="img.png" src="pic/img_13.png" /></p>
+<p>То решение этой задачи следующее:</p>
+<p>Зайдите в <code>settings.py</code> папки <code>project</code> и в конце файла пропишите</p>
+<pre class="highlight"><code class="language-python linenums">import mimetypes
+
+mimetypes.add_type(&quot;application/javascript&quot;, &quot;.js&quot;, True)
+
+DEBUG_TOOLBAR_CONFIG = {
+    &quot;INTERCEPT_REDIRECTS&quot;: False,
+}
+</code></pre>
+
+<p>Теперь панель должна отображаться в браузере при переходе на сайт (Если не отображается, то попробуйте перезагрузить страницу с перезагрузкой статических файлов.
+В большинстве браузеров это сочетание <code>Ctrl+Shift+R</code>)</p>
+<hr />
+<p>Пример для главной страницы</p>
+<p><img alt="img_9.png" src="pic/img_9.png" /></p>
+<p>Для страницы http://127.0.0.1:8000/train/db/ при одном ответе будет такой результат</p>
+<p><img alt="img_10.png" src="pic/img_10.png" /></p>
+<p>Посмотрите как в зависимости от сложности запросов будет отличаться время и число запросов в БД.</p>
+<h2 id="41">4.1 Отображение запросов в консоли</h2>
+<p>Также есть возможность отображения дополнительный информации в консоли при работе с ORM</p>
+<p>Для этого вызовите </p>
+<pre class="highlight"><code class="language-python linenums">python manage.py debugsqlshell
+</code></pre>
+
+<p>Появится интерактивная консоль с возможность создания запросов и отображения их через ORM</p>
+<p>Выполните следующий запрос в этой консоле</p>
+<pre class="highlight"><code class="language-python linenums">from apps.db_train.models import Entry
+Entry.objects.get(id=1)
+</code></pre>
+
+<p><img alt="img_11.png" src="pic/img_11.png" /></p>
+<p>Посмотрите как ORM трансформирует запрос в SQL запрос для других запросов, допустим тех, что вы писали при ответе на вопросы. </p>
+<pre class="highlight"><code class="language-python linenums">Entry.objects.values('author__username', 'text').get(id=1)
+</code></pre>
+
+<p><img alt="img_12.png" src="pic/img_12.png" /></p>
+<h1 id="_1">Практика окончена</h1>
+<hr />
+<h1 id="5">5. <u>Необязательный блок</u> (выполнение по желанию, на результат следующих практик влиять не будет)</h1>
+<h2 id="51-postgresql">5.1 Подключение к PostgreSQL</h2>
+<p>Прочитайте данный материал в файле <code>db_postgre.md</code> в папке <code>tasks/lab2</code></p>
+<h2 id="52-python">5.2 Подключение к БД через модули python</h2>
+<p>Прочитайте данный материал в файле <code>db_other.md</code> в папке <code>tasks/lab2</code></p>
+</div>
+        </body>
+        </html>
+    

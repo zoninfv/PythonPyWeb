@@ -1,0 +1,1064 @@
+
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Оглавление</title>
+
+            <link rel="stylesheet" href="/js_css/main.css">
+            <link rel="stylesheet" href="/js_css/default.min.css">
+            <!-- Подключаем js -->
+            <script src="/js_css/copy.js"></script>
+            <script src="/js_css/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
+        </head>
+        <body>
+            <div class="sidebar">
+<ul>
+<li><a href="#1">1. Разграничение доступа</a><ul>
+<li><a href="#11-rest_frameworkpermissions">1.1 Какие есть разрешения в rest_framework.permissions?</a></li>
+<li><a href="#12">1.2 Использование разрешений</a><ul>
+<li><a href="#121-isauthenticated">1.2.1 IsAuthenticated</a></li>
+<li><a href="#122-isadminuser-isauthenticatedorreadonly">1.2.2 IsAdminUser, IsAuthenticatedOrReadOnly</a></li>
+<li><a href="#123">1.2.3 Пользовательские разрешения</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2">2. Аутентификация</a><ul>
+<li><a href="#21">2.1 Базовая аутентификация</a></li>
+<li><a href="#22">2.2 Сессионная аутентификация</a></li>
+<li><a href="#23">2.3 Авторизация через токены</a><ul>
+<li><a href="#231-tokenauthentication">2.3.1 TokenAuthentication</a></li>
+<li><a href="#232-json-web-tokensjwt">2.3.2 JSON Web Tokens(JWT)</a><ul>
+<li><a href="#2321">2.3.2.1 Теоретическая часть</a><ul>
+<li><a href="#_1">Практическая часть</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3">3. Деплой</a><ul>
+<li><a href="#31">3.1 Скрываем всю чувствительную информацию</a></li>
+<li><a href="#32-pythonanywhere">3.2 Деплой на сервис pythonanywhere</a></li>
+</ul>
+</li>
+<li><a href="#_2">Практика окончена</a><ul>
+<li><a href="#33-pythonanywhere">3.3. Частые вопросы после развертки первого приложения на pythonanywhere</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="content">
+<h1 id="1">1. Разграничение доступа</h1>
+<p>Ранее доступ к API мог получить любой пользователь, да можно ограничить саму функциональность API (разрешить только get методы), допустим, что 
+пользователь может только читать информацию, а не изменять её, но это будет касаться вообще всех, а не только отдельных пользователей. Поэтому
+после того как мы выяснили что за пользователь пришел к нам на сервер за информацией (аутентификация), необходимо посмотреть какие есть права на данный ресурс
+у этого пользователя (авторизация).</p>
+<p>В Django разграничение доступа к ресурсам может быть достигнуто с помощью различных механизмов:</p>
+<ul>
+<li>
+<p><code>Authentication</code> (Аутентификация): Этот механизм позволяет идентифицировать пользователя. 
+Django имеет встроенную поддержку различных методов аутентификации, таких как аутентификация по токену, аутентификация по сеансу и базовая аутентификация.</p>
+</li>
+<li>
+<p><code>Permissions</code> (Разрешения): После аутентификации Django проверяет разрешения, которые определяют, 
+имеет ли пользователь доступ к определенному ресурсу или действию. Разрешения могут быть глобальными или специфичными для объектов.</p>
+</li>
+</ul>
+<blockquote>
+<p>В DRF общие разрешения задаются через классовый атрибут <code>permission_classes</code> </p>
+<p>Пример (только посмотреть):</p>
+</blockquote>
+<p>```python
+  from rest_framework.permissions import IsAuthenticated
+  from rest_framework.response import Response
+  from rest_framework.views import APIView</p>
+<p>class ExampleView(APIView):
+      permission_classes = [IsAuthenticated]</p>
+<pre class="highlight"><code class="linenums">  def get(self, request):
+      content = {'message': 'Только аутентифицированные пользователи могут видеть этот контент'}
+      return Response(content)
+</code></pre>
+
+<p>```</p>
+<blockquote>
+<p>В этом примере <code>IsAuthenticated</code> - это разрешение, которое требует, чтобы пользователь был аутентифицирован для доступа к представлению. Если пользователь не аутентифицирован, он получит ошибку HTTP 403 Forbidden.</p>
+</blockquote>
+<ul>
+<li><code>View-level permissions</code> (Разрешения на уровне представлений): Django позволяет определить права доступа к представлениям. 
+Это позволяет вам контролировать, какие пользователи или группы пользователей могут видеть или изменять данные.</li>
+</ul>
+<blockquote>
+<p>Когда необходимо локализовать какие-то разрешения до отдельных пользователей или групп, то создают свой класс с разрешениями, 
+наследующийся от <code>BasePermission</code>, где переопределяют метод <code>has_permission</code> возвращающий <code>True</code> если пользователь имеет доступ к ресурсу (представлению),
+<code>False</code> - если нет</p>
+<p>Пример (только посмотреть):</p>
+</blockquote>
+<p>```python
+  from rest_framework.permissions import BasePermission
+  from rest_framework.response import Response
+  from rest_framework.views import APIView</p>
+<p>class ExamplePermission(BasePermission):
+      def has_permission(self, request, view):
+          if request.user.is_superuser:
+              return True
+          return False</p>
+<p>class ExampleView(APIView):
+      permission_classes = [ExamplePermission]</p>
+<pre class="highlight"><code class="linenums">  def get(self, request):
+      content = {'message': 'Этот контент доступен только суперпользователям'}
+      return Response(content)
+</code></pre>
+
+<p>```</p>
+<blockquote>
+<p>В этом примере создается пользовательское разрешение <code>ExamplePermission</code>, которое разрешает доступ только суперпользователям к представлению.</p>
+</blockquote>
+<ul>
+<li><code>Object-level permissions</code> (Разрешения на уровне объектов): Этот механизм позволяет управлять доступом к отдельным объектам. 
+Например, вы можете разрешить только владельцу объекта (или тому, кому дали доступ до объекта) просматривать или изменять его.</li>
+</ul>
+<blockquote>
+<p>Когда необходимо локализовать какие-то разрешения до отдельных объектов (строки таблицы), то создают свой класс с разрешениями, 
+наследующийся от <code>BasePermission</code>, где переопределяют метод <code>has_object_permission</code> возвращающий <code>True</code> если пользователь имеет доступ к просмотру или изменения ресурса (строк таблицы в БД которые создал пользователь),
+<code>False</code> - если нет</p>
+<p>Пример (только посмотреть):</p>
+</blockquote>
+<p>```python
+  from rest_framework.permissions import BasePermission
+  from .models import YourModel</p>
+<p>class ExampleObjectPermission(BasePermission):
+      def has_object_permission(self, request, view, obj):
+          # Проверяем, имеет ли пользователь доступ к объекту
+          return obj.owner == request.user</p>
+<p>class ExampleObjectView(APIView):
+      permission_classes = [ExampleObjectPermission]</p>
+<pre class="highlight"><code class="linenums">  def get(self, request, pk):
+      obj = YourModel.objects.get(pk=pk)
+      if not request.user.has_perm('view_object', obj):
+          return Response({&quot;message&quot;: &quot;У вас нет разрешения на просмотр этого объекта&quot;}, status=status.HTTP_403_FORBIDDEN)
+      return Response({&quot;message&quot;: &quot;Вы имеете доступ к этому объекту&quot;})
+</code></pre>
+
+<p>```</p>
+<blockquote>
+<p><code>permission_classes</code> проверяются до того, как будут выполняться методы <code>get</code>, <code>post</code>, ...</p>
+<p>В этом примере <code>ExampleObjectPermission</code> - это объектное разрешение, которое разрешает доступ к объекту только владельцу объекта. 
+Разрешение проверяет, что пользователь, делающий запрос, является владельцем объекта. Однако помимо общего объектного разрешения проверяется то,
+что у пользователя есть разрешение просматривать этот контент, вспомните первую практику, где мы вручную в админ панели раздавали разрешения отдельным пользователям или 
+группам пользователям на чтение (<code>view_object</code>), изменение (<code>change_object</code>), добавление (<code>add_object</code>), удаление (<code>delete_object</code>)</p>
+</blockquote>
+<p><img alt="img.png" src="pic/img.png" /></p>
+<blockquote>
+<p><code>owner</code> - это общепринятый термин, который используется в контексте моделей данных для указания на пользователя или владельца объекта. 
+Это не встроенный атрибут Django или Python, поэтому его нужно создать в вашей модели данных, если вы хотите использовать 
+его для указания на владельца объекта.</p>
+</blockquote>
+<p>Если хочется почитать как работают разграничения именно в Django,а не DRF, то можно прочитать <a href="https://colab.research.google.com/drive/1QvHVUhoG3dZqv2ePUxnrtVStsbUSTTsb">здесь</a>(не является обязательным, сделано как лекция)</p>
+<h2 id="11-rest_frameworkpermissions">1.1 Какие есть разрешения в rest_framework.permissions?</h2>
+<p><code>rest_framework.permissions</code> предоставляет несколько встроенных классов разрешений для обеспечения безопасности в вашем API:
+Некоторые из наиболее распространенных разрешений включают:</p>
+<ul>
+<li>
+<p><code>IsAuthenticated</code>: Пользователь должен быть аутентифицирован для доступа к ресурсу.</p>
+</li>
+<li>
+<p><code>IsAdminUser</code>: Только пользователи с административными правами могут получить доступ к ресурсу.</p>
+</li>
+<li>
+<p><code>AllowAny</code>: Доступ к ресурсу разрешен без аутентификации.</p>
+</li>
+<li>
+<p><code>IsAuthenticatedOrReadOnly</code>: Аутентифицированные пользователи могут выполнять любые действия, а неаутентифицированные могут только читать (GET).</p>
+</li>
+<li>
+<p><code>DjangoModelPermissions</code>: Разрешения, основанные на правах доступа к модели Django. Разрешает доступ на основе прав доступа add, change и delete модели Django.</p>
+</li>
+</ul>
+<blockquote>
+<p>По умолчанию данное разрешение даёт полный доступ на создание, чтение, изменение и удаление объектов модели. Чтобы ограничить это, то необходимо в самой модели в 
+метаклассе прописать атрибут permissions и перечислением возможных действий над моделью. Как пример (только посмотреть):</p>
+</blockquote>
+<p>```python
+  class MyModel(models.Model):
+      name = models.CharField(max_length=100)</p>
+<pre class="highlight"><code class="linenums">  class Meta:
+      permissions = [
+          (&quot;can_view_mymodel&quot;, &quot;Можно посмотреть&quot;),
+          (&quot;can_edit_mymodel&quot;, &quot;Можно изменить&quot;),
+          (&quot;can_delete_mymodel&quot;, &quot;Можно удалить&quot;),
+      ]
+</code></pre>
+
+<p>```  </p>
+<blockquote>
+<p>В данном примере над объектами таблицы MyModel можно совершать только действия над просмотром, изменением и удалением,
+создать объект в БД не получится. Соответственно используя <code>permission_classes = [DjangoModelPermissions]</code>, то в API 
+будут доступны все разрешения, что есть в модели.</p>
+</blockquote>
+<ul>
+<li>
+<p><code>DjangoModelPermissionsOrAnonReadOnly</code>: Аналогично <code>DjangoModelPermissions</code>, но неавторизированные пользователи могут просматривать ресурс.</p>
+</li>
+<li>
+<p><code>DjangoObjectPermissions</code>: Разрешения, основанные на правах доступа к объекту Django. Позволяет настраивать доступ на основе атрибутов модели Django и прав доступа пользователя.</p>
+</li>
+</ul>
+<p>Все эти классы вы можете указывать в классовом атрибуте <code>permission_classes</code> вашего класса представления API.</p>
+<h2 id="12">1.2 Использование разрешений</h2>
+<p>По умолчанию к точке доступа API может подключиться любой желающий. Проверим это выйдя из под пользователя. И проверим доступность 
+ресурса как представлению, что писали самостоятельно <code>AuthorAPIView</code> используя <code>APIView</code></p>
+<p>http://127.0.0.1:8000/api/authors/</p>
+<p><code>AuthorGenericAPIView</code> используя <code>GenericAPIView</code></p>
+<p>http://127.0.0.1:8000/api/authors_generic/</p>
+<p><code>AuthorViewSet</code> используя <code>ModelViewSet</code></p>
+<p>http://127.0.0.1:8000/api/authors_viewset/</p>
+<p>Тоже самое можно проверить через Postman, любой из них будет работать, так как по умолчанию Postman проверяет доступность без 
+авторизации.</p>
+<p>Но вот допустим, нам не нравится, что доступ имеют все, допустим некоторая информация конфиденциальная или имеет ценность и хочется показывать 
+её только авторизированным пользователям, таким образом добавим возможность проверять разрешения.</p>
+<h3 id="121-isauthenticated">1.2.1 IsAuthenticated</h3>
+<p>Во <code>views.py</code> приложения <code>api</code> добавьте <code>permission_classes</code> в ваш <code>AuthorAPIView</code> </p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework import permissions
+
+class AuthorAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+</code></pre>
+
+<p>Теперь проверим доступность адреса</p>
+<p>http://127.0.0.1:8000/api/authors/</p>
+<p>И увидим, что необходимо авторизоваться</p>
+<p><img alt="img_1.png" src="pic/img_1.png" /></p>
+<p>То же самое будет и в Postman</p>
+<p><img alt="img_2.png" src="pic/img_2.png" /></p>
+<p>Если авторизироваться, то всё будет нормально, кроме Postman, про это поговорим в главе 2, про аутентификацию.</p>
+<h3 id="122-isadminuser-isauthenticatedorreadonly">1.2.2 IsAdminUser, IsAuthenticatedOrReadOnly</h3>
+<p><code>IsAdminUser</code>, <code>IsAuthenticatedOrReadOnly</code> работают идентично <code>IsAuthenticated</code> только <code>IsAdminUser</code> проверяет, что пользователь админ,
+а <code>IsAuthenticatedOrReadOnly</code> даёт доступ на чтение неавторизированным пользователям, а авторизированным всё что требуется.</p>
+<h3 id="123">1.2.3 Пользовательские разрешения</h3>
+<p>Создадим свой класс разрешений, чтобы учесть все эти действия и добавим этот класс в <code>permission_classes</code> класса <code>AuthorGenericAPIView</code></p>
+<pre class="highlight"><code class="language-python linenums">class CustomPermission(permissions.BasePermission):
+    &quot;&quot;&quot;
+    Пользователи могут выполнять различные действия в зависимости от их роли.
+    &quot;&quot;&quot;
+
+    def has_permission(self, request, view):
+        # Разрешаем только GET запросы для неаутентифицированных пользователей
+        if request.method == 'GET' and not request.user.is_authenticated:
+            return True
+
+        # Разрешаем GET и POST запросы для аутентифицированных пользователей
+        if request.method in ['GET', 'POST'] and request.user.is_authenticated:
+            return True
+
+        # Разрешаем все действия для администраторов
+        if request.user.is_superuser:
+            return True
+
+        # Во всех остальных случаях возвращаем False
+        return False
+
+
+class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin,
+                           DestroyModelMixin):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+
+    # Переопределяем атрибут permission_classes для указания нашего собственного разрешения
+    permission_classes = [CustomPermission]
+
+    # ...
+</code></pre>
+
+<p>Неавторизированный пользователь видит только GET запрос, POST и другие запросы не сделать</p>
+<p>http://127.0.0.1:8000/api/authors_generic/</p>
+<p>Авторизируемся под обычным пользователем </p>
+<p>username: <code>platon27</code></p>
+<p>password: <code>#8X+DujR!B</code></p>
+<p>Всех доступных пользователей можете найти в файле <code>users.json</code> в корне проекта, если его там нет, то найдете его в папке <code>tasks/lab5</code></p>
+<p>Теперь снова зайдем на </p>
+<p>http://127.0.0.1:8000/api/authors_generic/</p>
+<p>Затем на </p>
+<p>http://127.0.0.1:8000/api/authors_generic/3/</p>
+<p>И увидим, что ничего кроме GET и POST метода нет доступного</p>
+<p><img alt="img_3.png" src="pic/img_3.png" /></p>
+<p>Авторизируемся под админом и увидим полный функционал над данными</p>
+<p><img alt="img_4.png" src="pic/img_4.png" /></p>
+<h1 id="2">2. Аутентификация</h1>
+<p>Для проверки путей через Postman достаточно просто подключиться к точке доступа не требующей авторизации</p>
+<p><img alt="img_5.png" src="pic/img_5.png" /></p>
+<p>Но вот допустим для POST запроса наше представление проверяет авторизирован ли пользователь</p>
+<p>В <code>Body</code> в <code>raw</code> задайте</p>
+<pre class="highlight"><code class="language-json linenums">{
+    &quot;name&quot;: &quot;user_abc&quot;,
+    &quot;email&quot;: &quot;user@abc.abc&quot;
+}
+</code></pre>
+
+<p>И соответственно запрос не пропустит, так как не знает что за пользователь его задал</p>
+<p><img alt="img_6.png" src="pic/img_6.png" /></p>
+<p>Но так как Django по умолчанию поддерживает Базовую Аутентификацию, то можно параметры пользователя передать в заголовке <code>HTTP_AUTHORIZATION</code></p>
+<h2 id="21">2.1 Базовая аутентификация</h2>
+<p>Это простая форма аутентификации, где пользователь должен предоставить имя пользователя и пароль при каждом запросе.</p>
+<p>Данные для Базовой Аутентификации передаются в кодировке <code>base64</code>.</p>
+<p>Результат данной кодировки можно без проблем получить в python для этого достаточно воспользоваться модулем <code>base64</code></p>
+<p>Кодируется строка вида <code>login:password</code> получим кодированное представление для админа с его </p>
+<p>username: <code>admin</code></p>
+<p>password: <code>123</code></p>
+<p>В <code>Python Console</code> пропишите</p>
+<pre class="highlight"><code class="language-python linenums">import base64
+
+login = 'admin'
+password = '123'
+# Кодируем логин и пароль в виде строковой комбинации
+credentials = base64.b64encode(f'{login}:{password}'.encode('utf-8')).decode('utf-8')
+print(credentials)
+</code></pre>
+
+<p>Результат получим <code>YWRtaW46MTIz</code></p>
+<p><img alt="img_9.png" src="pic/img_9.png" /></p>
+<p>Теперь можем передать эти данные в <code>Headers</code> по ключу <code>Authorization</code> со значением <code>Basic YWRtaW46MTIz</code>, где 
+<code>Basic</code> это название метода аутентификации.</p>
+<p><img alt="img_10.png" src="pic/img_10.png" /></p>
+<p>Теперь если отправить данные на сервер, то создастся новый автор, а пользователь создавший его будет админ.</p>
+<p><img alt="img_8.png" src="pic/img_8.png" /></p>
+<p>В Postman есть более удобный инструмент для кодирования в <code>base64</code>, чем ручное определение через <code>python</code>. 
+Нажмите на кнопку <code>"Authorization"</code>, выберите тип <code>"Basic Auth"</code> и введите ваше имя пользователя и пароль.</p>
+<p><img alt="img_7.png" src="pic/img_7.png" /></p>
+<p>Чтобы не было конфликтов, то удалите авторизационный заголовок из <code>Headers</code></p>
+<p>Изменим данные отправляемые на сервер в <code>Body</code> в <code>raw</code>, чтобы был создан новый автор, а не пришла ошибка, что автор уже существует</p>
+<pre class="highlight"><code class="language-json linenums">{
+    &quot;name&quot;: &quot;user1_abc&quot;,
+    &quot;email&quot;: &quot;user1@abc.abc&quot;
+}
+</code></pre>
+
+<p>Отправляем и получаем ответ, что пользователь создан</p>
+<p><img alt="img_11.png" src="pic/img_11.png" /></p>
+<p>Base64 - это метод кодирования, который используется для представления бинарных данных в текстовом виде. Он не является методом шифрования или хеширования, а лишь представляет данные в другом виде.</p>
+<p>Когда вы используете базовую аутентификацию, клиент отправляет на сервер строку в формате "Имя пользователя:Пароль", закодированную в Base64. Если у разных пользователей одни и те же аутентификационные данные, то при кодировании этих данных в Base64 они будут иметь одинаковое значение.</p>
+<p>Однако стоит отметить, что Base64 не является безопасным методом хранения аутентификационных данных, так как он не является шифрованием. Даже если два пользователя имеют одинаковые авторизационные данные, это не является уязвимостью, так как безопасность базовой аутентификации зависит от других факторов, таких как использование HTTPS для защищенной передачи данных по сети.</p>
+<p>В целом, использование Base64 для представления авторизационных данных в базовой аутентификации безопасно, при условии, что используется HTTPS для защиты передаваемых данных. Однако стоит избегать хранения чувствительной информации в таком формате и использовать более безопасные методы аутентификации, такие как OAuth или JWT.</p>
+<p>Базовая аутентификация, хотя и является простым и легко понятным методом, имеет несколько уязвимостей:</p>
+<ul>
+<li>
+<p><code>Отправка в открытом виде</code>: При использовании базовой аутентификации данные (имя пользователя и пароль) отправляются в открытом виде через сеть. Это означает, что злоумышленники могут перехватить эти данные и использовать их для несанкционированного доступа.</p>
+</li>
+<li>
+<p><code>Отсутствие шифрования</code>: Поскольку данные отправляются в открытом виде, базовая аутентификация не обеспечивает шифрования. Это делает ее уязвимой к атакам перехвата данных (например, через перехват пакетов сети).</p>
+</li>
+<li>
+<p><code>Хранение паролей на стороне клиента</code>: Поскольку данные для аутентификации отправляются с каждым запросом, клиент должен хранить имя пользователя и пароль. Это может представлять риск безопасности, если злоумышленники получат доступ к хранилищу данных клиента.</p>
+</li>
+<li>
+<p><code>Базовая аутентификация безопасна только при использовании HTTPS</code>: Для уменьшения рисков безопасности базовая аутентификация должна использоваться только вместе с HTTPS. В противном случае данные будут отправляться в открытом виде и станут уязвимыми к перехвату.</p>
+</li>
+</ul>
+<p>Из-за этих уязвимостей базовая аутентификация редко используется в приложениях, где требуется высокий уровень безопасности. Вместо этого обычно используются более безопасные методы аутентификации, такие как OAuth или JSON Web Tokens (JWT), которые обеспечивают более надежный уровень безопасности.</p>
+<h2 id="22">2.2 Сессионная аутентификация</h2>
+<p>Django также по умолчанию поддерживает сессионную аутентификацию.</p>
+<p>Это более удобный способ аутентификации, где пользователь вводит имя пользователя и пароль один раз, и далее сохраняется сессия, подтверждающая аутентификацию.</p>
+<p>Сессия это идентификатор, который хранится на сервере и передаётся в специальном файле cookie</p>
+<p>Сессия и cookie - это два способа хранения информации о состоянии пользователя на веб-сайте, но они работают немного по-разному:</p>
+<ul>
+<li>
+<p><code>Cookie</code> (куки): Это небольшие фрагменты данных, которые веб-сервер отправляет в браузер пользователя, а браузер хранит их на локальной машине пользователя. 
+Cookie обычно используются для хранения информации о предпочтениях пользователя, идентификаторов сессии, состояния входа в систему и т. д. 
+Когда пользователь делает запрос на веб-сайт, весь cookie, относящийся к этому домену, автоматически включается в заголовки запроса и отправляется на сервер.</p>
+</li>
+<li>
+<p><code>Сессия</code>: Это временный способ хранения информации о состоянии пользователя на сервере. Когда пользователь входит в 
+систему или начинает сессию на веб-сайте, сервер создает уникальную сессию для этого пользователя и присваивает ей идентификатор сессии.
+Этот идентификатор обычно сохраняется в cookie и отправляется обратно на сервер с каждым последующим запросом. 
+На сервере информация о состоянии пользователя хранится в этой сессии. По завершении сессии (например, когда пользователь 
+выходит из системы или закрывает браузер), информация о сессии удаляется. В Django сессия удаляется через 14 дней или после выхода из системы. Выход из браузера не влияет на продолжительность сессии.</p>
+</li>
+</ul>
+<p>Postman позволяет отправить <code>cookies</code>, чтобы была возможность сделать сессионную авторизацию</p>
+<p>Для этого необходимо сначала узнать <code>id</code> сессии, это можно узнать в БД в таблице <code>django_session</code>, последняя строка будет соответствовать 
+актуальной сессии. Необходимо значение из поля <code>session_key</code></p>
+<p>Это же значение можно получить из браузера, перейдите по http://127.0.0.1:8000/api/authors_generic/</p>
+<p>И вызовите консоль разработчика, чаще всего это кнопка <code>F12</code></p>
+<p>Далее в зависимости от браузера путь до хранения cookie может отличаться</p>
+<blockquote>
+<p>Для Mozilla Firefox</p>
+</blockquote>
+<p><img alt="img_12.png" src="pic/img_12.png" /></p>
+<blockquote>
+<p>Для Google Chrome</p>
+</blockquote>
+<p><img alt="img_13.png" src="pic/img_13.png" /></p>
+<blockquote>
+<p>Для Яндекс Браузера</p>
+</blockquote>
+<p><img alt="img_14.png" src="pic/img_14.png" /></p>
+<p>Нам будет необходимы две строки</p>
+<p><code>sessionid</code> и <code>csrftoken</code></p>
+<p>Далее переходим в Postman</p>
+<p>В блоке <code>Authorization</code> ставим <code>No Auth</code></p>
+<p><img alt="img_15.png" src="pic/img_15.png" /></p>
+<p>В <code>Headers</code> прописываем <code>X-CSRFToken</code> со значением взятым из <code>csrftoken</code> в <code>cookie</code></p>
+<p><img alt="img_16.png" src="pic/img_16.png" /></p>
+<p>В Body в raw пропишем новые данные для POST запроса</p>
+<pre class="highlight"><code class="language-json linenums">{
+    &quot;name&quot;: &quot;user5_abc&quot;,
+    &quot;email&quot;: &quot;user5@abc.abc&quot;
+}
+</code></pre>
+
+<p>И наконец перейдем в Cookies</p>
+<p><img alt="img_17.png" src="pic/img_17.png" /></p>
+<p>Пропишем доменный адрес нашего локалхоста</p>
+<p><code>http://127.0.0.1:8000</code></p>
+<p><img alt="img_18.png" src="pic/img_18.png" /></p>
+<p>Затем уже добавляем куки</p>
+<p><img alt="img_19.png" src="pic/img_19.png" /></p>
+<p>Необходимо только прописать название и значение, остальные параметры не трогайте, пусть будут по умолчанию</p>
+<p>По ключу <code>sessionid</code> вставьте свои данные из браузера и сохраните этот cookie</p>
+<p><img alt="img_20.png" src="pic/img_20.png" /></p>
+<p>Добавьте ещё cookie нажав на <code>+ Add Cookie</code></p>
+<p>По ключу <code>csrftoken</code> вставьте свои данные из браузера и сохраните этот cookie</p>
+<p><img alt="img_21.png" src="pic/img_21.png" /></p>
+<p>Закройте окно и выполните запрос, если всё верно, то новый автор создастся </p>
+<p><img alt="img_22.png" src="pic/img_22.png" /></p>
+<p>Сессионная аутентификация имеет свои преимущества и недостатки:</p>
+<blockquote>
+<p>Преимущества сессионной аутентификации:</p>
+</blockquote>
+<ul>
+<li><code>Безопасность</code>: Поскольку идентификатор сессии хранится на сервере, а не на клиентской стороне, сессионная аутентификация обычно считается более безопасной, чем передача пароля в открытом виде (например, с помощью базовой аутентификации).</li>
+<li><code>Простота использования</code>: Для пользователя сессионная аутентификация обычно более удобна, поскольку она не требует ввода пароля каждый раз при входе на сайт или выполнении защищенных действий.</li>
+<li><code>Гибкость</code>: Сессионная аутентификация позволяет реализовать различные сценарии безопасности, такие как автоматический выход из системы после определенного периода неактивности или вход в систему с помощью многофакторной аутентификации. </li>
+</ul>
+<blockquote>
+<p>Недостатки сессионной аутентификации:</p>
+</blockquote>
+<ul>
+<li><code>Нагрузка на сервер</code>: Поскольку информация о сессии хранится на сервере, это может привести к увеличению нагрузки на сервер, особенно при работе с большим количеством активных сессий.</li>
+<li><code>Зависимость от cookie</code>: Для сессионной аутентификации часто требуется использование cookie для хранения идентификатора сессии. Это означает, что если пользователь отключил cookie в своем браузере, сессионная аутентификация может не работать должным образом.</li>
+<li><code>Уязвимость к атакам типа session hijacking</code>: Если злоумышленник получит доступ к идентификатору сессии, например, через перехват сетевого трафика или атаку CSRF, он может представиться этим пользователем и получить доступ к его учетной записи.</li>
+</ul>
+<p>В целом, сессионная аутентификация является распространенным и удобным способом обеспечения безопасности веб-приложений, но она также имеет свои ограничения и риски, которые необходимо учитывать при разработке приложений.</p>
+<h2 id="23">2.3 Авторизация через токены</h2>
+<p>Авторизация по токенам (Token-based authentication) и сессионная авторизация (Session-based authentication) - это два различных подхода к аутентификации пользователей в веб-приложениях. </p>
+<p>Вот основные различия между ними:</p>
+<blockquote>
+<p>Хранение состояния (stateless vs stateful):</p>
+</blockquote>
+<ul>
+<li><code>Токен</code>: Авторизация по токенам является "бессостоятельной" (stateless) системой, где сервер не хранит состояние аутентификации пользователя. Каждый запрос пользователя должен содержать токен, который сервер проверяет на валидность при каждом запросе.</li>
+<li><code>Сессия</code>: Сессионная авторизация является "состоятельной" (stateful) системой, где сервер хранит информацию о сеансе пользователя (например, идентификатор сессии) на сервере. После успешной аутентификации пользователю присваивается сессионный идентификатор, который используется для идентификации пользователя при последующих запросах.</li>
+</ul>
+<blockquote>
+<p>Хранение токенов (token storage):</p>
+</blockquote>
+<ul>
+<li><code>Токен</code>: Токены обычно хранятся на клиентской стороне, например, в Local Storage или в куки-файлах. Они могут быть долговременными (долговременные токены доступа) или краткосрочными (краткосрочные токены доступа или токены обновления).</li>
+<li><code>Сессия</code>: Идентификаторы сессии хранятся на сервере и могут быть связаны с куки-файлом на клиентской стороне для идентификации пользователя при последующих запросах.</li>
+</ul>
+<blockquote>
+<p>Защита от CSRF-атак (Cross-Site Request Forgery):</p>
+</blockquote>
+<ul>
+<li><code>Токен</code>: При использовании токенов CSRF-атаки становятся менее вероятными, так как токен должен быть явно передан с клиента на сервер и проверен на каждом запросе.</li>
+<li><code>Сессия</code>: В сессионной авторизации защита от CSRF обычно достигается с использованием механизмов, таких как CSRF-токены, которые встраиваются в формы.</li>
+</ul>
+<blockquote>
+<p>Масштабируемость (scalability):</p>
+</blockquote>
+<ul>
+<li><code>Токен</code>: Авторизация по токенам обеспечивает лучшую масштабируемость, поскольку она не требует хранения состояния на сервере. Это делает ее более подходящей для распределенных систем и микросервисных архитектур.</li>
+<li><code>Сессия</code>: Сессионная авторизация может столкнуться с проблемами масштабируемости при большом количестве активных сеансов, поскольку требует хранения информации о сессиях на сервере.</li>
+</ul>
+<h3 id="231-tokenauthentication">2.3.1 TokenAuthentication</h3>
+<p>Помимо базовой аутентификации и аутентификации по сессии, среди доступных методов в DRF есть аутентификация 
+по токенам. </p>
+<p>Для этого для <code>AuthorGenericAPIView</code> в <code>authentication_classes</code> пропишем <code>authentication.TokenAuthentication</code></p>
+<p>Для упрощения проверок сделаем, что получить информацию могут только авторизированные пользователи </p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework import authentication
+
+class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin,
+                           DestroyModelMixin):
+    # ...
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentication.TokenAuthentication]
+    # ...
+</code></pre>
+
+<p><code>TokenAuthentication</code> - это один из методов аутентификации в DRF, который позволяет аутентифицировать пользователей с 
+использованием токенов. Токены предоставляются аутентифицированным пользователям и должны быть включены в заголовок запроса 
+для аутентификации.</p>
+<p>Для полноценной работы с токенами необходимо будет произвести ряд действий (так как будет создаваться таблица для 
+хранения токенов в БД)</p>
+<p>Добавьте <code>'rest_framework.authtoken'</code> в <code>INSTALLED_APPS</code> в файле <code>settings.py</code>:</p>
+<pre class="highlight"><code class="language-python linenums">INSTALLED_APPS = [
+    # ...
+    'rest_framework',
+    'rest_framework.authtoken',
+    # ...
+]
+</code></pre>
+
+<p>Запустите миграцию и создание таблиц в БД</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<p><img alt="img_23.png" src="pic/img_23.png" /></p>
+<p>Обычно происходит следующее: пользователь регистрируется, ему выдаётся токен доступа, который он использует для
+доступа к API. При работе с сессиями происходит аналогично, выдаётся токен, записывается в сессию или куки, и уже
+по этому токену происходит аутентификация.</p>
+<p>Для начала токен нужно получить, это чем-то похоже на кодирование при <code>base64</code>, только используем токенизатор,
+что DRF будет использовать при аутентификации.</p>
+<p>Чтобы не писать целое представление по получению токена, его обновлению и другие моменты, то получим используем токен
+вручную, для этого в <code>Python Console</code> пропишем</p>
+<pre class="highlight"><code class="language-python linenums">from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
+login = 'admin'
+
+# Token от rest_framework работает с объектами модели
+user = User.objects.get(username=login)
+# Получение токена по объекту модели
+token, created = Token.objects.get_or_create(user=user) 
+print(token)  # 'c2674caef699d8f4bccfd7b8b04b297e1615cafa'
+</code></pre>
+
+<p>Теперь уже используем данный токен для доступа, так как даже простой GET требует токена доступа</p>
+<p><img alt="img_24.png" src="pic/img_24.png" /></p>
+<p>Далее в заголовках Headers пропишите ключ <code>Authorization</code> и значение <code>Token &lt;number&gt;</code>, где <code>&lt;number&gt;</code> значение токена полученного недавно.</p>
+<p>Теперь к ресурсу возможно обратиться используя токен доступа.</p>
+<p><img alt="img_25.png" src="pic/img_25.png" /></p>
+<h3 id="232-json-web-tokensjwt">2.3.2 JSON Web Tokens(JWT)</h3>
+<p><code>JSON Web Token(JWT)</code> - это компактный и самодостаточный способ представления информации между двумя сторонами в форме 
+объекта в JSON-формате. JWT используется для передачи данных между клиентом и сервером в виде токена. Он может 
+использоваться для аутентификации и обмена данными в безопасном формате.</p>
+<h4 id="2321">2.3.2.1 Теоретическая часть</h4>
+<p>JWT состоит из трех частей, разделенных точками:</p>
+<ol>
+<li>Заголовок (Header): Заголовок содержит информацию о типе токена (JWT) и алгоритме подписи, используемом для создания 
+и проверки подписи. Пример заголовка:</li>
+</ol>
+<pre class="highlight"><code class="language-python linenums">{
+  &quot;alg&quot;: &quot;HS256&quot;,
+  &quot;typ&quot;: &quot;JWT&quot;
+}
+</code></pre>
+
+<ol>
+<li>
+<p>Полезная нагрузка (Payload): Полезная нагрузка содержит данные (claims), которые хранятся в токене. В JWT есть три типа claims:</p>
+</li>
+<li>
+<p><code>Registered claims</code>: Эти claims являются стандартными и включают, например, iss (issuer), exp (expiration time), 
+sub (subject), и другие.</p>
+</li>
+<li><code>Public claims</code>: Эти claims определяются пользователем и/или приложением и могут использоваться для обмена 
+дополнительной информацией.</li>
+<li><code>Private claims</code>: Эти claims также определяются пользователем, но они предназначены для обмена между сторонами, 
+которые заранее договорились о их значении.</li>
+</ol>
+<p>Пример полезной нагрузки:</p>
+<pre class="highlight"><code class="language-python linenums">{
+  &quot;sub&quot;: &quot;1234567890&quot;,
+  &quot;name&quot;: &quot;John Doe&quot;,
+  &quot;exp&quot;: 1516239022
+}
+</code></pre>
+
+<ol>
+<li>Подпись (Signature): Подпись создается путем кодирования заголовка, полезной нагрузки и секретного ключа алгоритмом, 
+указанным в заголовке. Это делает JWT самодостаточным, так как сторона, получившая токен, может проверить его подлинность, 
+раскодировав токен и проверив подпись.</li>
+</ol>
+<p>Процесс работы JWT:</p>
+<ol>
+<li>Пользователь входит в систему и аутентифицируется на сервере, который генерирует JWT.</li>
+<li>Сервер включает в токен информацию о пользователе и другие данные, которые ему необходимы.</li>
+<li>JWT отправляется обратно клиенту, который может хранить его (например, в куках или localStorage) и включать в заголовки 
+запросов к серверу.</li>
+<li>При каждом запросе на сервер клиент включает токен в заголовок запроса.</li>
+<li>Сервер проверяет подпись токена, раскодирует полезную нагрузку и использует информацию для аутентификации пользователя 
+и принятия решения о предоставлении доступа к запрошенным ресурсам.</li>
+</ol>
+<p>JWT позволяет создавать безсостоятельные, расширяемые и безопасные токены, которые могут использоваться в различных контекстах, 
+таких как аутентификация в API, одиночная сессия (Single Sign-On), обмен данными между сервисами и многое другое.</p>
+<h6 id="_1">Практическая часть</h6>
+<p>Работу с токенами будем делать с помощью сторонней библиотеки <code>djangorestframework-simplejwt</code>
+Ссылка на данный пакет есть в <a href="https://www.django-rest-framework.org/api-guide/authentication/#json-web-token-authentication">официальной документации restframework</a> </p>
+<p><a href="https://django-rest-framework-simplejwt.readthedocs.io/en/latest/">Документация djangorestframework-simplejwt</a></p>
+<p>JWT тоже токены, но отличаются от подхода описанного в <code>TokenAuthentication</code></p>
+<p>Установим <code>djangorestframework-simplejwt</code></p>
+<pre class="highlight"><code class="language-python linenums">pip install djangorestframework-simplejwt
+</code></pre>
+
+<p>Регистрация в <code>INSTALLED_APPS</code> в <code>settings.py</code></p>
+<pre class="highlight"><code class="language-python linenums">INSTALLED_APPS = [
+    # ...
+    'rest_framework',
+    'rest_framework_simplejwt',
+    # ...
+]
+</code></pre>
+
+<p>Для этого для <code>AuthorGenericAPIView</code> в <code>authentication_classes</code> пропишем <code>JWTAuthentication</code> из <code>rest_framework_simplejwt.authentication</code></p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework_simplejwt.authentication import JWTAuthentication
+
+class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin,
+                           DestroyModelMixin):
+    # ...
+    authentication_classes = [JWTAuthentication]
+    # ...
+</code></pre>
+
+<p>Далее необходимо получить токен и с ним сформировать запрос на получение нужной информации.
+Поможет получить токен обработчик <code>TokenObtainPairView</code> у <code>rest_framework_simplejwt.views</code></p>
+<p>Во <code>rest_framework_simplejwt.views</code> есть часть представлений, которые мы благополучно используем для своих нужд</p>
+<p>В <code>urls.py</code> приложения <code>api</code> пропишем</p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
+urlpatterns = [
+    # ...
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Получение токена
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Обновление токена
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Проверка токена
+]
+</code></pre>
+
+<p>Теперь если попробуем получить токен, пройдя по http://127.0.0.1:8000/api/token/</p>
+<p>То получим сообщение, что необходим POST запрос</p>
+<p><img alt="img_26.png" src="pic/img_26.png" /></p>
+<p>Сделайте POST запрос с данными </p>
+<pre class="highlight"><code class="language-json linenums">{
+    &quot;username&quot;: &quot;admin&quot;,
+    &quot;password&quot;: &quot;123&quot;
+}
+</code></pre>
+
+<p>Получим огромный токен доступа, так как в нем содержится вся необходимая информация (смотри теорию)</p>
+<p><img alt="img_27.png" src="pic/img_27.png" /></p>
+<p>Нам нужен токен по ключу <code>access</code></p>
+<p>Настало время Postman, чтобы сделать запрос с данным токеном, по умолчанию вы можете создать обычный запрос, просто в 
+заголовке <code>Authorization</code> нужно будет прописать <code>Bearer &lt;token&gt;</code>, где <code>&lt;token&gt;</code> тот токен по ключу <code>access</code></p>
+<p>В Postman в <code>Authorization</code> выберите <code>Bearer Token</code> и вставьте туда данные полученные из <code>access</code></p>
+<p><img alt="img_28.png" src="pic/img_28.png" /></p>
+<p>Если по каким-то причинам не получили доступа, то заново получите ключ отправив POST запрос на http://127.0.0.1:8000/api/token/</p>
+<p>Таким образом <code>djangorestframework-simplejwt</code> и <code>rest_framework.authtoken</code> - это два разных способа аутентификации и авторизации в DRF
+с использованием токенов. Они имеют несколько существенных различий:</p>
+<ol>
+<li>
+<p>Механизм аутентификации:</p>
+</li>
+<li>
+<p><code>rest_framework.authtoken</code> использует механизм аутентификации на основе токенов, где каждый пользователь имеет свой 
+уникальный токен, который используется для аутентификации в API. Эти токены создаются и управляются на стороне сервера.</p>
+</li>
+<li>
+<p><code>djangorestframework-simplejwt</code> использует JWT для аутентификации. JWT - это стандартный формат токенов, который 
+содержит информацию о пользователе и может быть подписан цифровой подписью. В отличие от <code>rest_framework.authtoken</code>, 
+пользовательские данные хранятся внутри самого токена, и сервер не обязан хранить и управлять отдельными токенами.</p>
+</li>
+<li>
+<p>Хранение данных пользователя:</p>
+<ul>
+<li>
+<p>В случае <code>rest_framework.authtoken</code>, данные пользователя (например, его идентификатор) хранятся на стороне сервера, 
+ и токены служат как ссылки на эти учетные записи пользователя.</p>
+</li>
+<li>
+<p>В <code>djangorestframework-simplejwt</code>, информация о пользователе хранится внутри самого токена, и серверу не требуется 
+ для проверки подлинности пользователя. Это делает JWT более масштабируемым в средах, где у вас может быть множество 
+ серверов, так как он не требует обращения к серверу для проверки токена.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Сложность и настройка:</p>
+<ul>
+<li>
+<p><code>rest_framework.authtoken</code> более прост в настройке и использовании. Он предоставляет готовые представления и 
+ аутентификационные классы для использования в DRF.</p>
+</li>
+<li>
+<p><code>djangorestframework-simplejwt</code> требует немного больше настройки, но предоставляет более гибкую и расширяемую систему 
+ аутентификации с поддержкой JWT, включая возможность настройки срока действия и обновления токенов.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Срок действия токена:
+     Оба метода могут поддерживать срок действия токена, но в <code>djangorestframework-simplejwt</code> это реализовано более гибко 
+и позволяет устанавливать срок действия как для доступа, так и для обновления токена.</p>
+</li>
+<li>
+<p>Производительность и безопасность:
+     JWT более безопасен в том смысле, что информация в токене зашифрована и подписана, что обеспечивает целостность данных 
+и защиту от подделки. Однако это также может сделать JWT более сложным для управления, если требуется много дополнительной информации о пользователе.</p>
+</li>
+</ol>
+<p>Выбор между <code>rest_framework.authtoken</code> и <code>djangorestframework-simplejwt</code> зависит от ваших требований и предпочтений. 
+Если вам нужна быстрая и простая аутентификация с токенами, <code>rest_framework.authtoken</code> может быть хорошим выбором. 
+Если вам нужна более гибкая и безопасная аутентификация с JWT, то <code>djangorestframework-simplejwt</code> может быть более подходящим вариантом.</p>
+<h1 id="3">3. Деплой</h1>
+<h2 id="31">3.1 Скрываем всю чувствительную информацию</h2>
+<p>Устанавливаем модуль <code>python-dotenv</code> - пакет для работы удобной работы с переменными среды</p>
+<p><code>pip install python-dotenv</code></p>
+<p>Cоздайте файл <code>template.env</code> в корне проекта, где будем хранить переменные окружения. 
+Этот файл не будет содержать самих значений, а только названия переменных.</p>
+<pre class="highlight"><code class="language-env linenums">SECRET_KEY=
+DEBUG=
+ALLOWED_HOSTS=
+</code></pre>
+
+<p><img alt="img_15.png" src="pic/update/img_15.png" /></p>
+<p>Создайте файл <code>.env</code> м по тем же ключам добавьте значения</p>
+<pre class="highlight"><code class="language-python linenums">SECRET_KEY=&lt;ваши значения&gt;
+DEBUG=true
+ALLOWED_HOSTS='localhost,127.0.0.1'
+</code></pre>
+
+<p><img alt="img_16.png" src="pic/update/img_16.png" /></p>
+<p><code>SECRET_KEY</code> получаем из соответствующих переменных файла <code>settings.py</code></p>
+<p>В файле <code>settings.py</code> (папка project) выполняем загрузку переменных среды из файла <code>.env</code> с помощью 
+установленного пакета, также в <code>settings.py</code> на нужных местах необходимо выгрузить 
+значения из окружения:</p>
+<pre class="highlight"><code class="language-python linenums"># settings.py
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # здесь загружаются данные из .env и отправляются в переменные окружения
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+DEBUG = os.getenv('DEBUG') == 'true'
+
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS').split(',')]
+</code></pre>
+
+<p><img alt="img_17.png" src="pic/update/img_17.png" /></p>
+<p>В <code>.gitignore</code> добавьте <code>.env</code>, чтобы на <code>github</code> не залилась чувствительная информация.</p>
+<p><img alt="img_19.png" src="pic/update/img_19.png" /></p>
+<p>Затем в <code>settings.py</code> рядом со <code>STATIC_URL = 'static/'</code> пропишите</p>
+<pre class="highlight"><code class="language-python linenums">STATIC_URL = &quot;static/&quot;  # Папка в корне проекта, где будут собираться статические файлы
+if 'localhost' in ALLOWED_HOSTS:
+   STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Папка для локального проекта
+else:
+   STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Папка для сервера
+</code></pre>
+
+<p><img alt="img.png" src="pic/update/img.png" /></p>
+<p>Используя параметр <code>STATICFILES_DIRS</code> вы можете указать, где Django будет искать статические файлы помимо папки <code>static</code> в каждом приложении</p>
+<p>Конструкция if - else поможет в будущем и работать на сервере и на локальном проекте.
+Так как параметр <code>STATICFILES_DIRS</code> нужен в режиме работы с локальным проектом (если вы решите собрать 
+все статические файлы в одну корневую папку static, но даже если она указана, но её нет физически, 
+то никакой ошибки не будет), 
+а <code>STATIC_ROOT</code> с сервером (на сервере чаще всего присутствует условие, что вся статика должна быть в отдельной корневой папке static). 
+Одновременно <code>STATICFILES_DIRS</code> и <code>STATIC_ROOT</code> не могут существовать в одном файле</p>
+<p><code>STATICFILES_DIRS</code> и <code>STATIC_ROOT</code> в Django выполняют разные функции.</p>
+<ul>
+<li>
+<p><code>STATICFILES_DIRS</code>: Это список папок, в которых Django 
+ищет статические файлы при выполнении команды collectstatic или при 
+использовании runserver в режиме отладки. Обычно используется для файлов,
+которые изменяются в процессе разработки.</p>
+</li>
+<li>
+<p><code>STATIC_ROOT</code>: Это путь к папке, в которую собираются (копируются) 
+все статические файлы из приложений Django при выполнении команды 
+collectstatic. Эта папка используется для предоставления статических 
+файлов в production, когда ваш веб-сервер отдает файлы напрямую, а не 
+через Django.</p>
+</li>
+</ul>
+<p>Перезапустите сервер и проверьте, что переменные окружения правильно подтянулись и всё работоспособно.</p>
+<hr />
+<blockquote>
+<p>Одно важное условие. На сервисе pythonanywhere не поддерживается postgreSQL на бесплатной основе, но поддерживается SQLite,
+поэтому у тех, кто работает с использованием postgre, то переключитесь на SQLite обратно.</p>
+</blockquote>
+<hr />
+<p>Обновите файл <code>requirements.txt</code>, чтобы внести в него новые модули и была возможность восстановить окружение</p>
+<p><code>pip freeze &gt; requirements.txt</code></p>
+<p>Сделайте коммит ваших изменений</p>
+<blockquote>
+<p>Не включайте в коммит файл .env. 
+Так как чтобы .gitignore заработал сначала нужно его закоммитить, иначе если закоммитить в одном коммите и .gitignore и .env,
+то .env отправится на github, чего мы не хотим</p>
+</blockquote>
+<p>И отправьте всё на сервер github. </p>
+<h2 id="32-pythonanywhere">3.2 Деплой на сервис pythonanywhere</h2>
+<p>Зарегистрируйтесь на https://www.pythonanywhere.com/</p>
+<p>Создайте Web приложение нажав <code>“Add a new app”</code></p>
+<p><img alt="img_20.png" src="pic/update/img_20.png" /></p>
+<p>Ваш бесплатный домен, по которому вы можете получать доступ к вашему приложению. 
+Сохраните название этого домена, он понадобится чуть позже. Нажимаем Next</p>
+<p><img alt="img_21.png" src="pic/update/img_21.png" /></p>
+<p>Выбираем “Manual configuration”.</p>
+<p><img alt="img_22.png" src="pic/update/img_22.png" /></p>
+<p>Чтобы избежать непредвиденных ситуаций при развертывании выберите ту версию интерпретатора, которая была у вас на локальной машине.
+На текущий момент сервис ограничен python 3.10, поэтому если использовали python 3.11 и 3.12, то в теории проблем не должно быть
+если выберете 3.10.</p>
+<p><img alt="img_23.png" src="pic/update/img_23.png" /></p>
+<p>Нажимаем Next и ждем пока создастся приложение</p>
+<p><img alt="img_24.png" src="pic/update/img_24.png" /></p>
+<p><img alt="img_25.png" src="pic/update/img_25.png" /></p>
+<p>В <code>pythonanywhere</code> выбираем <code>Consoles</code> и <code>Bash</code></p>
+<p><img alt="img_26.png" src="pic/update/img_26.png" /></p>
+<p>Перед вами откроется консоль, через которую вы сможете настроить удаленный сервер и загрузить туда ваш Django проект</p>
+<p><img alt="img_27.png" src="pic/update/img_27.png" /></p>
+<p>Далее необходимо склонировать <code>Ваш репозиторий</code> с github, что недавно пушили. 
+Возьмём ссылку с вашего репозитория</p>
+<blockquote>
+<p>Картинка ниже как пример (копируем свою ссылку)</p>
+</blockquote>
+<p><img alt="img_28.png" src="pic/update/img_28.png" /></p>
+<p>А затем с помощью команды загрузим проект на сервер:</p>
+<pre class="highlight"><code class="linenums">git clone &lt;url вашего репозитория&gt;
+</code></pre>
+
+<p>Как пример <code>git clone https://github.com/EgorOb/pythonPy110_part2_dev.git</code></p>
+<p><img alt="img_29.png" src="pic/update/img_29.png" /></p>
+<p>С помощью команды <code>ls</code> убедимся что в директории существует папка с названием нашего проекта и перейдём в нее с помощью команды</p>
+<pre class="highlight"><code class="linenums">cd &lt;название вашего репозитория&gt;
+</code></pre>
+
+<p><img alt="img_39.png" src="pic/update/img_39.png" /></p>
+<p>Далее нужно настроить виртуальное окружение, чтобы установить все зависимости, которые были установлены на вашей локальной машине. Создать виртуальное окружение можно с помощью команды</p>
+<pre class="highlight"><code class="language-python linenums">python -m venv &lt;название виртульного окружения&gt;
+</code></pre>
+
+<p>Создание окружения может занимать значительное время (на примере окружения с названием venv)</p>
+<p><img alt="img_40.png" src="pic/update/img_40.png" /></p>
+<p>Теперь следует активировать виртуальное окружение с помощью следующей команды</p>
+<pre class="highlight"><code class="linenums">source &lt;название виртуального окружения&gt;/bin/activate
+</code></pre>
+
+<p><img alt="img_41.png" src="pic/update/img_41.png" /></p>
+<p>Установим все зависимости из файла <code>requirements.txt</code></p>
+<pre class="highlight"><code class="linenums">pip install -r requirements.txt
+</code></pre>
+
+<p>Далее создайте файл <code>.env</code> и заполните его необходимыми данными:</p>
+<pre class="highlight"><code class="linenums">cp template.env .env
+</code></pre>
+
+<p>Любым удобным способом заполнить файл .env на удаленной машине (например, через графический интерфейс) Files -&gt; &lt;папка с вашим проектом&gt; -&gt; .env</p>
+<blockquote>
+<p>(Не обращаем внимания на название проекта, это пример)</p>
+</blockquote>
+<p><img alt="img_42.png" src="pic/update/img_42.png" /></p>
+<p>Скопируйте данные из вашего локального .env (все ключи) в .env на сервере </p>
+<p><img alt="img_43.png" src="pic/update/img_43.png" /></p>
+<blockquote>
+<p>Обратите внимание, SECRET_KEY как на локальной машине, ALLOWED_HOSTS согласно вашему домену, 
+полученному на шаге, когда просили сохранить адрес (если вдруг не сохранили этот адрес, то он есть на вкладке Web)</p>
+</blockquote>
+<p>Зеленая кнопка, чтобы сохранить результат</p>
+<p><img alt="img_44.png" src="pic/update/img_44.png" /></p>
+<p>Возвращаемся в консоль и прописываем команду для сбора всех статических файлов в одном месте (это условие сервера)</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py collectstatic
+</code></pre>
+
+<p><img alt="img_45.png" src="pic/update/img_45.png" /></p>
+<p>Подготовка среды закончена теперь, нужно настроить приложение. Переходим во вкладку Web</p>
+<p><img alt="img_46.png" src="pic/update/img_46.png" /></p>
+<p>Находим блок “Code”, настраиваем папку с исходным кодом вашего проекта и рабочей директорией. Не обращаем внимание, что написано VegetableStore, это прошлый проект, в вашем случае будет папка с которой работаете на сервере 
+(будет называться как ваш репозиторий)</p>
+<p><img alt="img_47.png" src="pic/update/img_47.png" /></p>
+<p>Далее нужно настроить “WSGI configuration file”: нажимаем на синюю ссылку</p>
+<p><img alt="img_48.png" src="pic/update/img_48.png" /></p>
+<p>В wsgi файле комментируем (работает комбинация Ctrl+/) 19-47 строки</p>
+<p><img alt="img_49.png" src="pic/update/img_49.png" /></p>
+<p>Раскомментируем 76-89 строки отвечающие за wsgi для Django</p>
+<p><img alt="img_50.png" src="pic/update/img_50.png" /></p>
+<p>Далее нужно настроить путь до файлов с настройками вашего приложения (файл settings.py) и файла, который управляет вашим приложением (manage.py). Переменная path должна быть равна пути до вашего проекта</p>
+<p>Было</p>
+<p><img alt="img_51.png" src="pic/update/img_51.png" /></p>
+<p>Стало</p>
+<p><img alt="img_52.png" src="pic/update/img_52.png" /></p>
+<p>Переменная окружения на ваш модуль с настройками проекта должна быть изменена в соответствии с названием вашего проекта. Подсмотреть её значение можно в файле wsgi.py вашего Django проекта</p>
+<p><img alt="img_53.png" src="pic/update/img_53.png" /></p>
+<p>Было</p>
+<p><img alt="img_54.png" src="pic/update/img_54.png" /></p>
+<p>Стало</p>
+<p><img alt="img_55.png" src="pic/update/img_55.png" /></p>
+<p>Также нужно подгрузить переменные среды, находящиеся в файле .env</p>
+<pre class="highlight"><code class="language-python linenums">from dotenv import load_dotenv
+
+load_dotenv(os.path.join(path, '.env'))
+</code></pre>
+
+<p><img alt="img_56.png" src="pic/update/img_56.png" /></p>
+<p>Сохраняем файл. Кнопка Save</p>
+<p><img alt="img_57.png" src="pic/update/img_57.png" /></p>
+<p>Настраиваем путь до вашего виртуального окружения во вкладке Web</p>
+<p><code>&lt;путь до проекта&gt;/&lt;названием виртуального окружения&gt;</code></p>
+<p><img alt="img_58.png" src="pic/update/img_58.png" /></p>
+<p>Во вкладке Web настраиваем раздел “Static files”:</p>
+<ul>
+<li>URL = STATIC_URL из settings.py</li>
+<li>Directory = &lt;путь до проекта&gt;/&lt;название папки со статическими файлами&gt;</li>
+</ul>
+<p><img alt="img_59.png" src="pic/update/img_59.png" /></p>
+<p>В данном сервисе проблематично указывать статические файлы для каждого приложения, придётся делать это вручную. 
+Выход вынести все статические файлы в одну папку, что мы и сделали при вынесении папки со статическими файлами в корень проекта (collectstatic)</p>
+<p>Перезапускаем приложение (зеленая кнопка, нужно будет подождать определенное время) и переходим по ссылке выше (доменное имя)</p>
+<p><img alt="img_60.png" src="pic/update/img_60.png" /></p>
+<p>В результате, если всё сделано верно теперь на сервисе развернуто приложение с аналогичным функционалом как на локальной машине и можно будет его проверить через любой браузер по вашему доменному имени.</p>
+<p>Теперь по адресной ссылке, на сайт можно зайти с любого устройства поддерживающее интернет соединение.</p>
+<p><img alt="img_61.png" src="pic/update/img_61.png" /></p>
+<p>Обычно на практике никто не сохраняет БД на github, 
+так как базы данных не должны также храниться в открытом месте, но в качестве упрощения себе жизни в .gitignore 
+не стоит строчка с игнорированием базы данных Django (которая по умолчанию SQLite). </p>
+<hr />
+<blockquote>
+<p>Если база не перенеслась или поставили игнорирование базы в .gitignore, то необходимо создать таблицы в БД
+командой в консоле сервиса (обратите внимание, что в консоле должно быть активировано виртуальное окружение)</p>
+</blockquote>
+<pre class="highlight"><code class="language-python linenums">python manage.py migrate
+</code></pre>
+
+<blockquote>
+<p>Затем в вашем локальном проекте сделайте <code>dumpdata</code> вашей БД, перенесите этот файл на pythonanywhere и сделайте <code>loaddata</code> вашего файла</p>
+</blockquote>
+<hr />
+<h1 id="_2">Практика окончена</h1>
+<h2 id="33-pythonanywhere">3.3. Частые вопросы после развертки первого приложения на pythonanywhere</h2>
+<ul>
+<li>Как быстро перейти в консоль с виртуальным окружением?</li>
+</ul>
+<blockquote>
+<p>Можно зайти во вкладку Consoles и выбрать там вашу рабочую консоль. 
+На бесплатном аккаунте можно создать и поддерживать только 2 консоли. Закрыть консоль можно
+на крестик.</p>
+</blockquote>
+<p><img alt="img_66.png" src="pic/update/img_66.png" /></p>
+<blockquote>
+<p>Если вдруг нет той консоли в которой работали, то через вкладку 
+Web можно зайти в консоль под виртуальной средой</p>
+</blockquote>
+<p><img alt="img_67.png" src="pic/update/img_67.png" /></p>
+<ul>
+<li>Где посмотреть, если что-то упало и сайт не отображается?</li>
+</ul>
+<blockquote>
+<p>В логе ошибок на вкладке Web</p>
+</blockquote>
+<p><img alt="img_62.png" src="pic/update/img_62.png" /></p>
+<ul>
+<li>Я реализовал новый функционал в локальном проекте! Как это перенести на сервис?</li>
+</ul>
+<blockquote>
+<p>Перенос на сервис идёт по этапам получения изменений с github. Поэтому что необходимо:
+1. Запуште ваши изменения на github (Если скачивали и использовали новые модули, 
+то перед отправлением на гитхаб сначала обновите requirements.txt.)
+2. Подтяните ваши изменения с github на сервис используя команду <code>git pull</code>
+   * Есть определенная вероятность, что произойдет конфликт при слиянии(так как на гитхабе и на сервисе 
+   вы можете работать и изменять одни и теже файлы и нужно будет выбрать что с этим делать). Один из способов это 
+   откатить определенные изменения до последнего известного коммита на сервере, а затем снова сделать <code>git pull</code>.
+   Допустим часто такое бывает когда база данных не записана в .gitignore и на локальном проекте и на сервере отличается, так как они должны находиться там,
+   где используются, и соответственно могут иметь различия. Тогда можно попробовать откатить изменения до последнего известного коммита на сервере
+   при помощи команды  <code>git reset</code>, <code>git restore</code>, <code>git rm</code>, однако если данные что есть на сервере нужны, то придётся решать конфликт слияния (что для обычных файлов не так сложно, но бывает проблематично для баз данных).
+3. Если после подтягивания ваших изменений вы использовали новые статические файлы или делали новые таблицы в базе данных, то можно использовать команды
+<code>python manage.py collectstatic</code> или <code>python manage.py migrate</code>
+4. Перезапустите ваш сервер и теперь сервис будет с актуальными изменениями.</p>
+</blockquote>
+<p>Пример ошибки при подтягивании изменений</p>
+<p><img alt="img_68.png" src="pic/update/img_68.png" /></p>
+<p>Сообщение об ошибке говорит о том, что у вас есть непроиндексированные (untracked) 
+файлы в рабочем каталоге, которые перезапишутся при слиянии (merge). 
+Прежде чем продолжить, вам нужно решить проблему с этими файлами. </p>
+<p>Вот несколько шагов, которые вы можете предпринять:</p>
+<ol>
+<li>
+<p>Если файлы на сервере просто не нужны, то можно их удалить, <code>rm cart.json wishlist.json</code>, а 
+затем сделать <code>git pull</code></p>
+</li>
+<li>
+<p>Если пока не известно нужны они и нет, то можно их добавить в систему контроля версий <code>git add cart.json wishlist.json</code>
+сделать временное сохранения изменений без фиксации (commit) <code>git stash</code>, затем сделать <code>git pull</code>, 
+и уже решить что делать с теми файлами или их применять <code>git stash apply</code> и решать что оставлять что на сервере или на github 
+или удалить эти файлы из временных  <code>git stash drop</code>.</p>
+</li>
+<li>
+<p>Также можно добавить файлы в систему индексации <code>git add cart.json wishlist.json</code>, сделать коммит <code>git commit -m 'текст описания коммита'</code>,
+а уже затем при <code>git pull</code> разбираться с коммитом слияния.</p>
+</li>
+</ol>
+<p>Для примера рассмотрю второй вариант.</p>
+<p><img alt="img_70.png" src="pic/update/img_70.png" /></p>
+<ul>
+<li>Полезные команды git для работы с терминалом pythonanywhere</li>
+</ul>
+<blockquote>
+<ol>
+<li>
+<p><code>git restore &lt;file&gt;</code> - откатить файл до последнего известного коммита. 
+Без изменения истории коммитов.
+Применяется только к файлам которые есть в системе индексации. 
+Откатывает до последнего известного состояния в системе индексации. 
+Т.е. если файл до этого не был в системе индексации, то откатить его не получится, даже если добавить в систему индексации).</p>
+</li>
+<li>
+<p><code>git revert &lt;commit&gt;</code> - создает новый коммит, который отменяет изменения, внесенные предыдущим коммитом.
+Удобно когда нужно откатиться к определенному коммиту в ветке, без потери всей истории, что была после этого коммита.</p>
+</li>
+<li>
+<p><code>git stash</code> - используется для временного сохранения изменений, 
+чтобы вы могли переключиться на другую ветку без фиксации (commit) изменений. 
+После git stash можно безопасно сделать git pull, затем нужно решить, что делать с данными временными файлами.</p>
+</li>
+<li><code>git stash apply</code>: Эта команда применяет последний stash к вашему текущему рабочему дереву, но не удаляет stash.</li>
+<li><code>git stash pop</code>: Эта команда также применяет последний stash, но при этом удаляет его из списка stash.</li>
+<li>
+<p><code>git stash drop</code>: Эта команда удаляет последний stash без его применения к текущему рабочему дереву.</p>
+</li>
+<li>
+<p><code>git reset</code> - используется для сброса текущей ветки к определенному коммиту. 
+По умолчанию сбрасывает до последнего коммита, но можно явно указать до какого.
+Есть 3 варианта сброса:</p>
+</li>
+<li>
+<p><code>git reset --soft &lt;commit&gt;</code> - Этот вариант устанавливает указатель HEAD и текущую ветку на определенный коммит, но оставляет изменения в индексе. 
+Это полезно, если вы хотите объединить несколько коммитов в один.</p>
+</li>
+<li>
+<p><code>git reset --mixed &lt;commit&gt;</code> (стоит по умолчанию <code>git reset &lt;commit&gt;</code>) - Этот вариант по умолчанию, 
+и он устанавливает указатель HEAD и текущую ветку на определенный коммит, 
+а также сбрасывает изменения в индексе. Рабочий каталог остается неизменным. Файлы выходят из системы контроля версий, но при это не удаляются.</p>
+</li>
+<li>
+<p><code>git reset --hard &lt;commit&gt;</code> - Этот вариант устанавливает указатель HEAD и текущую ветку на определенный коммит. 
+Все изменения в вашем рабочем каталоге и индексе будут потеряны. Будьте осторожны с этой командой, так как она изменяет историю и может привести к потере данных.</p>
+</li>
+<li>
+<p><code>git rm &lt;file&gt;</code> - удаляет файл из индекса и из рабочего каталога.</p>
+</li>
+</ol>
+</blockquote>
+<ul>
+<li>Можно ли включить защищенное соединение?</li>
+</ul>
+<blockquote>
+<p>Да, сервис pythonanywhere позволяет работать с протоколом https. Forse HTTPS перевести в Enable. 
+Необходимо перезагрузить сервер</p>
+</blockquote>
+<p><img alt="img_63.png" src="pic/update/img_63.png" /></p>
+<p><img alt="img_64.png" src="pic/update/img_64.png" /></p>
+<ul>
+<li>Как перевести сервис из режима дебага?</li>
+</ul>
+<blockquote>
+<p>В параметрах DEBUG в <code>.env</code> на вашем сервисе с <code>true</code> поменяйте на <code>false</code> (необходимо сохранить, 
+а затем перезапустить сервер)</p>
+</blockquote>
+<hr />
+<!-- # <a name="section-optional-block"></a> <u>Необязательный блок</u> (выполнение по желанию) -->
+
+</div>
+        </body>
+        </html>
+    

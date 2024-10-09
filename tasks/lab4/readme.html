@@ -1,0 +1,969 @@
+
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Оглавление</title>
+
+            <link rel="stylesheet" href="/js_css/main.css">
+            <link rel="stylesheet" href="/js_css/default.min.css">
+            <!-- Подключаем js -->
+            <script src="/js_css/copy.js"></script>
+            <script src="/js_css/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
+        </head>
+        <body>
+            <div class="sidebar">
+<ul>
+<li><a href="#1-genericapiview">1. Использование GenericApiView</a><ul>
+<li><a href="#11-mixin">1.1. Что ещё mixin и зачем они нужны?</a></li>
+<li><a href="#12-rest_frameworkgenerics">1.2. Что ещё есть в rest_framework.generics?</a></li>
+<li><a href="#13-genericapiview">1.3 Создание представления на GenericApiView</a></li>
+</ul>
+</li>
+<li><a href="#2-viewset">2. Использование ViewSet</a><ul>
+<li><a href="#21">2.1 Создание представления</a><ul>
+<li><a href="#211-viewset">2.1.1 ViewSet</a></li>
+<li><a href="#212-genericviewset">2.1.2 GenericViewSet</a></li>
+<li><a href="#213-readonlymodelviewset">2.1.3 ReadOnlyModelViewSet</a></li>
+<li><a href="#214-modelviewset">2.1.4 ModelViewSet</a></li>
+</ul>
+</li>
+<li><a href="#22">2.2 Маршрутизация</a></li>
+<li><a href="#23">2.3 Поддерживание дополнительных действий</a></li>
+<li><a href="#24">2.4 Ограничение поддерживаемых методов для всего представления</a></li>
+</ul>
+</li>
+<li><a href="#3">3. Пагинация</a></li>
+<li><a href="#4">4. Фильтрация</a><ul>
+<li><a href="#41-get_queryset">4.1 Переопределение get_queryset</a></li>
+<li><a href="#42-djangofilterbackend">4.2 Использование DjangoFilterBackend</a></li>
+</ul>
+</li>
+<li><a href="#5">5. Тестирование</a><ul>
+<li><a href="#51-authorviewset">5.1 Тестирование AuthorViewSet</a></li>
+<li><a href="#52">5.2 Самостоятельно (по желанию)</a></li>
+</ul>
+</li>
+<li><a href="#_1">Практика окончена</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 id="1-genericapiview">1. Использование GenericApiView</h1>
+<p><code>GenericAPIView</code> - это представление в Django REST Framework, которое предоставляет множество удобных методов и функциональности для работы с API 
+на основе обобщенных (<code>generic</code>) представлений. 
+Они представляют собой высокоуровневый способ создания API, который обрабатывает множество типичных сценариев, 
+таких как создание, чтение, обновление и удаление объектов.</p>
+<p><code>GenericAPIView</code> - это просто более высокоуровневое представление <code>APIView</code> </p>
+<p>Преимущества использования <code>GenericAPIView</code>:</p>
+<ul>
+<li>
+<p><code>Упрощенный код</code>: <code>GenericAPIView</code> позволяет сократить количество кода благодаря использованию предварительно 
+реализованных методов для типичных операций <code>CRUD</code> (<code>Create</code>, <code>Retrieve</code>, <code>Update</code>, <code>Delete</code>).</p>
+</li>
+<li>
+<p><code>Гибкость и настраиваемость</code>: Они предоставляют гибкую и настраиваемую структуру для создания API, 
+позволяя вам добавлять пользовательский функционал при необходимости.</p>
+</li>
+<li>
+<p><code>Уменьшение вероятности ошибок</code>: Использование стандартных методов и функциональности в <code>GenericAPIView</code> помогает 
+снизить вероятность ошибок и упростить отладку.</p>
+</li>
+</ul>
+<p><code>GenericAPIView</code> находится в <code>rest_framework.generics</code></p>
+<p>Прежде чем окунуться в то, какие есть generic представления и как ими пользоваться необходимо уточнить, что <code>GenericAPIView</code>
+это базовый класс, который имеет определенную функциональность, но лишен управлять поведением запросов из коробки, т.е. 
+как в случае с <code>APIView</code> необходимо прописывать <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code> запросы вручную. Однако нам на помощь приходят
+специальные классы, их называют миксины, которые за счет наследования помогают добавить основные действия <code>CRUD</code> по управлению.</p>
+<h2 id="11-mixin">1.1. Что ещё mixin и зачем они нужны?</h2>
+<p><code>Mixin</code> - это специальный тип класса в объектно-ориентированном программировании, который используется для добавления 
+функциональности в классы, не создавая циклических зависимостей или дублирования кода. Они представляют собой небольшие, 
+легко переиспользуемые блоки функциональности, которые могут быть добавлены к классам через множественное наследование.</p>
+<p>Миксины (mixins) расположены в <code>rest_framework.mixins</code></p>
+<p>В Django REST Framework (rest_framework.mixins) mixin-классы предоставляют небольшие кусочки поведения, которые можно добавлять 
+к представлениям API. Они позволяют вам быстро расширять функциональность ваших представлений, добавляя дополнительные методы и функции.</p>
+<p><code>mixin-классы</code> в Django REST Framework и их назначение:</p>
+<ul>
+<li>
+<p><code>CreateModelMixin</code> - Добавляет метод <code>create()</code> для создания нового объекта модели.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.mixins</code>)</p>
+</blockquote>
+<p><img alt="img_11.png" src="pic/img_11.png" /></p>
+</li>
+<li>
+<p><code>ListModelMixin</code> - Добавляет метод <code>list()</code> для получения списка объектов модели</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.mixins</code>)</p>
+</blockquote>
+<p><img alt="img_12.png" src="pic/img_12.png" /></p>
+</li>
+<li>
+<p><code>RetrieveModelMixin</code> - Добавляет метод <code>retrieve()</code> для получения конкретного объекта модели по его идентификатору</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.mixins</code>)</p>
+</blockquote>
+<p><img alt="img_13.png" src="pic/img_13.png" /></p>
+</li>
+<li>
+<p><code>UpdateModelMixin</code> - Добавляет метод <code>update()</code> для обновления существующего объекта модели</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.mixins</code>)</p>
+</blockquote>
+<p><img alt="img_14.png" src="pic/img_14.png" /></p>
+</li>
+<li>
+<p><code>DestroyModelMixin</code> - Добавляет метод <code>destroy()</code> для удаления существующего объекта модели</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.mixins</code>)</p>
+</blockquote>
+<p><img alt="img_15.png" src="pic/img_15.png" /></p>
+</li>
+</ul>
+<p>Допустим вот пример кода (для ознакомления):</p>
+<pre class="highlight"><code class="language-python linenums">class AuthorGenericAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+</code></pre>
+
+<p>Здесь мы добавляем возможность поддерживать отображения списочной информации <code>ListModelMixin</code> (GET) запрос 
+и добавления информации <code>CreateModelMixin</code> (POST) запрос</p>
+<p>Но если попытаться выполнить запрос, чтобы это представление отрабатывало, то вернется ошибка с текстом, что данный метод запроса не доступен</p>
+<p><img alt="img.png" src="pic/img.png" /></p>
+<p>Как в <code>APIView</code>, так и в <code>GenericAPIView</code> необходимо явно прописывать методы, которые хотите, чтобы поддерживались, однако в <code>GenericAPIView</code> 
+тогда необходимо явно прописать какие именно методы из mixins вызываются в методах <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code></p>
+<p>(для ознакомления)</p>
+<pre class="highlight"><code class="language-python linenums">class AuthorGenericAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+</code></pre>
+
+<p><img alt="img_1.png" src="pic/img_1.png" /></p>
+<h2 id="12-rest_frameworkgenerics">1.2. Что ещё есть в rest_framework.generics?</h2>
+<p>Теперь когда разобрались с тем что такое миксины и как они применяются, то самое время разобраться какие 
+есть ещё общие представления в <code>rest_framework.generics</code></p>
+<p>В <code>rest_framework.generics</code> есть несколько классов, которые обеспечивают базовую функциональность для создания обобщенных 
+представлений в Django REST Framework. Вот основные классы и их назначение:</p>
+<ul>
+<li><code>GenericAPIView</code>: Представляет базовое обобщенное представление API.
+Он предоставляет ряд методов и атрибутов, которые позволяют обрабатывать различные типы запросов HTTP и взаимодействовать с сериализаторами и моделями.
+Обычно используется в сочетании с одним или несколькими "mixin" классами для добавления функциональности.
+Например, ListModelMixin для поддержки операции списка (GET), CreateModelMixin для операции создания (POST) и т. д.</li>
+</ul>
+<p><code>(код GenericAPIView из DRF не предоставлен, так как большой)</code></p>
+<ul>
+<li>
+<p><code>ListAPIView</code>: Предоставляет обобщенное представление для получения списка объектов.
+Он наследует GenericAPIView и использует ListModelMixin для добавления поддержки операции списка (GET).</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_2.png" src="pic/img_2.png" /></p>
+</li>
+<li>
+<p><code>RetrieveAPIView</code>: Предоставляет обобщенное представление для получения конкретного объекта по его идентификатору.
+Он наследует GenericAPIView и использует RetrieveModelMixin для добавления поддержки операции получения (GET) конкретного объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_4.png" src="pic/img_4.png" /></p>
+</li>
+<li>
+<p><code>CreateAPIView</code>: Предоставляет обобщенное представление для создания нового объекта.
+Он наследует GenericAPIView и использует CreateModelMixin для добавления поддержки операции создания (POST) нового объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_3.png" src="pic/img_3.png" /></p>
+</li>
+<li>
+<p><code>UpdateAPIView</code>: Предоставляет обобщенное представление для обновления существующего объекта.
+Он наследует GenericAPIView и использует UpdateModelMixin для добавления поддержки операции обновления (PUT) существующего объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_5.png" src="pic/img_5.png" /></p>
+</li>
+<li>
+<p><code>DestroyAPIView</code>: Предоставляет обобщенное представление для удаления существующего объекта.
+Он наследует GenericAPIView и использует DestroyModelMixin для добавления поддержки операции удаления (DELETE) существующего объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_6.png" src="pic/img_6.png" /></p>
+</li>
+</ul>
+<p>В добавок существуют уже созданные классы, комбинирующие в себе несколько типовых миксинов:</p>
+<ul>
+<li>
+<p><code>ListCreateAPIView</code>: Предоставляет обобщенное представление для получения списка объектов и создания нового объекта.
+Он наследует <code>GenericAPIView</code> и использует <code>ListModelMixin</code> и <code>CreateModelMixin</code> для добавления поддержки операций списка (GET) и создания (POST) нового объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_7.png" src="pic/img_7.png" /></p>
+</li>
+<li>
+<p><code>RetrieveUpdateAPIView</code>: Предоставляет обобщенное представление для получения и обновления конкретного объекта. 
+Он наследует GenericAPIView и использует RetrieveModelMixin и UpdateModelMixin для добавления поддержки операций получения (GET) и обновления (PUT) существующего объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_8.png" src="pic/img_8.png" /></p>
+</li>
+<li>
+<p><code>RetrieveDestroyAPIView</code>: Предоставляет обобщенное представление для получения и удаления конкретного объекта.
+Он наследует <code>GenericAPIView</code> и использует <code>RetrieveModelMixin</code> и <code>DestroyModelMixin</code> для добавления поддержки операций получения (GET) и удаления (DELETE) существующего объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_9.png" src="pic/img_9.png" /></p>
+</li>
+<li>
+<p><code>RetrieveUpdateDestroyAPIView</code>: Предоставляет обобщенное представление для получения, изменения и удаления конкретного объекта.
+Он наследует <code>GenericAPIView</code> и использует <code>RetrieveModelMixin</code>, <code>UpdateModelMixin</code> и <code>DestroyModelMixin</code> для добавления поддержки операций получения (GET), обновления (PUT, PATCH) и удаления (DELETE) 
+существующего объекта.</p>
+<blockquote>
+<p>(код DRF из <code>rest_framework.generics</code>)</p>
+</blockquote>
+<p><img alt="img_10.png" src="pic/img_10.png" /></p>
+</li>
+</ul>
+<p>Эти классы позволяют создавать обобщенные представления API с различными комбинациями операций CRUD (Create, Retrieve, Update, Delete), что делает разработку API более быстрой и удобной.</p>
+<h2 id="13-genericapiview">1.3 Создание представления на GenericApiView</h2>
+<p>Теперь уже с полным понимаем мы готовы создать и использовать представления на <code>GenericApiView</code></p>
+<p>Во <code>views.py</code> приложения <code>api</code> создайте <code>AuthorGenericAPIView</code></p>
+<pre class="highlight"><code class="language-python linenums">from django.http import Http404
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+from .serializers import AuthorModelSerializer
+
+
+class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin,
+                           DestroyModelMixin):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+
+    def get(self, request, *args, **kwargs):
+        if kwargs.get(self.lookup_field):  # если был передан id или pk
+            # возвращаем один объект
+            return self.retrieve(request, *args, **kwargs)
+        # Иначе возвращаем список объектов
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+</code></pre>
+
+<p>Так образом мы записали аналогичные действия как в <code>AuthorAPIView</code>, но с <code>GenericAPIView</code> и миксинами.</p>
+<p>В методе <code>get</code> было использовано <code>if kwargs.get(self.lookup_field)</code> чтобы проверить, что был передан соответствующий ключ
+pk, чтобы понять хотим мы всё получить или только какого-то конкретного автора.</p>
+<p>Осталось только создать новый маршрут, чтобы использовать данное представление</p>
+<p>в <code>urls.py</code> приложения <code>api</code> допишите маршруты</p>
+<pre class="highlight"><code class="language-python linenums">from .views import AuthorGenericAPIView
+
+urlpatterns = [
+    # ...
+    path('authors_generic/', AuthorGenericAPIView.as_view(), name='author-generic-list'),
+    path('authors_generic/&lt;int:pk&gt;/', AuthorGenericAPIView.as_view(), name='author-generic-detail'),
+]
+</code></pre>
+
+<p>Проверьте работоспособность маршрутов </p>
+<p>http://127.0.0.1:8000/api/authors_generic/</p>
+<p>http://127.0.0.1:8000/api/authors_generic/1/</p>
+<p>http://127.0.0.1:8000/api/authors_generic/30/</p>
+<p>На последнем запросе возникает ошибка, так как автора не существует, о чем свидетельствует сообщение</p>
+<p><img alt="img_16.png" src="pic/img_16.png" /></p>
+<p>Допустим нам не нравится сообщение или по какому ключу оно отправлено, тогда его можно изменить отловив эту ошибку и отправив свой текст</p>
+<pre class="highlight"><code class="language-python linenums">from django.http import Http404
+
+
+class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin,
+                           DestroyModelMixin):
+    # ...
+
+    def get(self, request, *args, **kwargs):
+        if kwargs.get(self.lookup_field):
+            try:
+                # возвращаем один объект
+                return self.retrieve(request, *args, **kwargs)
+            except Http404:
+                return Response({'message': 'Автор не найден'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Иначе возвращаем список объектов
+            return self.list(request, *args, **kwargs)
+
+    # ...
+</code></pre>
+
+<p>Теперь если нет автора, то сообщение то, что и хотели</p>
+<p><img alt="img_17.png" src="pic/img_17.png" /></p>
+<p>Далее проверим работоспособность POST метода через DRF панель.</p>
+<p>Если пролистать вниз, то можно обнаружить, что теперь появилась форма для отправки запросов, а не просто сырой json</p>
+<p><img alt="img_18.png" src="pic/img_18.png" /></p>
+<p>При отправке создастся новый автор</p>
+<p>Остальные методы <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code> проверьте самостоятельно через DRF панель</p>
+<h1 id="2-viewset">2. Использование ViewSet</h1>
+<p>Поднимаемся на уровень абстрации повыше и там нас встречает <code>ViewSet</code></p>
+<p><code>ViewSet</code> в Django REST Framework - это удобный способ организации логики представлений API для работы с моделями. 
+Он представляет собой класс, который объединяет несколько типов представлений 
+(например, просмотр списка объектов, создание нового объекта, получение конкретного объекта, обновление объекта и удаление объекта) в один. 
+Это позволяет упростить код и уменьшить его дублирование.</p>
+<p><code>ViewSet</code> может работать как с обычными представлениями, так и с обобщенными представлениями 
+(например, <code>ListModelMixin</code>, <code>CreateModelMixin</code>, <code>RetrieveModelMixin</code>, <code>UpdateModelMixin</code>, <code>DestroyModelMixin</code>). 
+Он предоставляет стандартные методы для каждой операции CRUD (<code>Create</code>, <code>Retrieve</code>, <code>Update</code>, <code>Delete</code>), которые могут 
+быть переопределены по мере необходимости.</p>
+<p>Для использования <code>ViewSet</code> в Django REST Framework нужно сначала создать класс, наследующийся от одного из базовых классов 
+<code>ViewSet</code> (<code>ViewSet</code>, <code>GenericViewSet</code>, <code>ReadOnlyModelViewSet</code>, <code>ModelViewSet</code>) 
+и определить логику для каждой операции, если это необходимо. Затем этот класс регистрируется с помощью маршрутизатора 
+(например, <code>DefaultRouter</code> или <code>SimpleRouter</code>), чтобы он мог быть доступен по определенным URL.</p>
+<h2 id="21">2.1 Создание представления</h2>
+<h3 id="211-viewset">2.1.1 ViewSet</h3>
+<p>Класс <code>ViewSet</code> это расширение <code>APIView</code> вместе со специальным миксин классом <code>ViewSetMixin</code>, который позволяет задавать 
+дополнительные действия</p>
+<p><img alt="img_19.png" src="pic/img_19.png" /></p>
+<p>Ниже приведен код просто для ознакомления, чтобы посмотреть как бы выглядел код представления с использованием <code>ViewSet</code></p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework import viewsets
+from rest_framework.response import Response
+from .models import Author
+from .serializers import AuthorSerializer
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
+
+class AuthorViewSet(viewsets.ViewSet):
+    def list(self, request):
+        queryset = Author.objects.all()
+        serializer = AuthorSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Author.objects.all()
+        author = get_object_or_404(queryset, pk=pk)
+        serializer = AuthorSerializer(author)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = AuthorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        author = Author.objects.get(pk=pk)
+        serializer = AuthorSerializer(author, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def partial_update(self, request, pk=None):
+        author = Author.objects.get(pk=pk)
+        serializer = AuthorSerializer(author, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        author = Author.objects.get(pk=pk)
+        author.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+</code></pre>
+
+<p>Как видите, в отличие от <code>APIView</code>, где мы прописывали методы <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code>, то в <code>ViewSet</code>
+прописываем <code>list</code>, <code>retrieve</code>, <code>create</code>, <code>update</code>, <code>partial_update</code>, <code>destroy</code>. Всё встанет на свои места, 
+когда мы будем проводить маршрутизацию.</p>
+<p>Кода много, но полезно когда хотите держать всё под контролем. Этот подход требует больше кода по сравнению с использованием <code>ModelViewSet</code> или <code>GenericViewSet</code>, 
+но дает больше контроля над каждым методом представления.</p>
+<h3 id="212-genericviewset">2.1.2 GenericViewSet</h3>
+<p>Класс <code>GenericViewSet</code> это расширение <code>GenericAPIView</code> вместе со специальным миксин классом <code>ViewSetMixin</code>, который позволяет задавать 
+дополнительные действия</p>
+<p><img alt="img_20.png" src="pic/img_20.png" /></p>
+<p>Приведенный код снова просто для ознакомления, чтобы посмотреть как бы выглядел код представления с использованием <code>GenericViewSet</code>. 
+Ранее мы выяснили, что в Generic нужно передавать mixins, иначе всё нужно будет писать руками, поэтому код особо не будет отличаться от
+кода выше, единственное, что в GenericViewSet доступен классовый атрибут <code>queryset</code> и <code>serializer_class</code>, которого нет в обычном
+<code>ViewSet</code></p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework import viewsets
+from rest_framework.response import Response
+from .models import Author
+from .serializers import AuthorSerializer
+from rest_framework import status
+
+class AuthorViewSet(viewsets.GenericViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        author = self.get_object()
+        serializer = self.get_serializer(author)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        author = self.get_object()
+        serializer = self.get_serializer(author, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def partial_update(self, request, pk=None):
+        author = self.get_object()
+        serializer = self.get_serializer(author, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        author = self.get_object()
+        author.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+</code></pre>
+
+<h3 id="213-readonlymodelviewset">2.1.3 ReadOnlyModelViewSet</h3>
+<p>Расширение <code>GenericViewSet</code>, с добавлением методов <code>list()</code> и <code>retrieve()</code></p>
+<p><img alt="img_21.png" src="pic/img_21.png" /></p>
+<p>Класс не зря назван <code>ReadOnlyModelViewSet</code> так как в нём содержатся только методы для обработки GET запроса, без возможности
+изменения объектов в БД</p>
+<h3 id="214-modelviewset">2.1.4 ModelViewSet</h3>
+<p>Самый часто употребимый класс из блока ViewSet. Является расширением <code>GenericViewSet</code>, но зато каким! Класс расширен всеми доступными миксинами,
+т.е. сразу обладает методами <code>list</code>, <code>retrieve</code>, <code>create</code>, <code>update</code>, <code>partial_update</code>, <code>destroy</code>, которые <strong><em>если это не требуется (для вашей логики API или взаимодействия с БД),
+то не нужно переопределять</em></strong>.</p>
+<p><img alt="img_22.png" src="pic/img_22.png" /></p>
+<p>Так что код теперь будет таким, его и добавим во <code>views.py</code> приложения <code>api</code></p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework.viewsets import ModelViewSet
+
+class AuthorViewSet(ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+</code></pre>
+
+<p>Коротко и лаконично.</p>
+<h2 id="22">2.2 Маршрутизация</h2>
+<p>Осталось только зарегистрировать маршруты у нашего <code>AuthorViewSet</code></p>
+<p>Регистрация маршрутов в представлений типа <code>ViewSet</code> (<code>ViewSet</code>, <code>GenericViewSet</code>, <code>ReadOnlyModelViewSet</code>, <code>ModelViewSet</code>) 
+отличается от ранее используемых. Для этого используется специальный класс <code>DefaultRouter</code> или <code>SimpleRouter</code> в который передаётся ViewSet и название маршрута, затем
+уже данный роутер регистрируется более привычным способом.</p>
+<p>В <code>urls.py</code> приложения <code>api</code> пропишем</p>
+<pre class="highlight"><code class="language-python linenums">from django.urls import include
+from .views import AuthorViewSet
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'authors_viewset', AuthorViewSet, basename='authors-viewset')
+
+urlpatterns = [
+    # ...
+    path('', include(router.urls)),
+]
+</code></pre>
+
+<p>В этом коде:</p>
+<ul>
+<li>Создается экземпляр класса <code>DefaultRouter</code>.</li>
+<li>Представление <code>AuthorViewSet</code> регистрируется в роутере под именем <code>'authors_viewset'</code>.</li>
+</ul>
+<p>В роутере маршруты автоматически создадутся для каждого метода представления <code>AuthorViewSet</code> (GET, POST, PUT, PATCH, DELETE) 
+и будут доступны по URL <code>/authors_viewset/</code> для списка авторов и <code>/authors_viewset/&lt;pk&gt;/</code> для конкретного автора, 
+где <pk> - это первичный ключ автора.</p>
+<p>В Django REST Framework, когда вы используете <code>router.register()</code> для регистрации представления в роутере, 
+параметр <code>basename</code> определяет базовое имя для создаваемых URL. Это базовое имя используется при генерации именованных URL в представлениях, связанных с роутером.
+В общем случае это что-то похоже, что ранее передавалось в параметр <code>name</code> в <code>path</code></p>
+<p>Вот как это работает:</p>
+<p>Каждое представление, зарегистрированное в роутере, получает три именованных URL: 
+* <code>&lt;basename&gt;-list</code>, 
+* <code>&lt;basename&gt;-detail</code>, 
+* <code>&lt;basename&gt;-set</code>. </p>
+<p>Например, если вы укажете <code>basename='authors-viewset'</code>, то URL для списка объектов будет иметь имя <code>authors-viewset-list</code>, 
+для конкретного объекта - <code>author-detail</code>, 
+а для набора - <code>authors-viewset-set</code>.
+Эти имена можно использовать в методах reverse() или reverse_lazy() для генерации URL внутри вашего кода.</p>
+<p>Общий код во <code>views.py</code> выглядит так</p>
+<p><img alt="img_23.png" src="pic/img_23.png" /></p>
+<p>Теперь если пройти по маршруту http://127.0.0.1:8000/api/a чтобы посмотреть какие были созданы, то увидим, что router создал несколько
+маршрутов</p>
+<p><img alt="img_24.png" src="pic/img_24.png" /></p>
+<p>Всё остальное полностью работоспособно по маршрутам</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/10/</p>
+<h2 id="23">2.3 Поддерживание дополнительных действий</h2>
+<p><code>ModelViewSet</code> поддерживает написание пользовательский действий, т.е. методов (которые не вписываются в стандартные операции CRUD), которые будут вызываться при заходе на определенный путь.</p>
+<p>Вы можете указать, на каких типах запросов может запускаться пользовательское действие, используя атрибут <code>action</code> в методе <code>@action декоратора</code>. 
+Этот декоратор предоставляется Django REST Framework для добавления пользовательских действий к вашим представлениям ViewSet.
+По названию вашего метода будет сформирован маршрут с этим названием.</p>
+<p>Во <code>views.py</code> приложения <code>api</code> в <code>AuthorViewSet</code> пропишем</p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework.decorators import action
+from rest_framework.response import Response
+
+class AuthorViewSet(ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+
+    @action(detail=True, methods=['post'])
+    def my_action(self, request, pk=None):
+        # Ваша пользовательская логика здесь
+        return Response({'message': f'Пользовательская функция для пользователя с pk={pk}'})
+</code></pre>
+
+<p><code>@action(detail=True, methods=['post'])</code> указывает, что пользовательское действие custom_action доступно только для объектов, 
+а не для всего списка (<code>detail=True</code>), и может быть запущено только с HTTP методом POST (<code>methods=['post']</code>).</p>
+<p><code>pk=None</code> означает, что этот метод принимает параметр идентификатора (pk), который используется для получения объекта из базы данных.</p>
+<p>Таким образом, пользовательское действие <code>my_action</code> теперь доступно только для HTTP POST запросов и может быть вызвано только для конкретных объектов.</p>
+<p>Теперь появились новые маршруты</p>
+<p><img alt="img_25.png" src="pic/img_25.png" /></p>
+<p>GET Запрос не работает http://127.0.0.1:8000/api/authors_viewset/10/my_action/</p>
+<p>А вот POST работает</p>
+<p><img alt="img_26.png" src="pic/img_26.png" /></p>
+<h2 id="24">2.4 Ограничение поддерживаемых методов для всего представления</h2>
+<p>По умолчанию <code>ModelViewSet</code> поддерживает все методы <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, но это можно ограничить.</p>
+<p>Делается это на этапе создания представления в классовом атрибуте <code>http_method_names</code>, как пример </p>
+<pre class="highlight"><code class="language-python linenums">class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    http_method_names = ['get', 'post']
+</code></pre>
+
+<p>В таком случае представление <code>AuthorViewSet</code> будет поддерживать только методы <code>GET</code> и <code>POST</code></p>
+<h1 id="3">3. Пагинация</h1>
+<p>Пагинация - это процесс разделения большого списка данных на отдельные страницы для улучшения производительности и удобства использования. 
+Веб-приложения часто используют пагинацию для отображения больших объемов данных, таких как результаты поиска или список записей.</p>
+<p><code>DRF</code> предоставляет множество встроенных классов пагинации для различных видов пагинации, 
+таких как стандартная пагинация, курсорная пагинация, пагинация на основе номеров страниц и т. д.</p>
+<p>Чтобы применить пагинацию в <code>AuthorViewSet</code>, вы можете использовать классы пагинации <code>DRF</code> и настроить их в соответствии 
+с вашими потребностями. </p>
+<p>Например, вы можете добавить следующий код в ваш <code>AuthorViewSet</code>, чтобы применить стандартную пагинацию:</p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework.pagination import PageNumberPagination
+
+
+class AuthorPagination(PageNumberPagination):
+    page_size = 5  # количество объектов на странице
+    page_size_query_param = 'page_size'  # параметр запроса для настройки количества объектов на странице
+    max_page_size = 1000  # максимальное количество объектов на странице
+
+
+class AuthorViewSet(ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+    pagination_class = AuthorPagination
+
+    # Остальные методы
+</code></pre>
+
+<p>Пагинация применяется для результатов запроса метода <code>list()</code>, т.е. в нашем случае для <code>GET</code> запроса</p>
+<p>Отобразим всех авторов http://127.0.0.1:8000/api/authors_viewset/ теперь их будет всего 5 и будет ещё дополнительная информация.</p>
+<p><img alt="img_27.png" src="pic/img_27.png" /></p>
+<p>Передадим в запрос параметр <code>page</code> со значением страницы, которую хотим отобразить http://127.0.0.1:8000/api/authors_viewset/?page=2</p>
+<p>Пагинация работает, если ходим изменить число выводимых авторов, то это можно сделать прямо через параметр <code>page_size</code></p>
+<p>http://127.0.0.1:8000/api/authors_viewset/?page=1&amp;page_size=10 теперь отображается 10 авторов на странице.</p>
+<h1 id="4">4. Фильтрация</h1>
+<p>Для интересующихся можно почитать перевод <a href="https://django.fun/docs/django-rest-framework/3.12/api-guide/filtering/">документации</a></p>
+<p>По умолчанию общие представления списков в REST framework возвращают весь набор запросов для менеджера модели. 
+Часто вы хотите, чтобы ваш API ограничивал элементы, возвращаемые набором запросов.</p>
+<h2 id="41-get_queryset">4.1 Переопределение get_queryset</h2>
+<p>Самый простой способ фильтровать набор запросов любого представления, которое является подклассом <code>GenericAPIView</code> 
+(<code>GenericAPIView</code>, <code>GenericViewSet</code>, <code>ReadOnlyModelViewSet</code>, <code>ModelViewSet</code>) - это переопределить метод <code>get_queryset()</code>.</p>
+<p>Вы можете определить параметры запроса URL, которые будут использоваться для фильтрации данных. 
+Например, если у вас есть модель <code>Author</code>, и вы хотите фильтровать авторов по содержанию определенного слова в их имени(а не так как они выводятся по умолчанию), 
+вы можете сделать это следующим образом.</p>
+<pre class="highlight"><code class="language-python linenums">class AuthorViewSet(ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+    pagination_class = AuthorPagination
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        name = self.request.query_params.get('name')
+        if name:
+            queryset = queryset.filter(name__contains=name)
+        return queryset
+
+    # Остальные методы
+</code></pre>
+
+<p>Рассмотрите следующие запросы:</p>
+<p>Сначала без фильтрации</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/</p>
+<p>Затем с фильтрацией</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/?name=blog</p>
+<h2 id="42-djangofilterbackend">4.2 Использование DjangoFilterBackend</h2>
+<p>DRF также поддерживает стороннюю библиотеку <code>django-filter</code>, которая предоставляет более гибкий и мощный способ фильтрации данных. 
+Для использования <a href="https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html">django-filter</a> с <code>DRF</code>, вам необходимо настроить фильтры в соответствующем классе фильтра.</p>
+<p>Установим её</p>
+<pre class="highlight"><code class="language-python linenums">pip install django-filter
+</code></pre>
+
+<p>Затем добавьте <code>'django_filters'</code> к <code>INSTALLED_APPS</code> в корневой <code>settings.py</code>:</p>
+<p>Расширим <code>AuthorViewSet</code> во <code>views.py</code> приложения <code>api</code> </p>
+<pre class="highlight"><code class="language-python linenums">from django_filters.rest_framework import DjangoFilterBackend
+
+class AuthorViewSet(ModelViewSet):
+    # ...
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'email']  # Указываем для каких полем можем проводить фильтрацию
+</code></pre>
+
+<p>Если зайти в панель DRF, напримена на http://127.0.0.1:8000/api/authors_viewset/, то появится кнопка <code>Filters</code></p>
+<p><img alt="img_28.png" src="pic/img_28.png" /></p>
+<p>Где высветится поле</p>
+<p><img alt="img_29.png" src="pic/img_29.png" /></p>
+<p>Впишите туда <code>anna_journey</code> и нажмите submit</p>
+<p>Произойдет фильтрование, а в адресной строке вы увидите путь http://127.0.0.1:8000/api/authors_viewset/?name=anna_journey&amp;email=</p>
+<p>Аналогично можно проводить фильтрование по полям в адресной строке.</p>
+<p>В DRF есть свои встроенные фильтрации в модуле <code>from rest_framework import filters</code> такие как:</p>
+<ul>
+<li>
+<p><code>SearchFilter</code> - Этот фильтр позволяет выполнить поиск по определенным полям модели. Он работает путем фильтрации queryset на основе заданного поискового запроса, переданного в параметре запроса URL</p>
+</li>
+<li>
+<p><code>OrderingFilter</code> - Этот фильтр позволяет сортировать результаты запроса по заданным полям модели. Он работает путем сортировки queryset на основе заданных полей, переданных в параметре запроса URL.</p>
+</li>
+</ul>
+<p>Чтобы использовать эти фильтры, то необходимо прописать их в <code>filter_backends</code>, также при помощи <code>search_fields</code> и <code>ordering_fields</code> 
+прописываются поля участвующие в фильтрации для <code>SearchFilter</code> и <code>OrderingFilter</code> соответственно.</p>
+<p>Расширьте <code>AuthorViewSet</code></p>
+<pre class="highlight"><code class="language-python linenums">from rest_framework import filters
+
+class AuthorViewSet(ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorModelSerializer
+    pagination_class = AuthorPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['name', 'email']  # Указываем для каких полем можем проводить фильтрацию
+    search_fields = ['email']  # Поля, по которым будет выполняться поиск
+    ordering_fields = ['name', 'email']  # Поля, по которым можно сортировать
+
+    # ...
+</code></pre>
+
+<p>Теперь в панели DRF в Filters появились новые поля</p>
+<p><img alt="img_30.png" src="pic/img_30.png" /></p>
+<p>Поиск аналогично можно производить через адресную строку, по своим параметрам:</p>
+<ul>
+<li><code>search</code> - передаёте текст, который ищется в полях указанных в <code>search_fields</code>. Происходит поиск именно вхождения искомого 
+текста в текст записанного в поле, а не полное соответствие. Пример в каких строках БД таблицы Author в поле email содержится слово <code>user</code></li>
+</ul>
+<p>http://127.0.0.1:8000/api/authors_viewset/?search=user</p>
+<ul>
+<li><code>ordering</code> - сортировка, которое принимает название поле по которому можно сортировать 
+(среди допустимых полей описанных в <code>ordering_fields</code>) результат запроса. Можно передать несколько полей через запятую. По умолчанию
+сортировка идёт по возрастанию, чтобы сделать по убыванию, то перед названием поля ставим <code>-</code></li>
+</ul>
+<p>Пример вывода всех авторов отсортированных по имени</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/?ordering=name</p>
+<p>Отсортированных по имени в обратном порядке</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/?ordering=-name</p>
+<p>Запросы фильтрации можно комбинировать. Допустим вывести всех авторов у которых в имени есть user и отсортировать их в обратном порядке по полю email</p>
+<p>http://127.0.0.1:8000/api/authors_viewset/?search=user&amp;ordering=-email</p>
+<p>Комбинированные запросы выполняются в том порядке как описаны в filter_backends, т.е. в нашем случае сначала выполняется
+<code>DjangoFilterBackend</code>, затем <code>filters.SearchFilter</code>, затем <code>filters.OrderingFilter</code></p>
+<h1 id="5">5. Тестирование</h1>
+<p>Тестирование в Django REST Framework (DRF) обычно включает в себя проверку функциональности представлений API, 
+сериализаторов, роутинга и других компонентов вашего приложения. Вот несколько типов тестов, которые обычно используются при разработке в DRF:</p>
+<ul>
+<li>
+<p><code>Тесты представлений (Views)</code>:</p>
+</li>
+<li>
+<p>Проверка корректности ответа на запросы GET, POST, PUT, PATCH, DELETE.</p>
+</li>
+<li>Проверка обработки различных типов запросов (авторизованных и неавторизованных).</li>
+<li>
+<p>Тестирование обработки ошибок и возвращаемых статусов.</p>
+</li>
+<li>
+<p><code>Тесты сериализаторов (Serializers)</code>:</p>
+</li>
+<li>
+<p>Проверка корректности сериализации данных.</p>
+</li>
+<li>Тестирование валидации входных данных.</li>
+<li>
+<p>Проверка обработки различных типов данных (валидных и невалидных).</p>
+</li>
+<li>
+<p><code>Тесты маршрутизации (Routing)</code>:</p>
+</li>
+<li>
+<p>Проверка соответствия URL и представлений.</p>
+</li>
+<li>
+<p>Тестирование динамической маршрутизации (например, в случае использования router в DRF).</p>
+</li>
+<li>
+<p><code>Тесты аутентификации и авторизации</code>:</p>
+</li>
+<li>
+<p>Проверка корректности работы системы аутентификации.</p>
+</li>
+<li>
+<p>Тестирование доступа к защищенным ресурсам для авторизованных и неавторизованных пользователей.</p>
+</li>
+<li>
+<p><code>Интеграционные тесты</code>:</p>
+</li>
+<li>
+<p>Проверка взаимодействия различных компонентов приложения.</p>
+</li>
+<li>
+<p>Тестирование сценариев использования на основе реальных данных.</p>
+</li>
+<li>
+<p><code>Тесты производительности</code>:</p>
+</li>
+<li>
+<p>Проверка скорости ответа API при обработке запросов с большим объемом данных.</p>
+</li>
+<li>Тестирование масштабируемости приложения.</li>
+</ul>
+<p>Для написания тестов в DRF вы можете использовать стандартные инструменты тестирования Django, такие как <code>unittest</code> или <code>pytest</code>, 
+а также дополнительные библиотеки, специализированные для тестирования REST API, например, <code>django-rest-framework-test</code>. 
+Кроме того, DRF предоставляет некоторые вспомогательные классы для упрощения написания тестов, такие как <code>APITestCase</code>, <code>APIClient</code> и другие.</p>
+<h2 id="51-authorviewset">5.1 Тестирование AuthorViewSet</h2>
+<p>Тесты в Django пишутся в специальном файле <code>tests.py</code> в соответственном приложении. При запуске тестов в Django автоматически 
+формируется новая тестовая БД, с той же самой структурой что есть, но совершенно незаполненная.</p>
+<p>В файле <code>tests.py</code> приложения <code>api</code> пропишите</p>
+<pre class="highlight"><code class="language-python linenums">from django.test import TestCase
+from rest_framework.test import APITestCase
+from rest_framework import status
+from django.urls import reverse
+from apps.db_train_alternative.models import Author
+from .serializers import AuthorModelSerializer
+
+
+class AuthorViewSetTestCase(APITestCase):
+    fixtures = ['testdata.json']
+
+    def setUp(self):
+        print(&quot;Создаём данные в БД&quot;)
+        self.author1 = Author.objects.create(name='John', email='john@example.com')
+        self.author2 = Author.objects.create(name='Alice', email='alice@example.com')
+
+    def test_list_authors(self):
+        print(&quot;Запуск теста test_list_authors&quot;)
+        print(&quot;______________________________&quot;)
+        print(f'В таблице автор {Author.objects.count()} значения')
+        url = reverse('authors-viewset-list')  # Получаем URL ссылку
+        print(f&quot;Проверяемы маршрут: {url}&quot;)
+        response = self.client.get(url)
+        print(f&quot;Ответ от сервера: {response.status_code}&quot;)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        authors = Author.objects.all()
+        serializer = AuthorModelSerializer(authors, many=True)
+        print(f&quot;Сериализатор вернул из БД: {serializer.data}&quot;)
+        self.assertEqual(response.data['results'], serializer.data)
+
+
+    def test_retrieve_author(self):
+        print(&quot;Запуск теста test_retrieve_author&quot;)
+        print(&quot;______________________________&quot;)
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})  # Укажите имя URL-шаблона и параметры
+        print(f&quot;Проверяемы маршрут: {url}&quot;)
+        response = self.client.get(url)
+        print(f&quot;Ответ от сервера: {response.status_code}&quot;)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        author = Author.objects.get(pk=self.author1.pk)
+        serializer = AuthorModelSerializer(author)
+        print(f&quot;Сериализатор вернул из БД: {serializer.data}&quot;)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_create_author(self):
+        print(&quot;Запуск теста test_create_author&quot;)
+        print(&quot;______________________________&quot;)
+        url = reverse('authors-viewset-list')  # Получаем URL ссылку
+        print(f&quot;Проверяемы маршрут: {url}&quot;)
+        data = {'name': 'Bob', 'email': 'bob@example.com'}
+        response = self.client.post(url, data)
+        print(f&quot;Ответ от сервера: {response.status_code}&quot;)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        author = Author.objects.get(name='Bob')
+        serializer = AuthorModelSerializer(author)
+        print(f&quot;Сериализатор вернул из БД: {serializer.data}&quot;)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_update_author(self):
+        print(&quot;Запуск теста test_update_author&quot;)
+        print(&quot;______________________________&quot;)
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})
+        print(f&quot;Проверяемы маршрут: {url}&quot;)
+        data = {'name': 'John Doe', 'email': 'john.doe@example.com'}
+        response = self.client.put(url, data)
+        print(f&quot;Ответ от сервера: {response.status_code}&quot;)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        author = Author.objects.get(pk=self.author1.pk)
+        serializer = AuthorModelSerializer(author)
+        print(f&quot;Сериализатор вернул из БД: {serializer.data}&quot;)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_partial_update_author(self):
+        print(&quot;Запуск теста test_partial_update_author&quot;)
+        print(&quot;______________________________&quot;)
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})
+        print(f&quot;Проверяемы маршрут: {url}&quot;)
+        data = {'name': 'John Doe'}
+        response = self.client.patch(url, data)
+        print(f&quot;Ответ от сервера: {response.status_code}&quot;)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        author = Author.objects.get(pk=self.author1.pk)
+        serializer = AuthorModelSerializer(author)
+        print(f&quot;Сериализатор вернул из БД: {serializer.data}&quot;)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_delete_author(self):
+        print(&quot;Запуск теста test_delete_author&quot;)
+        print(&quot;______________________________&quot;)
+        url = reverse('authors-viewset-detail', kwargs={'pk': self.author1.pk})
+        print(f&quot;Проверяемы маршрут: {url}&quot;)
+        response = self.client.delete(url)
+        print(f&quot;Ответ от сервера: {response.status_code}&quot;)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Author.objects.filter(pk=self.author1.pk).exists())  # Проверка, что теперь этого автора не существует
+</code></pre>
+
+<p>Для создания теста создаётся тестовый класс наследующийся от <code>APITestCase</code>. Каждый тест записывается как метод данного класса и обязательно должен начинаться 
+со слова <code>test</code>, далее можно писать любое название. </p>
+<p>При проверке методов API чаще следуют следующему алгоритму:
+1. Определяют путь по которому будут проверять доступность endpoint, для этого можно написать путь вручную или воспользоваться функцией
+<code>reverse</code> из <code>from django.urls import reverse</code>, чтобы по имени маршрута получить URL путь этого маршрута, как пример 
+<code>url = reverse('authors-viewset-list')</code> запишет в переменную <code>url</code> значение <code>/api/authors_viewset/</code></p>
+<ol>
+<li>
+<p>Как определились с маршрутом, то если это необходимо, то формируем данные которые будем передавать в запросе, допустим для POST, PUT, PATCH запроса</p>
+</li>
+<li>
+<p>Отправляем запрос на представление, это можно сделать при помощи объекта <code>APIClient</code>, который существует в атрибуте <code>self.client</code>. По своему
+существу он похож на requests. Преимущества объекта <code>self.client</code> в том, что для запуска тестов не нужно, чтобы сервер был запущен физически,
+так как реальный запрос не отправляется, а просто проверяется работа представлений. </p>
+<blockquote>
+<p>В тестах Django <code>self.client</code> представляет собой клиент HTTP, который позволяет выполнять HTTP-запросы к вашему приложению Django в контексте теста. 
+Он предоставляет удобный интерфейс для отправки запросов и получения ответов без необходимости запуска сервера. Когда вы вызываете 
+методы <code>self.client.get()</code>, <code>self.client.post()</code>, <code>self.client.put()</code> и т.д., вы создаете HTTP-запрос к вашему приложению 
+Django и получаете HTTP-ответ в виде объекта HttpResponse. Это позволяет вам проверять поведение вашего приложения в различных сценариях и убеждаться, что оно работает корректно.</p>
+</blockquote>
+</li>
+<li>
+<p>Проведение проверок полученных результатов с контрольными значениями. 
+Все сравнивания в тестах полученного значения с необходимым проходят с использованием <code>self.assert***</code>, где <code>***</code> это имя 
+блока для проверки определенного теста. Допустим <code>self.assertEqual(a, b)</code> сравнивает, что <code>a == b</code>, а 
+<code>self.assertFalse(a)</code> сравнивает, что <code>a == False</code></p>
+</li>
+</ol>
+<hr />
+<p>Запустите тесты командой в терминале</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py test apps.api
+</code></pre>
+
+<p>Не обращайте внимание на предупреждения со стороны модуля пагинации.</p>
+<p><img alt="img_31.png" src="pic/img_31.png" /></p>
+<p>Вы можете увидеть, что тесты запускаются не по порядку как написаны, а потому как называются в отсортированном виде по имени теста,
+это необходимо учитывать если планируете передавать данные между запускаемыми тестами (допустим добавили строку в БД, а в другом тесте
+хотите использовать этот результат), но по умолчанию Django очищает БД каждый раз как тест завершается, чтобы новый тест был с пустой БД или 
+заполненной данными определенными в <code>def setUp(self)</code>, данный метод Django запускает каждый раз после завершения <code>каждого теста</code> в своём классе.</p>
+<p>После завершения тестов в файле <code>tests.py</code> тестовая БД самостоятельно.</p>
+<p>Когда необходимо перед тестами создать БД, которая будет хоть как-то заполнена и чтобы это не делать в каждом тесте, то можно создать фикстуры на базе которых будут заполняться тестовые БД, 
+как мы уже поняли в момент теста БД полностью пустая и после каждого теста БД будет откатываться к состоянию которое было определено на момент начало данного теста</p>
+<p>Чтобы создать фикстуры, то необходимо:</p>
+<ol>
+<li>
+<p>Создать директорию(папку) <code>fixtures</code> внутри тестируемого приложения, в нашем случает это приложение <code>api</code></p>
+</li>
+<li>
+<p>В директории <code>fixtures</code> создайте файл с именем, например, <code>testdata.json</code> (или любое другое имя с расширением .json), и заполните его данными в формате JSON</p>
+</li>
+</ol>
+<pre class="highlight"><code class="language-json linenums">[
+    {
+        &quot;model&quot;: &quot;db_train_alternative.author&quot;,
+        &quot;pk&quot;: 1,
+        &quot;fields&quot;: {
+            &quot;name&quot;: &quot;John_test&quot;,
+            &quot;email&quot;: &quot;john_test@example.com&quot;
+        }
+    },
+    {
+        &quot;model&quot;: &quot;db_train_alternative.author&quot;,
+        &quot;pk&quot;: 2,
+        &quot;fields&quot;: {
+            &quot;name&quot;: &quot;Alice_test&quot;,
+            &quot;email&quot;: &quot;alice_test@example.com&quot;
+        }
+    }
+]
+</code></pre>
+
+<ol>
+<li>В тестовом классе <code>AuthorViewSetTestCase</code> используйте классовый атрибут <code>fixtures</code> для указания имени файла фикстуры в вашем тестовом случае.
+В атрибут <code>fixtures</code> передаётся список фикстур.</li>
+</ol>
+<pre class="highlight"><code class="language-python linenums">class AuthorViewSetTestCase(APITestCase):
+    fixtures = ['testdata.json']
+
+    # Остальные методы ...
+</code></pre>
+
+<p>Чтобы проверить, что фикстура действительно применилась, то в <code>test_list_authors</code> проверим сколь записей есть в таблице Автор</p>
+<pre class="highlight"><code class="language-python linenums">def test_list_authors(self):
+    print(&quot;Запуск теста test_list_authors&quot;)
+    print(&quot;______________________________&quot;)
+    print(f'В таблице автор {Author.objects.count()} значения')
+    # ...
+</code></pre>
+
+<p><img alt="img_32.png" src="pic/img_32.png" /></p>
+<p>В итоге при запуске тестов будет 4 значения</p>
+<p><img alt="img_33.png" src="pic/img_33.png" /></p>
+<p>Если было бы необходимо запускать все тесты в проект, то просто не указываем конкретный проект в котором Django будет искать тесты.</p>
+<p>В нашем случае это</p>
+<pre class="highlight"><code class="language-python linenums">python manage.py test apps
+</code></pre>
+
+<p>Так как все приложения лежат в папке apps, если бы этого не было, то писали бы </p>
+<pre class="highlight"><code class="language-python linenums">python manage.py test
+</code></pre>
+
+<p>Если по каким-то причинам обязательно необходимо, чтобы данные в БД сохранялись между сессиями, то можно воспользоваться параметрами при запуске <code>test --keepdb</code> (просто для ознакомления).
+Эта опция сохраняет тестовую базу данных между несколькими запусками. </p>
+<p>Дополнительно (если необходимо) про тестирование в Django можете прочитать <a href="https://colab.research.google.com/drive/17cYDRQ-MnQETVJxURrOPzli65leVVxcf">здесь</a></p>
+<h2 id="52">5.2 Самостоятельно (по желанию)</h2>
+<p>Если ранее создавали API к таблице БД, то протестируйте вашу API.</p>
+<h1 id="_1">Практика окончена</h1>
+<hr />
+<!-- # <a name="section-optional-block"></a> <u>Необязательный блок</u> (выполнение по желанию, на результат следующих практик влиять не будет) -->
+
+<!-- ## 6. Документирование API -->
+
+<!-- ## 7. Использование github для концепции continuous integration (ci) -->
+
+</div>
+        </body>
+        </html>
+    

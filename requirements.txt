@@ -6,3 +6,4 @@ django-crispy-forms==2.1
 crispy-bootstrap4
 transliterate
 requests
+markdown
