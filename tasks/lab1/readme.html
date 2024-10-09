@@ -43,22 +43,22 @@
 <ol>
 <li>Начнем с создания миграции</li>
 </ol>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-1">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-1')">Копировать код</button></div>
 
 <ol>
 <li>Создадим таблицы в базе данных (БД)</li>
 </ol>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-2">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-2')">Копировать код</button></div>
 
 <ol>
 <li>Запустим сервер</li>
 </ol>
-<pre class="highlight"><code class="language-python linenums">python manage.py runserver
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-3">python manage.py runserver
+</code></pre><button class="copy-button" onclick="copyCode('code-block-3')">Копировать код</button></div>
 
-<p>Перейдем по http://127.0.0.1:8000/ и увидим, что чего-то не хватает. Так как основное наполнение идет через базу данных 
+<p>Перейдем по <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a> и увидим, что чего-то не хватает. Так как основное наполнение идет через базу данных 
 (БД). Для этого произведем загрузку(перенос) данных в БД из её фикстуры(слепка). В фикстуре содержится вся информация о заполнении БД.
 Однако, фикстура это всего лишь заполнение БД, без структуры (какие именно таблицы и какие есть связи в БД), которую 
 мы переносили при помощи команды (<code>migrate</code>) фикстуру не применить.</p>
@@ -68,8 +68,8 @@
 <ol>
 <li>Теперь загрузим эти данные (фикстуру)</li>
 </ol>
-<pre class="highlight"><code class="language-python linenums">python manage.py loaddata data_db.json
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-4">python manage.py loaddata data_db.json
+</code></pre><button class="copy-button" onclick="copyCode('code-block-4')">Копировать код</button></div>
 
 <p><img alt="img_1.png" src="pic/img_1.png" /></p>
 <p>Так как данные уже есть в БД, то <code>Блог</code> показывает нужную информацию.</p>
@@ -77,10 +77,10 @@
 <p>Django в отличие от большинства других библиотек или фреймворков обладает встроенной административной панелью (но и в других 
 библиотеках можно скачать модулю которые закроют данный функционал, если он требуется). Административная панель это страница, с
 базовыми функциями для администрирования сайта. С помощью админ понели достаточно просто и удобно работать со значениями таблиц БД. </p>
-<p>Чтобы зайти в неё достаточно перейти по адресу http://127.0.0.1:8000/admin</p>
+<p>Чтобы зайти в неё достаточно перейти по адресу <a href="http://127.0.0.1:8000/admin" target="_blank">http://127.0.0.1:8000/admin</a></p>
 <p>В курсах ранее мы с вами создавали суперпользователя(он же админ) используя команду <code>manage.py createsuperuser</code>, но 
 пока этого не нужно, необходимые пользователи и админ был загружен через фикстуру.</p>
-<p>Зайдите в админ панель по адресу http://127.0.0.1:8000/admin под: </p>
+<p>Зайдите в админ панель по адресу <a href="http://127.0.0.1:8000/admin" target="_blank">http://127.0.0.1:8000/admin</a> под: </p>
 <p>Username: <code>admin</code>
 Password: <code>123</code></p>
 <p><img alt="img_2.png" src="pic/img_2.png" /></p>
@@ -88,7 +88,7 @@ Password: <code>123</code></p>
 <code>Authentication and Authorization</code> и <code>Приложение</code>. </p>
 <p><img alt="img_4.png" src="pic/img_4.png" /></p>
 <p>Визуальное отображение админ панели можно изменить при помощи сторонних библиотек, кому интересно, то подробнее 
-можно почитать <a href="https://docs.google.com/document/d/1S9bGmy-83u-7P2b-Kpt1tVUQqiBAGRS5RUxyJkLQ6yQ/edit?usp=sharing">здесь</a> (информация только для интересующихся, 
+можно почитать здесь <a href="https://docs.google.com/document/d/1S9bGmy-83u-7P2b-Kpt1tVUQqiBAGRS5RUxyJkLQ6yQ/edit?usp=sharing" target="_blank">https://docs.google.com/document/d/1S9bGmy-83u-7P2b-Kpt1tVUQqiBAGRS5RUxyJkLQ6yQ/edit?usp=sharing</a> (информация только для интересующихся, 
 выполнять в рамках практики примеры из материала не нужно).</p>
 <h2 id="21">2.1 Аутентификация и авторизация</h2>
 <p>Первый блок посвящен системе аутентификации (определение кто зашел на страницу, какой пользователь) 
@@ -109,11 +109,21 @@ Password: <code>123</code></p>
 <p>Если сделали какие-то изменения на данной странице, то чтобы они принялись, то необходимо внизу страницы нажать на <code>Save</code></p>
 <p>Далее перейдите в таблицу <code>Groups</code> в левой панели, и вы увидите, что уже есть одна группа, она была загружена из фикстур, это группа <code>Авторы</code></p>
 <p>Создайте новую группу, название на ваше усмотрение, в моём случае пусть это будет <code>Группа</code>, далее вы можете раздать определенные права пользователям на действия над данными в этой группе.</p>
-<p>Допустим можно делать следующие действия со строками в таблицах БД:
-* добавлять данные (Can add)
-* изменять данные (Can change)
-* удалять данные (Can delete)
-* просматривать данные (Can view)</p>
+<p>Допустим можно делать следующие действия со строками в таблицах БД:</p>
+<ul>
+<li>
+<p>добавлять данные (Can add)</p>
+</li>
+<li>
+<p>изменять данные (Can change)</p>
+</li>
+<li>
+<p>удалять данные (Can delete)</p>
+</li>
+<li>
+<p>просматривать данные (Can view)</p>
+</li>
+</ul>
 <p>Возьмите и перенесите права над <code>auth | user</code> из левой колонки в правую, для этого нажмите двойной щелчок левой кнопки мыши на необходимой
 строке права или выделите строку и нажмите на символ стрелки вправо.</p>
 <p>Сохраните данную группу.</p>
@@ -170,12 +180,12 @@ Password: <code>RbT9Zu7rg%</code></p>
 <p>После заполнения создайте свою первую запись на платформе через админ панель.</p>
 <p>Теперь в БД есть запись созданная через админ панель.</p>
 <p><img alt="img_15.png" src="pic/img_15.png" /></p>
-<p>Наблюдать за результатом возможно на главной странице приложения. http://127.0.0.1:8000/</p>
+<p>Наблюдать за результатом возможно на главной странице приложения. <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></p>
 <p>Пролистайте начальную страницу немного вниз и увидите свой пост.</p>
 <p><img alt="img_16.png" src="pic/img_16.png" /></p>
 <p>Однако к БД можно подключить не только через админ панель, но и через любой обозреватель БД поддерживающий данную БД.
 По умолчанию БД в Django создаётся через SQLite, наша БД не исключение (в будущем рассмотрим извeстную нам PostgreSQL).</p>
-<p>К SQLite можно подключиться через <a href="https://sqlitebrowser.org/dl/">SQLiteBrowser</a> или <a href="https://dbeaver.io/download/">DBeaver (Community)</a> 
+<p>К SQLite можно подключиться через SQLiteBrowser <a href="https://sqlitebrowser.org/dl/" target="_blank">https://sqlitebrowser.org/dl/</a> или DBeaver (Community) <a href="https://dbeaver.io/download/" target="_blank">https://dbeaver.io/download/</a>
 или другие менеджеры и обозреватели БД.</p>
 <p>Рассмотрим <code>Dbeaver</code>.</p>
 <p><img alt="img_17.png" src="pic/img_17.png" /></p>
@@ -192,40 +202,66 @@ Password: <code>RbT9Zu7rg%</code></p>
 <p>Стандартно модели прописываются в файле <code>models.py</code> своего приложения. </p>
 <p>Откройте файл <code>models.py</code> приложения <code>db_train</code>, которое находится в папке <code>apps</code></p>
 <p>Создадим модель <code>Author</code>, для этого необходимо создать одноименный класс <code>Author</code>, который наследуется от <code>models.Model</code></p>
-<pre class="highlight"><code class="language-python linenums">class Author(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-5">class Author(models.Model):
     pass
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-5')">Копировать код</button></div>
 
 <p>Теперь наполним данную модель(таблицу) описанием полей(колонок) которые она буде хранить.</p>
 <p>Для создания поле внутри класса пишут классовый атрибут, причем название этого атрибута соответствует названию поля в 
 БД которое мы хотим создать для хранения там данных. В классовый атрибут записывается экземпляр созданный на базе определенного типа данных.</p>
 <p>Например:</p>
-<pre class="highlight"><code class="language-python linenums">class Author(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-6">class Author(models.Model):
     first_name = models.CharField()
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-6')">Копировать код</button></div>
 
 <p>Данным кодом было объявлено поле <code>first_name</code>, которое представляет собой строковый тип (CharField). Говорящее о том, что в данном поле
 будут храниться данные в строковом типе.</p>
 <h2 id="31">3.1 Описание полей</h2>
-<p>ORM Django поддерживает множество типов полей рассмотрим часто применяемые:
-* Поле для хранения целого числа - <code>models.IntegerField()</code>;
-* Поле для хранения вещественного числа - <code>models.FloatField()</code> для чисел типа float, <code>models.DecimalField</code> для чисел с фиксированной точностью 
-(допустим финансовых операций с 2-умя значениями после запятой);
-* Поле для хранения булевого значения - <code>models.BooleanField()</code> для хранения <code>True</code> или <code>False</code>;
-* Поле для хранения бинарных данных - <code>models.BinaryField()</code>. Допустим так можно сохранить документ или картинку в базу данных целым файлом;
-* Поле для хранения строки - <code>models.CharField()</code> для небольших предложений или слов размером до 255 символов, можно явно указать максимальный размер строки;
-* Поле для хранения многострочного текста - <code>models.TextField()</code> для больших предложений;
-* Поле для хранения строки email - <code>models.EmailField()</code>
-* Поле для хранения текста slug типа - <code>models.SlugField()</code>
-* Поле для хранения даты - <code>models.DateField()</code>
-* Поле для хранения даты со временем - <code>models.DateTimeField()</code>
-* Поле для хранения файла - <code>models.FileField()</code>
-* Поле для хранения картинки - <code>models.ImageField()</code></p>
+<p>ORM Django поддерживает множество типов полей рассмотрим часто применяемые:</p>
+<ul>
+<li>
+<p>Поле для хранения целого числа - <code>models.IntegerField()</code>;</p>
+</li>
+<li>
+<p>Поле для хранения вещественного числа - <code>models.FloatField()</code> для чисел типа float, <code>models.DecimalField</code> для чисел с фиксированной точностью 
+(допустим финансовых операций с 2-умя значениями после запятой);</p>
+</li>
+<li>
+<p>Поле для хранения булевого значения - <code>models.BooleanField()</code> для хранения <code>True</code> или <code>False</code>;</p>
+</li>
+<li>
+<p>Поле для хранения бинарных данных - <code>models.BinaryField()</code>. Допустим так можно сохранить документ или картинку в базу данных целым файлом;</p>
+</li>
+<li>
+<p>Поле для хранения строки - <code>models.CharField()</code> для небольших предложений или слов размером до 255 символов, можно явно указать максимальный размер строки;</p>
+</li>
+<li>
+<p>Поле для хранения многострочного текста - <code>models.TextField()</code> для больших предложений;</p>
+</li>
+<li>
+<p>Поле для хранения строки email - <code>models.EmailField()</code></p>
+</li>
+<li>
+<p>Поле для хранения текста slug типа - <code>models.SlugField()</code></p>
+</li>
+<li>
+<p>Поле для хранения даты - <code>models.DateField()</code></p>
+</li>
+<li>
+<p>Поле для хранения даты со временем - <code>models.DateTimeField()</code></p>
+</li>
+<li>
+<p>Поле для хранения файла - <code>models.FileField()</code></p>
+</li>
+<li>
+<p>Поле для хранения картинки - <code>models.ImageField()</code></p>
+</li>
+</ul>
 <p>Каждый тип поля в Django соотносит возможности по хранению для конкретной БД. То есть если в БД есть возможность хранить <code>email</code>, 
 так как этот тип поддерживается на уровне БД, то будет явная связь с этим типом. 
 Если такого типа не поддерживает БД, то Django свяжет его со строковым типом, но сделает определенные
 валидации внутри себя перед сохранением, чтобы убедиться, что передаваемое значение в БД соответствует типу <code>email</code>.</p>
-<p>Более детально про эти и другие типы можно прочитать в <a href="https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-types">документации</a> 
+<p>Более детально про эти и другие типы можно прочитать в <a href="<a href="https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-types">документации" target="_blank">https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-types">документации</a></a> 
 или в файле в <code>fields_and_types.md</code> в разделе <code>1. Описание полей</code></p>
 <p>Предположим, что на начальной стадии (не задумываясь о том как будем работать со сложными связями и таблицами) для полноценного описания данных об Авторе
 нам достаточно следующих данных(получилось много, но для тренировки самое то):</p>
@@ -347,9 +383,11 @@ Password: <code>RbT9Zu7rg%</code></p>
 <li><code>Частные параметры</code>, которые разнятся от класса, но в большинстве своём идут в дополнение к общим. 
 В зависимости от класса поля есть параметры которые обязательно нужно определить.</li>
 </ul>
-<p><code>Общие параметры</code> в свою очередь разбиваются на:
-1. Те, что используются для <code>отображения в админ панели</code> или формах:</p>
-<ul>
+<p><code>Общие параметры</code> в свою очередь разбиваются на:</p>
+<ol>
+<li>
+<p>Те, что используются для <code>отображения в админ панели</code> или формах:</p>
+</li>
 <li>
 <p><code>verbose_name</code> - Определяет человекочитаемое имя поля. Передаётся если хотите, чтобы поле отображалось в админ панели
 как передали, так как умолчанию оно отображается как именовали при названии классовой переменной;</p>
@@ -413,7 +451,7 @@ Password: <code>RbT9Zu7rg%</code></p>
 Если параметр не указан, Django будет использовать значение по умолчанию (смесь названия приложения и названия модели) 
 для базы данных.</p>
 </li>
-</ul>
+</ol>
 <p><code>Частные параметры</code> в свою очередь зависят от поля, рассмотрим примеры:</p>
 <ul>
 <li>
@@ -427,9 +465,11 @@ Password: <code>RbT9Zu7rg%</code></p>
 </li>
 <li>
 <p>поле <code>models.DecimalField</code> обладает <code>обязательными</code> параметрами:</p>
-</li>
+<ul>
 <li><code>max_digits</code> - Максимально допустимое количество цифр в числе; </li>
 <li><code>decimal_places</code> - Количество десятичных разрядов для хранения с числом. </li>
+</ul>
+</li>
 </ul>
 <p>Пример для максимально поддерживаемого числа 999.99 (значение 1000.0 и выше уже не будет поддерживаться)
 <code>models.DecimalField(max_digits=5, decimal_places=2)</code></p>
@@ -437,60 +477,58 @@ Password: <code>RbT9Zu7rg%</code></p>
 <li>
 <p>поля <code>models.DateField</code>, <code>models.DateTimeField</code> обладают <code>необязательными</code> параметрами <code>auto_now</code> и <code>auto_now_add</code>. 
 Одновременно можно задать только один из этих параметров. </p>
-</li>
-<li>
-<p><code>auto_now</code> - По умолчанию <code>False</code>. Если <code>True</code>, то автоматически устанавливает текущее временное значение каждый раз, когда объект <code>сохраняется</code>. 
-Полезно для отметок времени последнего изменения строки в БД.</p>
-</li>
-<li>
-<p><code>auto_now_add</code> - По умолчанию <code>False</code>. Если <code>True</code>, то автоматически устанавливает поле на текущее временное значение, когда объект <code>создается впервые</code>. 
-Полезно для отметок времени создания строки в БД.</p>
+<ul>
+<li><code>auto_now</code> - По умолчанию <code>False</code>. Если <code>True</code>, то автоматически устанавливает текущее временное значение каждый раз, когда объект <code>сохраняется</code>. 
+Полезно для отметок времени последнего изменения строки в БД.</li>
+<li><code>auto_now_add</code> - По умолчанию <code>False</code>. Если <code>True</code>, то автоматически устанавливает поле на текущее временное значение, когда объект <code>создается впервые</code>. 
+Полезно для отметок времени создания строки в БД.</li>
+</ul>
 </li>
 <li>
 <p>поля <code>models.FileField</code>, <code>models.ImageField</code> обладают <code>необязательным</code> параметром <code>upload_to</code>. Этот атрибут обеспечивает способ указания каталога загрузки и имени файла 
 и может быть установлен двумя способами (строкой и функцией, которая выполнится при сохранении)</p>
 </li>
 </ul>
-<p>Подробнее про передаваемые параметры можно прочитать в <a href="https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-options">документации</a> 
+<p>Подробнее про передаваемые параметры можно прочитать в <a href="<a href="https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-options">документации" target="_blank">https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-options">документации</a></a> 
 или файле <code>fields_and_types.md</code> в разделе <code>2. Общие параметры поля</code> и описание частных параметров в <code>1. Описание полей</code>.</p>
 <h2 id="32">3.2 Применение параметров</h2>
 <p>Далее определим какие ограничения мы хотим использовать на наши поля:</p>
 <p>Имя, Фамилия, Отчество, Город ограничим длиной в 100 символов;</p>
-<pre class="highlight"><code class="language-python linenums">models.CharField(max_length=100)
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-7">models.CharField(max_length=100)
+</code></pre><button class="copy-button" onclick="copyCode('code-block-7')">Копировать код</button></div>
 
 <p>Пол ограничим стандартными фразами <code>мужской</code>, <code>женский</code>, для этого воспользуемся параметром <code>choices</code> (при выборе 
 в админ панели <code>мужской</code> в БД запишется <code>м</code>, при выборе <code>женский</code> в БД запишется <code>ж</code>), с ограничением длины в 1 символ.</p>
-<pre class="highlight"><code class="language-python linenums">gender = models.CharField(max_length=1, choices=[('м', 'мужской'), ('ж', 'женский')])
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-8">gender = models.CharField(max_length=1, choices=[('м', 'мужской'), ('ж', 'женский')])
+</code></pre><button class="copy-button" onclick="copyCode('code-block-8')">Копировать код</button></div>
 
 <p>Телефон ограничим длиной в 12 символ, по стандарту +79991234567</p>
-<pre class="highlight"><code class="language-python linenums">phone_number = models.CharField(max_length=12)
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-9">phone_number = models.CharField(max_length=12)
+</code></pre><button class="copy-button" onclick="copyCode('code-block-9')">Копировать код</button></div>
 
 <p>Уровень самооценки ограничим одним знаком до разделителя от 0 до 5 и одним знаком после разделителя.</p>
-<pre class="highlight"><code class="language-python linenums">self_esteem = models.DecimalField(max_digits=2, decimal_places=1)
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-10">self_esteem = models.DecimalField(max_digits=2, decimal_places=1)
+</code></pre><button class="copy-button" onclick="copyCode('code-block-10')">Копировать код</button></div>
 
 <p>Так как у нас есть дата рождения и возраст и возраст вытекает из даты рождения, то скроем возможность задания возраста 
 и будем его вычислять перед сохранением в БД (это реализуем чуть позже), сейчас только скроем поле и 
 сделаем возможность устанавливать его как NULL в БД.  </p>
-<pre class="highlight"><code class="language-python linenums">age = models.IntegerField(null=True, editable=False)
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-11">age = models.IntegerField(null=True, editable=False)
 date_birth = models.DateField()
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-11')">Копировать код</button></div>
 
 <p>Фото профиля хотим, чтобы загружалось в папку <code>foto_profile</code> на нашем сервере для это прописываем это в <code>upload_to</code></p>
-<pre class="highlight"><code class="language-python linenums">image = models.ImageField(upload_to='foto_profile')
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-12">image = models.ImageField(upload_to='foto_profile')
+</code></pre><button class="copy-button" onclick="copyCode('code-block-12')">Копировать код</button></div>
 
 <p>Для работой с датой и временем создания и обновления записи в БД используем <code>auto_now=True</code> и <code>auto_now_add=True</code>. В админ панели не будет отображаться, 
 будет заполняться автоматически при сохранении в БД. </p>
-<pre class="highlight"><code class="language-python linenums">create_at = models.DateTimeField(auto_now_add=True)
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-13">create_at = models.DateTimeField(auto_now_add=True)
 update_at = models.DateTimeField(auto_now=True)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-13')">Копировать код</button></div>
 
 <p>В итоге теперь наша модель будет выглядеть так:</p>
-<pre class="highlight"><code class="language-python linenums">class Author(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-14">class Author(models.Model):
     username = models.SlugField()
     email = models.EmailField()
     first_name = models.CharField(max_length=100)
@@ -507,20 +545,20 @@ update_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='foto_profile')
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-14')">Копировать код</button></div>
 
 <h2 id="33">3.3 Создание таблицы в БД</h2>
 <p>После того как определись с наполнением таблицы, то самое время её создать в БД. Для этого выполняем команду</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-15">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-15')">Копировать код</button></div>
 
 <p>Чтобы создать питоновскую связь с таблицей в БД.</p>
 <p>Вы можете увидеть следующее, говорящее о том, что связь создана. Посмотреть как выглядит эта связь можно в соответствующей папке</p>
 <p><code>apps/db_tain/migrations/0001_initial.py</code></p>
 <p><img alt="img_22.png" src="pic/img_22.png" /></p>
 <p>Затем переносим схему таблицы в БД, для этого прописываем</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-16">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-16')">Копировать код</button></div>
 
 <p><img alt="img_23.png" src="pic/img_23.png" /></p>
 <p>Теперь самое время зайти в админ панель и посмотреть на наше творение!</p>
@@ -530,11 +568,11 @@ update_at = models.DateTimeField(auto_now=True)
 для отображения и настройки админ панели для данного приложения.</p>
 <p>Зайдите в приложение <code>db_train</code>, затем в файл <code>admin.py</code></p>
 <p>И пропишите следующее(подгружаем таблицу из моделей и регистрируем её для отображения в админ панели):</p>
-<pre class="highlight"><code class="language-python linenums">from django.contrib import admin
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-17">from django.contrib import admin
 from .models import Author
 
 admin.site.register(Author)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-17')">Копировать код</button></div>
 
 <p>Теперь таблица на месте</p>
 <p><img alt="img_25.png" src="pic/img_25.png" /></p>
@@ -548,12 +586,12 @@ admin.site.register(Author)
 <p><img alt="img_28.png" src="pic/img_28.png" /></p>
 <p>Чтобы сделать эту строку удобочитаемой, необходимо переопределить метод <code>__str__</code> в котором вернуть как будет отображаться данная строка.</p>
 <p>Переопределите метод в вашем классе <code>Author</code></p>
-<pre class="highlight"><code class="language-python linenums">def __str__(self):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-18">def __str__(self):
     initials = None  # Инициалы
     if self.first_name and self.middle_name:
         initials = f&quot;{self.first_name.upper()[0]}.{self.middle_name.upper()[0]}.&quot;
     return f&quot;{self.username} - {self.last_name} {initials}&quot;
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-18')">Копировать код</button></div>
 
 <p>Теперь автор более читаемый и понятно кто это</p>
 <p><img alt="img_29.png" src="pic/img_29.png" /></p>
@@ -575,7 +613,7 @@ admin.site.register(Author)
 <p>В данном случае будем использовать валидацию с использованием регулярного выражения. Саму переменную которая будет вызываться можно прописать, вне класса Таблицы <code>Author</code>. 
 А можно как классовый атрибут, это не будет считаться полем, так как мы не создаём экземпляр от типа поля, а экземпляр от валидации. </p>
 <p>Данный валидатор передаём в параметр <code>validators</code> в поле <code>phone_number</code></p>
-<pre class="highlight"><code class="language-python linenums">from django.core.validators import RegexValidator
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-19">from django.core.validators import RegexValidator
 
 class Author(models.Model):
     phone_regex = RegexValidator(
@@ -585,12 +623,12 @@ class Author(models.Model):
     # ...
     phone_number = models.CharField(max_length=12, validators=[phone_regex])
     # ...
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-19')">Копировать код</button></div>
 
 <p><img alt="img_32.png" src="pic/img_32.png" /></p>
 <p>Для уровня самооценки нам тоже нужно поставить ограничения, не меньше 0, не больше 5. Для этого воспользуемся валидаторами
 <code>MinValueValidator</code>, <code>MaxValueValidator</code> из <code>from django.core.validators import MinValueValidator, MaxValueValidator</code></p>
-<pre class="highlight"><code class="language-python linenums">from django.core.validators import MinValueValidator, MaxValueValidator
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-20">from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Author(models.Model):
     # ...
@@ -599,7 +637,7 @@ class Author(models.Model):
                                           validators=[MinValueValidator(0, &quot;Диапазон [0.0, 5.0]&quot;),
                                                       MaxValueValidator(5, &quot;Диапазон [0.0, 5.0]&quot;)])
     # ...
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-20')">Копировать код</button></div>
 
 <p>Далее изменим отображение названия полей, чтобы было понятно на русском, что это за поле. 
 Для этого в каждом поле передадим параметр <code>verbose_name</code> и пропишем как будет называться поле.</p>
@@ -607,7 +645,7 @@ class Author(models.Model):
 <p>И напоследок упростим себе задачу и сделаем всего несколько полей обязательными, остальными сделаем такими, чтобы 
 их можно было оставить пустыми, а в БД запишется или NULL или значение по умолчанию.</p>
 <p>В итоге класс теперь выглядит следующим образом:</p>
-<pre class="highlight"><code class="language-python linenums">class Author(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-21">class Author(models.Model):
     phone_regex = RegexValidator(
         regex=r'^\+79\d{9}$',
         message=&quot;Телефонный номер должен быть формата: '+79123456789'.&quot;
@@ -706,14 +744,14 @@ class Author(models.Model):
         if self.first_name and self.middle_name:
             initials = f&quot;{self.first_name.upper()[0]}.{self.middle_name.upper()[0]}.&quot;
         return f&quot;{self.username} - {self.last_name} {initials}&quot;
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-21')">Копировать код</button></div>
 
 <p>А в панели администратора это выглядит следующим образом</p>
 <p><img alt="img_33.png" src="pic/img_33.png" />
 <img alt="img_34.png" src="pic/img_34.png" /></p>
 <p>Сделаем ещё одну функциональность, это добавим ограничение на уникальные поля, хочется чтобы <code>имя аккаунта</code>, <code>адрес почты</code> и <code>телефон</code> были уникальные. 
 Для этого у данных полей выставляем параметр <code>unique=True</code></p>
-<pre class="highlight"><code class="language-python linenums">username = models.SlugField(# ...
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-22">username = models.SlugField(# ...
                             unique=True,
                             )
 
@@ -724,28 +762,28 @@ email = models.EmailField(# ...
 phone_number = models.CharField(# ...
                                 unique=True,
                                 )
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-22')">Копировать код</button></div>
 
 <p>И последняя модификация, это изменение отображения названия таблицы Author. Это делает при помощи метакласса Meta внутри класса.</p>
 <p>Чтобы поменять название таблицы для отображения в единственном числе, то переопределяется классовый атрибут <code>verbose_name</code>, 
 а во множественном - <code>verbose_name_plural</code></p>
-<pre class="highlight"><code class="language-python linenums">class Author(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-23">class Author(models.Model):
     # ...
     class Meta:
         verbose_name = &quot;Автор&quot;
         verbose_name_plural = &quot;Авторы&quot;
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-23')">Копировать код</button></div>
 
 <p><img alt="img_35.png" src="pic/img_35.png" /></p>
 <p>Теперь осталось обновить миграции, для этого вызываем </p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-24">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-24')">Копировать код</button></div>
 
 <p>Новые изменения добавились в миграции</p>
 <p><img alt="img_36.png" src="pic/img_36.png" /></p>
 <p>А теперь переносим эти изменения в БД</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-25">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-25')">Копировать код</button></div>
 
 <p>Таким образом мы внесли изменения в структуру БД.</p>
 <p><img alt="img_37.png" src="pic/img_37.png" /></p>
@@ -755,7 +793,7 @@ phone_number = models.CharField(# ...
 хотя такое поле есть в таблице. В таких случаях вычисление происходит непосредственно перед сохранением в БД. Для это
 перегружают метод <code>save</code> в классе, где приписывают какие действия необходимо совершить при сохранении в БД.</p>
 <p>Добавьте данный код в класс <code>Author</code></p>
-<pre class="highlight"><code class="language-python linenums">from datetime import datetime
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-26">from datetime import datetime
 
 class Author(models.Model):
     # ...    
@@ -766,14 +804,14 @@ class Author(models.Model):
             additional_year = (today.month, today.day) &lt; (self.date_birth.month, self.date_birth.day)
             self.age = today.year - self.date_birth.year - additional_year  # Перезаписываем значение
         super().save(*args, **kwargs)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-26')">Копировать код</button></div>
 
 <p>Попробуйте теперь сделать обновление миграций и перенос этих данных в БД.</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-27">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-27')">Копировать код</button></div>
 
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-28">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-28')">Копировать код</button></div>
 
 <p>Вы увидите, что изменений нет, так как написание дополнительных методов или перегрузка методов не меняет структуру таблицы,
 это просто дополнительный функционал.</p>
@@ -781,35 +819,35 @@ class Author(models.Model):
 <h2 id="35">3.5 Заполнение данных в БД</h2>
 <p>Загрузим данные по авторам из ещё одной фикстуры. Фикстура <code>data_author.json</code> лежит в папке <code>files/lab1</code></p>
 <p>Выполните команду, чтобы загрузить данные из этого файла</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py loaddata files/lab1/data_author.json 
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-29">python manage.py loaddata files/lab1/data_author.json 
+</code></pre><button class="copy-button" onclick="copyCode('code-block-29')">Копировать код</button></div>
 
 <p>Теперь в вашей БД 11 авторов. Добавим ещё одного вручную через консоль <code>shell</code>.</p>
 <p>Чтобы открыть консоль, введите команду</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py shell
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-30">python manage.py shell
+</code></pre><button class="copy-button" onclick="copyCode('code-block-30')">Копировать код</button></div>
 
 <p>Появится интерактивная консоль, где можно выполнять команды и тем самым добавить данные в БД. Но перед этим необходимо 
 подгрузить таблицу <code>Author</code>. В интерактивной консоли выполните</p>
-<pre class="highlight"><code class="language-python linenums">from apps.db_train.models import Author
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-31">from apps.db_train.models import Author
+</code></pre><button class="copy-button" onclick="copyCode('code-block-31')">Копировать код</button></div>
 
 <p>Весь код приведенный ниже выполняется в интерактивной оболочке </p>
 <p>Создадим авторов 2-умя способами с использованием <code>save</code> и через <code>create</code></p>
 <p>Для записи данных с использованием save необходимо создать экземпляр, а затем его сохранить. Главное, что значения 
 передаются в любой класс таблицы только как <code>именованные переменные</code>.</p>
 <p>В интерактивной консоли выполните</p>
-<pre class="highlight"><code class="language-python linenums">obj = Author(username='my_author', email='author@author.ru', gender='м', status_rule=True) 
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-32">obj = Author(username='my_author', email='author@author.ru', gender='м', status_rule=True) 
 obj.save() 
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-32')">Копировать код</button></div>
 
 <p><img alt="img_40.png" src="pic/img_40.png" /></p>
 <p>Затем создаём автора через <code>create</code>. Для это используется <code>Author.objects.create</code></p>
 <p>Чтобы передать дату, необходимо использовать объект <code>datetime</code></p>
 <p>Выполните в интерактивной консоли следующий код</p>
-<pre class="highlight"><code class="language-python linenums">from datetime import date
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-33">from datetime import date
 Author.objects.create(username='my_author1', email='author1@author.ru', gender='ж', status_rule=False, date_birth=date(1990, 12,12))
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-33')">Копировать код</button></div>
 
 <p><img alt="img_41.png" src="pic/img_41.png" /></p>
 <p>Теперь были созданы 2 автора разными способами.</p>
@@ -817,52 +855,52 @@ Author.objects.create(username='my_author1', email='author1@author.ru', gender='
 <h3 id="361">3.6.1 Получение</h3>
 <p>Чтобы получить все элементы, используют конструкцию <code>objects.all()</code> в своей таблице.</p>
 <p>В нашем случае это</p>
-<pre class="highlight"><code class="language-python linenums">Author.objects.all()
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-34">Author.objects.all()
+</code></pre><button class="copy-button" onclick="copyCode('code-block-34')">Копировать код</button></div>
 
 <p><img alt="img_42.png" src="pic/img_42.png" /></p>
 <p>Чтобы получить одну строку в БД, то применяется конструкция <code>objects.get(поле=значение)</code> в своей таблице. Где поле - название поля по которому ищем,
 значение - искомое значение у поля. Если объект не найден, то вызовется ошибка.</p>
 <p>Как пример необходимо получить строку, где у автора имя <code>Админ</code></p>
-<pre class="highlight"><code class="language-python linenums">Author.objects.get(first_name='Админ')
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-35">Author.objects.get(first_name='Админ')
+</code></pre><button class="copy-button" onclick="copyCode('code-block-35')">Копировать код</button></div>
 
 <p><img alt="img_43.png" src="pic/img_43.png" /></p>
 <p>Чтобы получить несколько значений применяют фильтрацию с использованием конструкции <code>objects.filter(поле=значение)</code>.</p>
 <p>Как пример необходимо получить строки, где пол автора женский, а другим запросом, где мужской</p>
-<pre class="highlight"><code class="language-python linenums">Author.objects.filter(gender='ж')
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-36">Author.objects.filter(gender='ж')
 Author.objects.filter(gender='м')
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-36')">Копировать код</button></div>
 
 <p><img alt="img_44.png" src="pic/img_44.png" /></p>
 <h3 id="362">3.6.2 Обновление</h3>
 <p>Чтобы обновить данные, необходимо сначала получить объект из БД, затем обновить его атрибуты и снова его сохранить через <code>save</code>.</p>
 <p>Пример: получим автора с id=2 и изменим ему название города</p>
-<pre class="highlight"><code class="language-python linenums">author = Author.objects.get(id=2)
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-37">author = Author.objects.get(id=2)
 &gt;&gt;&gt; author.city = 'Санкт-Петербург'
 &gt;&gt;&gt; author.save() 
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-37')">Копировать код</button></div>
 
 <p>Если есть необходимость, то возможно изменить данные во множестве запросов (queryset), при помощи <code>update</code> таким образов в
 каждый объект, что есть в queryset в указанное поле(поля) запишутся значения.</p>
 <p>Пример: Заменить статус ознакомления <code>status_rule</code> на <code>True</code> тех авторов, чей город <code>Москва</code></p>
-<pre class="highlight"><code class="language-python linenums">Author.objects.filter(city='Москва').update(status_rule=True)
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-38">Author.objects.filter(city='Москва').update(status_rule=True)
+</code></pre><button class="copy-button" onclick="copyCode('code-block-38')">Копировать код</button></div>
 
 <p><img alt="img_45.png" src="pic/img_45.png" /></p>
 <h3 id="363">3.6.3 Удаление</h3>
 <p>Чтобы удалить данные, необходимо сначала получить объект из БД, затем удалить его через метод <code>delete()</code>.</p>
 <p>Пример: Удалить автора с email <code>author1@author.ru</code></p>
-<pre class="highlight"><code class="language-python linenums">author = Author.objects.get(email='author1@author.ru')
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-39">author = Author.objects.get(email='author1@author.ru')
 author.delete()
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-39')">Копировать код</button></div>
 
 <p><img alt="img_46.png" src="pic/img_46.png" /></p>
 <p>Если требуется удалить несколько элементов и есть множество запросов (queryset), то можно их удалить через это queryset.</p>
 <p>Пример: требуется удалить всех авторов, кто не указал город</p>
-<pre class="highlight"><code class="language-python linenums">Author.objects.filter(city=None).delete()
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-40">Author.objects.filter(city=None).delete()
 Author.objects.count()  # 7 - Количество оставшихся записей
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-40')">Копировать код</button></div>
 
 <p><img alt="img_47.png" src="pic/img_47.png" /></p>
 <h1 id="_1">Практика закончена</h1>

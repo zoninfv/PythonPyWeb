@@ -121,10 +121,10 @@
 </li>
 </ul>
 <p>Допустим вот пример кода (для ознакомления):</p>
-<pre class="highlight"><code class="language-python linenums">class AuthorGenericAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-1">class AuthorGenericAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-1')">Копировать код</button></div>
 
 <p>Здесь мы добавляем возможность поддерживать отображения списочной информации <code>ListModelMixin</code> (GET) запрос 
 и добавления информации <code>CreateModelMixin</code> (POST) запрос</p>
@@ -133,7 +133,7 @@
 <p>Как в <code>APIView</code>, так и в <code>GenericAPIView</code> необходимо явно прописывать методы, которые хотите, чтобы поддерживались, однако в <code>GenericAPIView</code> 
 тогда необходимо явно прописать какие именно методы из mixins вызываются в методах <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code></p>
 <p>(для ознакомления)</p>
-<pre class="highlight"><code class="language-python linenums">class AuthorGenericAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-2">class AuthorGenericAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
@@ -142,7 +142,7 @@
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-2')">Копировать код</button></div>
 
 <p><img alt="img_1.png" src="pic/img_1.png" /></p>
 <h2 id="12-rest_frameworkgenerics">1.2. Что ещё есть в rest_framework.generics?</h2>
@@ -239,7 +239,7 @@
 <h2 id="13-genericapiview">1.3 Создание представления на GenericApiView</h2>
 <p>Теперь уже с полным понимаем мы готовы создать и использовать представления на <code>GenericApiView</code></p>
 <p>Во <code>views.py</code> приложения <code>api</code> создайте <code>AuthorGenericAPIView</code></p>
-<pre class="highlight"><code class="language-python linenums">from django.http import Http404
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-3">from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from .serializers import AuthorModelSerializer
@@ -268,30 +268,30 @@ class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, C
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-3')">Копировать код</button></div>
 
 <p>Так образом мы записали аналогичные действия как в <code>AuthorAPIView</code>, но с <code>GenericAPIView</code> и миксинами.</p>
 <p>В методе <code>get</code> было использовано <code>if kwargs.get(self.lookup_field)</code> чтобы проверить, что был передан соответствующий ключ
 pk, чтобы понять хотим мы всё получить или только какого-то конкретного автора.</p>
 <p>Осталось только создать новый маршрут, чтобы использовать данное представление</p>
 <p>в <code>urls.py</code> приложения <code>api</code> допишите маршруты</p>
-<pre class="highlight"><code class="language-python linenums">from .views import AuthorGenericAPIView
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-4">from .views import AuthorGenericAPIView
 
 urlpatterns = [
     # ...
     path('authors_generic/', AuthorGenericAPIView.as_view(), name='author-generic-list'),
     path('authors_generic/&lt;int:pk&gt;/', AuthorGenericAPIView.as_view(), name='author-generic-detail'),
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-4')">Копировать код</button></div>
 
 <p>Проверьте работоспособность маршрутов </p>
-<p>http://127.0.0.1:8000/api/authors_generic/</p>
-<p>http://127.0.0.1:8000/api/authors_generic/1/</p>
-<p>http://127.0.0.1:8000/api/authors_generic/30/</p>
+<p><a href="http://127.0.0.1:8000/api/authors_generic/" target="_blank">http://127.0.0.1:8000/api/authors_generic/</a></p>
+<p><a href="http://127.0.0.1:8000/api/authors_generic/1/" target="_blank">http://127.0.0.1:8000/api/authors_generic/1/</a></p>
+<p><a href="http://127.0.0.1:8000/api/authors_generic/30/" target="_blank">http://127.0.0.1:8000/api/authors_generic/30/</a></p>
 <p>На последнем запросе возникает ошибка, так как автора не существует, о чем свидетельствует сообщение</p>
 <p><img alt="img_16.png" src="pic/img_16.png" /></p>
 <p>Допустим нам не нравится сообщение или по какому ключу оно отправлено, тогда его можно изменить отловив эту ошибку и отправив свой текст</p>
-<pre class="highlight"><code class="language-python linenums">from django.http import Http404
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-5">from django.http import Http404
 
 
 class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin,
@@ -310,7 +310,7 @@ class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, C
             return self.list(request, *args, **kwargs)
 
     # ...
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-5')">Копировать код</button></div>
 
 <p>Теперь если нет автора, то сообщение то, что и хотели</p>
 <p><img alt="img_17.png" src="pic/img_17.png" /></p>
@@ -339,7 +339,7 @@ class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, C
 дополнительные действия</p>
 <p><img alt="img_19.png" src="pic/img_19.png" /></p>
 <p>Ниже приведен код просто для ознакомления, чтобы посмотреть как бы выглядел код представления с использованием <code>ViewSet</code></p>
-<pre class="highlight"><code class="language-python linenums">from rest_framework import viewsets
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-6">from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import Author
 from .serializers import AuthorSerializer
@@ -386,7 +386,7 @@ class AuthorViewSet(viewsets.ViewSet):
         author = Author.objects.get(pk=pk)
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-6')">Копировать код</button></div>
 
 <p>Как видите, в отличие от <code>APIView</code>, где мы прописывали методы <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code>, то в <code>ViewSet</code>
 прописываем <code>list</code>, <code>retrieve</code>, <code>create</code>, <code>update</code>, <code>partial_update</code>, <code>destroy</code>. Всё встанет на свои места, 
@@ -401,7 +401,7 @@ class AuthorViewSet(viewsets.ViewSet):
 Ранее мы выяснили, что в Generic нужно передавать mixins, иначе всё нужно будет писать руками, поэтому код особо не будет отличаться от
 кода выше, единственное, что в GenericViewSet доступен классовый атрибут <code>queryset</code> и <code>serializer_class</code>, которого нет в обычном
 <code>ViewSet</code></p>
-<pre class="highlight"><code class="language-python linenums">from rest_framework import viewsets
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-7">from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import Author
 from .serializers import AuthorSerializer
@@ -448,7 +448,7 @@ class AuthorViewSet(viewsets.GenericViewSet):
         author = self.get_object()
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-7')">Копировать код</button></div>
 
 <h3 id="213-readonlymodelviewset">2.1.3 ReadOnlyModelViewSet</h3>
 <p>Расширение <code>GenericViewSet</code>, с добавлением методов <code>list()</code> и <code>retrieve()</code></p>
@@ -461,12 +461,12 @@ class AuthorViewSet(viewsets.GenericViewSet):
 то не нужно переопределять</em></strong>.</p>
 <p><img alt="img_22.png" src="pic/img_22.png" /></p>
 <p>Так что код теперь будет таким, его и добавим во <code>views.py</code> приложения <code>api</code></p>
-<pre class="highlight"><code class="language-python linenums">from rest_framework.viewsets import ModelViewSet
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-8">from rest_framework.viewsets import ModelViewSet
 
 class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-8')">Копировать код</button></div>
 
 <p>Коротко и лаконично.</p>
 <h2 id="22">2.2 Маршрутизация</h2>
@@ -475,7 +475,7 @@ class AuthorViewSet(ModelViewSet):
 отличается от ранее используемых. Для этого используется специальный класс <code>DefaultRouter</code> или <code>SimpleRouter</code> в который передаётся ViewSet и название маршрута, затем
 уже данный роутер регистрируется более привычным способом.</p>
 <p>В <code>urls.py</code> приложения <code>api</code> пропишем</p>
-<pre class="highlight"><code class="language-python linenums">from django.urls import include
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-9">from django.urls import include
 from .views import AuthorViewSet
 from rest_framework.routers import DefaultRouter
 
@@ -486,7 +486,7 @@ urlpatterns = [
     # ...
     path('', include(router.urls)),
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-9')">Копировать код</button></div>
 
 <p>В этом коде:</p>
 <ul>
@@ -510,19 +510,19 @@ urlpatterns = [
 Эти имена можно использовать в методах reverse() или reverse_lazy() для генерации URL внутри вашего кода.</p>
 <p>Общий код во <code>views.py</code> выглядит так</p>
 <p><img alt="img_23.png" src="pic/img_23.png" /></p>
-<p>Теперь если пройти по маршруту http://127.0.0.1:8000/api/a чтобы посмотреть какие были созданы, то увидим, что router создал несколько
+<p>Теперь если пройти по маршруту <a href="http://127.0.0.1:8000/api/a" target="_blank">http://127.0.0.1:8000/api/a</a> чтобы посмотреть какие были созданы, то увидим, что router создал несколько
 маршрутов</p>
 <p><img alt="img_24.png" src="pic/img_24.png" /></p>
 <p>Всё остальное полностью работоспособно по маршрутам</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/10/</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/" target="_blank">http://127.0.0.1:8000/api/authors_viewset/</a></p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/10/" target="_blank">http://127.0.0.1:8000/api/authors_viewset/10/</a></p>
 <h2 id="23">2.3 Поддерживание дополнительных действий</h2>
 <p><code>ModelViewSet</code> поддерживает написание пользовательский действий, т.е. методов (которые не вписываются в стандартные операции CRUD), которые будут вызываться при заходе на определенный путь.</p>
 <p>Вы можете указать, на каких типах запросов может запускаться пользовательское действие, используя атрибут <code>action</code> в методе <code>@action декоратора</code>. 
 Этот декоратор предоставляется Django REST Framework для добавления пользовательских действий к вашим представлениям ViewSet.
 По названию вашего метода будет сформирован маршрут с этим названием.</p>
 <p>Во <code>views.py</code> приложения <code>api</code> в <code>AuthorViewSet</code> пропишем</p>
-<pre class="highlight"><code class="language-python linenums">from rest_framework.decorators import action
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-10">from rest_framework.decorators import action
 from rest_framework.response import Response
 
 class AuthorViewSet(ModelViewSet):
@@ -533,7 +533,7 @@ class AuthorViewSet(ModelViewSet):
     def my_action(self, request, pk=None):
         # Ваша пользовательская логика здесь
         return Response({'message': f'Пользовательская функция для пользователя с pk={pk}'})
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-10')">Копировать код</button></div>
 
 <p><code>@action(detail=True, methods=['post'])</code> указывает, что пользовательское действие custom_action доступно только для объектов, 
 а не для всего списка (<code>detail=True</code>), и может быть запущено только с HTTP методом POST (<code>methods=['post']</code>).</p>
@@ -541,17 +541,17 @@ class AuthorViewSet(ModelViewSet):
 <p>Таким образом, пользовательское действие <code>my_action</code> теперь доступно только для HTTP POST запросов и может быть вызвано только для конкретных объектов.</p>
 <p>Теперь появились новые маршруты</p>
 <p><img alt="img_25.png" src="pic/img_25.png" /></p>
-<p>GET Запрос не работает http://127.0.0.1:8000/api/authors_viewset/10/my_action/</p>
+<p>GET Запрос не работает <a href="http://127.0.0.1:8000/api/authors_viewset/10/my_action/" target="_blank">http://127.0.0.1:8000/api/authors_viewset/10/my_action/</a></p>
 <p>А вот POST работает</p>
 <p><img alt="img_26.png" src="pic/img_26.png" /></p>
 <h2 id="24">2.4 Ограничение поддерживаемых методов для всего представления</h2>
 <p>По умолчанию <code>ModelViewSet</code> поддерживает все методы <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, но это можно ограничить.</p>
 <p>Делается это на этапе создания представления в классовом атрибуте <code>http_method_names</code>, как пример </p>
-<pre class="highlight"><code class="language-python linenums">class AuthorViewSet(viewsets.ModelViewSet):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-11">class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     http_method_names = ['get', 'post']
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-11')">Копировать код</button></div>
 
 <p>В таком случае представление <code>AuthorViewSet</code> будет поддерживать только методы <code>GET</code> и <code>POST</code></p>
 <h1 id="3">3. Пагинация</h1>
@@ -562,7 +562,7 @@ class AuthorViewSet(ModelViewSet):
 <p>Чтобы применить пагинацию в <code>AuthorViewSet</code>, вы можете использовать классы пагинации <code>DRF</code> и настроить их в соответствии 
 с вашими потребностями. </p>
 <p>Например, вы можете добавить следующий код в ваш <code>AuthorViewSet</code>, чтобы применить стандартную пагинацию:</p>
-<pre class="highlight"><code class="language-python linenums">from rest_framework.pagination import PageNumberPagination
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-12">from rest_framework.pagination import PageNumberPagination
 
 
 class AuthorPagination(PageNumberPagination):
@@ -577,16 +577,16 @@ class AuthorViewSet(ModelViewSet):
     pagination_class = AuthorPagination
 
     # Остальные методы
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-12')">Копировать код</button></div>
 
 <p>Пагинация применяется для результатов запроса метода <code>list()</code>, т.е. в нашем случае для <code>GET</code> запроса</p>
-<p>Отобразим всех авторов http://127.0.0.1:8000/api/authors_viewset/ теперь их будет всего 5 и будет ещё дополнительная информация.</p>
+<p>Отобразим всех авторов <a href="http://127.0.0.1:8000/api/authors_viewset/" target="_blank">http://127.0.0.1:8000/api/authors_viewset/</a> теперь их будет всего 5 и будет ещё дополнительная информация.</p>
 <p><img alt="img_27.png" src="pic/img_27.png" /></p>
-<p>Передадим в запрос параметр <code>page</code> со значением страницы, которую хотим отобразить http://127.0.0.1:8000/api/authors_viewset/?page=2</p>
+<p>Передадим в запрос параметр <code>page</code> со значением страницы, которую хотим отобразить <a href="http://127.0.0.1:8000/api/authors_viewset/?page=2" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?page=2</a></p>
 <p>Пагинация работает, если ходим изменить число выводимых авторов, то это можно сделать прямо через параметр <code>page_size</code></p>
-<p>http://127.0.0.1:8000/api/authors_viewset/?page=1&amp;page_size=10 теперь отображается 10 авторов на странице.</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/?page=1&amp;page_size=10" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?page=1&amp;page_size=10</a> теперь отображается 10 авторов на странице.</p>
 <h1 id="4">4. Фильтрация</h1>
-<p>Для интересующихся можно почитать перевод <a href="https://django.fun/docs/django-rest-framework/3.12/api-guide/filtering/">документации</a></p>
+<p>Для интересующихся можно почитать перевод <a href="<a href="https://django.fun/docs/django-rest-framework/3.12/api-guide/filtering/">документации" target="_blank">https://django.fun/docs/django-rest-framework/3.12/api-guide/filtering/">документации</a></a></p>
 <p>По умолчанию общие представления списков в REST framework возвращают весь набор запросов для менеджера модели. 
 Часто вы хотите, чтобы ваш API ограничивал элементы, возвращаемые набором запросов.</p>
 <h2 id="41-get_queryset">4.1 Переопределение get_queryset</h2>
@@ -595,7 +595,7 @@ class AuthorViewSet(ModelViewSet):
 <p>Вы можете определить параметры запроса URL, которые будут использоваться для фильтрации данных. 
 Например, если у вас есть модель <code>Author</code>, и вы хотите фильтровать авторов по содержанию определенного слова в их имени(а не так как они выводятся по умолчанию), 
 вы можете сделать это следующим образом.</p>
-<pre class="highlight"><code class="language-python linenums">class AuthorViewSet(ModelViewSet):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-13">class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer
     pagination_class = AuthorPagination
@@ -608,36 +608,36 @@ class AuthorViewSet(ModelViewSet):
         return queryset
 
     # Остальные методы
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-13')">Копировать код</button></div>
 
 <p>Рассмотрите следующие запросы:</p>
 <p>Сначала без фильтрации</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/" target="_blank">http://127.0.0.1:8000/api/authors_viewset/</a></p>
 <p>Затем с фильтрацией</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/?name=blog</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/?name=blog" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?name=blog</a></p>
 <h2 id="42-djangofilterbackend">4.2 Использование DjangoFilterBackend</h2>
 <p>DRF также поддерживает стороннюю библиотеку <code>django-filter</code>, которая предоставляет более гибкий и мощный способ фильтрации данных. 
-Для использования <a href="https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html">django-filter</a> с <code>DRF</code>, вам необходимо настроить фильтры в соответствующем классе фильтра.</p>
+Для использования <a href="<a href="https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html">django-filter" target="_blank">https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html">django-filter</a></a> с <code>DRF</code>, вам необходимо настроить фильтры в соответствующем классе фильтра.</p>
 <p>Установим её</p>
-<pre class="highlight"><code class="language-python linenums">pip install django-filter
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-14">pip install django-filter
+</code></pre><button class="copy-button" onclick="copyCode('code-block-14')">Копировать код</button></div>
 
 <p>Затем добавьте <code>'django_filters'</code> к <code>INSTALLED_APPS</code> в корневой <code>settings.py</code>:</p>
 <p>Расширим <code>AuthorViewSet</code> во <code>views.py</code> приложения <code>api</code> </p>
-<pre class="highlight"><code class="language-python linenums">from django_filters.rest_framework import DjangoFilterBackend
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-15">from django_filters.rest_framework import DjangoFilterBackend
 
 class AuthorViewSet(ModelViewSet):
     # ...
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'email']  # Указываем для каких полем можем проводить фильтрацию
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-15')">Копировать код</button></div>
 
-<p>Если зайти в панель DRF, напримена на http://127.0.0.1:8000/api/authors_viewset/, то появится кнопка <code>Filters</code></p>
+<p>Если зайти в панель DRF, напримена на <a href="http://127.0.0.1:8000/api/authors_viewset/," target="_blank">http://127.0.0.1:8000/api/authors_viewset/,</a> то появится кнопка <code>Filters</code></p>
 <p><img alt="img_28.png" src="pic/img_28.png" /></p>
 <p>Где высветится поле</p>
 <p><img alt="img_29.png" src="pic/img_29.png" /></p>
 <p>Впишите туда <code>anna_journey</code> и нажмите submit</p>
-<p>Произойдет фильтрование, а в адресной строке вы увидите путь http://127.0.0.1:8000/api/authors_viewset/?name=anna_journey&amp;email=</p>
+<p>Произойдет фильтрование, а в адресной строке вы увидите путь <a href="http://127.0.0.1:8000/api/authors_viewset/?name=anna_journey&amp;email=" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?name=anna_journey&amp;email=</a></p>
 <p>Аналогично можно проводить фильтрование по полям в адресной строке.</p>
 <p>В DRF есть свои встроенные фильтрации в модуле <code>from rest_framework import filters</code> такие как:</p>
 <ul>
@@ -651,7 +651,7 @@ class AuthorViewSet(ModelViewSet):
 <p>Чтобы использовать эти фильтры, то необходимо прописать их в <code>filter_backends</code>, также при помощи <code>search_fields</code> и <code>ordering_fields</code> 
 прописываются поля участвующие в фильтрации для <code>SearchFilter</code> и <code>OrderingFilter</code> соответственно.</p>
 <p>Расширьте <code>AuthorViewSet</code></p>
-<pre class="highlight"><code class="language-python linenums">from rest_framework import filters
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-16">from rest_framework import filters
 
 class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.all()
@@ -663,7 +663,7 @@ class AuthorViewSet(ModelViewSet):
     ordering_fields = ['name', 'email']  # Поля, по которым можно сортировать
 
     # ...
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-16')">Копировать код</button></div>
 
 <p>Теперь в панели DRF в Filters появились новые поля</p>
 <p><img alt="img_30.png" src="pic/img_30.png" /></p>
@@ -672,18 +672,18 @@ class AuthorViewSet(ModelViewSet):
 <li><code>search</code> - передаёте текст, который ищется в полях указанных в <code>search_fields</code>. Происходит поиск именно вхождения искомого 
 текста в текст записанного в поле, а не полное соответствие. Пример в каких строках БД таблицы Author в поле email содержится слово <code>user</code></li>
 </ul>
-<p>http://127.0.0.1:8000/api/authors_viewset/?search=user</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/?search=user" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?search=user</a></p>
 <ul>
 <li><code>ordering</code> - сортировка, которое принимает название поле по которому можно сортировать 
 (среди допустимых полей описанных в <code>ordering_fields</code>) результат запроса. Можно передать несколько полей через запятую. По умолчанию
 сортировка идёт по возрастанию, чтобы сделать по убыванию, то перед названием поля ставим <code>-</code></li>
 </ul>
 <p>Пример вывода всех авторов отсортированных по имени</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/?ordering=name</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/?ordering=name" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?ordering=name</a></p>
 <p>Отсортированных по имени в обратном порядке</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/?ordering=-name</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/?ordering=-name" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?ordering=-name</a></p>
 <p>Запросы фильтрации можно комбинировать. Допустим вывести всех авторов у которых в имени есть user и отсортировать их в обратном порядке по полю email</p>
-<p>http://127.0.0.1:8000/api/authors_viewset/?search=user&amp;ordering=-email</p>
+<p><a href="http://127.0.0.1:8000/api/authors_viewset/?search=user&amp;ordering=-email" target="_blank">http://127.0.0.1:8000/api/authors_viewset/?search=user&amp;ordering=-email</a></p>
 <p>Комбинированные запросы выполняются в том порядке как описаны в filter_backends, т.е. в нашем случае сначала выполняется
 <code>DjangoFilterBackend</code>, затем <code>filters.SearchFilter</code>, затем <code>filters.OrderingFilter</code></p>
 <h1 id="5">5. Тестирование</h1>
@@ -752,7 +752,7 @@ class AuthorViewSet(ModelViewSet):
 <p>Тесты в Django пишутся в специальном файле <code>tests.py</code> в соответственном приложении. При запуске тестов в Django автоматически 
 формируется новая тестовая БД, с той же самой структурой что есть, но совершенно незаполненная.</p>
 <p>В файле <code>tests.py</code> приложения <code>api</code> пропишите</p>
-<pre class="highlight"><code class="language-python linenums">from django.test import TestCase
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-17">from django.test import TestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -847,7 +847,7 @@ class AuthorViewSetTestCase(APITestCase):
         print(f&quot;Ответ от сервера: {response.status_code}&quot;)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Author.objects.filter(pk=self.author1.pk).exists())  # Проверка, что теперь этого автора не существует
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-17')">Копировать код</button></div>
 
 <p>Для создания теста создаётся тестовый класс наследующийся от <code>APITestCase</code>. Каждый тест записывается как метод данного класса и обязательно должен начинаться 
 со слова <code>test</code>, далее можно писать любое название. </p>
@@ -879,8 +879,8 @@ Django и получаете HTTP-ответ в виде объекта HttpResp
 </ol>
 <hr />
 <p>Запустите тесты командой в терминале</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py test apps.api
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-18">python manage.py test apps.api
+</code></pre><button class="copy-button" onclick="copyCode('code-block-18')">Копировать код</button></div>
 
 <p>Не обращайте внимание на предупреждения со стороны модуля пагинации.</p>
 <p><img alt="img_31.png" src="pic/img_31.png" /></p>
@@ -924,35 +924,35 @@ Django и получаете HTTP-ответ в виде объекта HttpResp
 <li>В тестовом классе <code>AuthorViewSetTestCase</code> используйте классовый атрибут <code>fixtures</code> для указания имени файла фикстуры в вашем тестовом случае.
 В атрибут <code>fixtures</code> передаётся список фикстур.</li>
 </ol>
-<pre class="highlight"><code class="language-python linenums">class AuthorViewSetTestCase(APITestCase):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-19">class AuthorViewSetTestCase(APITestCase):
     fixtures = ['testdata.json']
 
     # Остальные методы ...
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-19')">Копировать код</button></div>
 
 <p>Чтобы проверить, что фикстура действительно применилась, то в <code>test_list_authors</code> проверим сколь записей есть в таблице Автор</p>
-<pre class="highlight"><code class="language-python linenums">def test_list_authors(self):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-20">def test_list_authors(self):
     print(&quot;Запуск теста test_list_authors&quot;)
     print(&quot;______________________________&quot;)
     print(f'В таблице автор {Author.objects.count()} значения')
     # ...
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-20')">Копировать код</button></div>
 
 <p><img alt="img_32.png" src="pic/img_32.png" /></p>
 <p>В итоге при запуске тестов будет 4 значения</p>
 <p><img alt="img_33.png" src="pic/img_33.png" /></p>
 <p>Если было бы необходимо запускать все тесты в проект, то просто не указываем конкретный проект в котором Django будет искать тесты.</p>
 <p>В нашем случае это</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py test apps
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-21">python manage.py test apps
+</code></pre><button class="copy-button" onclick="copyCode('code-block-21')">Копировать код</button></div>
 
 <p>Так как все приложения лежат в папке apps, если бы этого не было, то писали бы </p>
-<pre class="highlight"><code class="language-python linenums">python manage.py test
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-22">python manage.py test
+</code></pre><button class="copy-button" onclick="copyCode('code-block-22')">Копировать код</button></div>
 
 <p>Если по каким-то причинам обязательно необходимо, чтобы данные в БД сохранялись между сессиями, то можно воспользоваться параметрами при запуске <code>test --keepdb</code> (просто для ознакомления).
 Эта опция сохраняет тестовую базу данных между несколькими запусками. </p>
-<p>Дополнительно (если необходимо) про тестирование в Django можете прочитать <a href="https://colab.research.google.com/drive/17cYDRQ-MnQETVJxURrOPzli65leVVxcf">здесь</a></p>
+<p>Дополнительно (если необходимо) про тестирование в Django можете прочитать здесь <a href="https://colab.research.google.com/drive/17cYDRQ-MnQETVJxURrOPzli65leVVxcf" target="_blank">https://colab.research.google.com/drive/17cYDRQ-MnQETVJxURrOPzli65leVVxcf</a> </p>
 <h2 id="52">5.2 Самостоятельно (по желанию)</h2>
 <p>Если ранее создавали API к таблице БД, то протестируйте вашу API.</p>
 <h1 id="_1">Практика окончена</h1>

@@ -1,91 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оглавление</title>
 
-    <link rel="stylesheet" href="/js_css/main.css">
-    <link rel="stylesheet" href="/js_css/default.min.css">
-    <!-- Подключаем js -->
-    <script src="/js_css/copy.js"></script>
-    <script src="/js_css/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-</head>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Оглавление</title>
 
-<body>
-<!-- Оглавление слева -->
-<div class="sidebar">
-<h1 id="оглавление">Оглавление</h1>
+            <link rel="stylesheet" href="/js_css/main.css">
+            <link rel="stylesheet" href="/js_css/default.min.css">
+            <!-- Подключаем js -->
+            <script src="/js_css/copy.js"></script>
+            <script src="/js_css/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
+        </head>
+        <body>
+            <div class="sidebar">
 <ul>
-<li><a href="#section-1">1.Работа с API, через view</a><ul>
-<li><a href="#section-1_1">1.1 GET запрос</a><ul>
-<li><a href="#section-1_1_1">1.1.1 requests</a></li>
-<li><a href="#section-1_1_2">1.1.2 curl</a></li>
-<li><a href="#section-1_1_3">1.1.3 postman</a></li>
+<li><a href="#1-api-view">1. Работа с API, через view</a><ul>
+<li><a href="#11-get">1.1 GET запрос</a><ul>
+<li><a href="#111-requests">1.1.1 requests</a></li>
+<li><a href="#112-curl">1.1.2 curl</a></li>
+<li><a href="#113-postman">1.1.3 postman</a></li>
 </ul>
 </li>
-<li><a href="#section-1_2">1.2 POST запрос</a><ul>
-<li><a href="#section-1_2_1">1.2.1 requests</a></li>
-<li><a href="#section-1_2_2">1.2.2 curl</a></li>
-<li><a href="#section-1_2_3">1.2.3 postman</a></li>
+<li><a href="#12-post">1.2 POST запрос</a><ul>
+<li><a href="#121-requests">1.2.1 requests</a></li>
+<li><a href="#122-curl">1.2.2 curl</a></li>
+<li><a href="#123-postman">1.2.3 postman</a></li>
 </ul>
 </li>
-<li><a href="#section-1_3">1.3 PUT запрос</a><ul>
-<li><a href="#section-1_3_1">1.3.1 requests</a></li>
-<li><a href="#section-1_3_2">1.3.2 curl</a></li>
-<li><a href="#section-1_3_3">1.3.3 postman</a></li>
+<li><a href="#13-put">1.3 PUT запрос</a></li>
+<li><a href="#131-requests">1.3.1 requests</a></li>
+<li><a href="#132-curl">1.3.2 curl</a></li>
+<li><a href="#133-postman">1.3.3 postman</a></li>
+<li><a href="#14-patch">1.4 PATCH запрос</a></li>
+<li><a href="#141-requests">1.4.1 requests</a></li>
+<li><a href="#142-curl">1.4.2 curl</a></li>
+<li><a href="#143-postman">1.4.3 postman</a></li>
+<li><a href="#15-delete">1.5 DELETE запрос</a></li>
+<li><a href="#151-requests">1.5.1 requests</a></li>
+<li><a href="#152-curl">1.5.2 curl</a></li>
+<li><a href="#153-postman">1.5.3 postman</a></li>
+<li><a href="#16">1.6 Типовые возвращаемые статус коды и что они значат (материал для чтения)</a><ul>
+<li><a href="#161-get">1.6.1 GET</a></li>
+<li><a href="#162-post">1.6.2 POST</a></li>
+<li><a href="#163-put">1.6.3 PUT</a></li>
+<li><a href="#164-patch">1.6.4 PATCH</a></li>
+<li><a href="#165-delete">1.6.5 DELETE</a></li>
+<li><a href="#17">1.7 Самостоятельно (для желающих)</a></li>
 </ul>
 </li>
-<li><a href="#section-1_4">1.4 PATCH запрос</a><ul>
-<li><a href="#section-1_4_1">1.4.1 requests</a></li>
-<li><a href="#section-1_4_2">1.4.2 curl</a></li>
-<li><a href="#section-1_4_3">1.4.3 postman</a></li>
 </ul>
 </li>
-<li><a href="#section-1_5">1.5 DELETE запрос</a><ul>
-<li><a href="#section-1_5_1">1.5.1 requests</a></li>
-<li><a href="#section-1_5_2">1.5.2 curl</a></li>
-<li><a href="#section-1_5_3">1.5.3 postman</a></li>
+<li><a href="#2-api-django-rest-framework">2. Работа с API через Django REST Framework</a><ul>
+<li><a href="#21-drf">2.1 Начало работы с DRF</a></li>
+<li><a href="#22-api">2.2 Алгоритм создания точки доступа к API</a><ul>
+<li><a href="#221">2.2.1 Создание сериализатора</a></li>
+<li><a href="#222">2.2.2 Создание представления</a></li>
+<li><a href="#223-url-routing">2.2.3 Настройка маршрутизации (URL Routing)</a></li>
 </ul>
 </li>
-<li><a href="#section-1_6">1.6 Типовые возвращаемые статус коды и что они значат (материал для чтения)</a></li>
-<li><a href="#section-1_7">1.7 Самостоятельно (для желающих)</a></li>
+<li><a href="#23">2.3 Проверка маршрутов</a></li>
+<li><a href="#24">2.4 Сериализатор модели</a></li>
 </ul>
 </li>
-<li><a href="#section-2">2 Работа с API через Django REST Framework</a><ul>
-<li><a href="#section-2_1">2.1 Начало работы с DRF</a></li>
-<li><a href="#section-2_2">2.2 Алгоритм создания точки доступа к API</a><ul>
-<li><a href="#section-2_2_1">2.2.1 Создание сериализатора</a></li>
-<li><a href="#section-2_2_2">2.2.2 Создание представления</a></li>
-<li><a href="#section-2_2_3">2.2.3 Настройка маршрутизации (URL Routing)</a></li>
+<li><a href="#_1">Практика окончена</a></li>
 </ul>
-</li>
-<li><a href="#section-2_3">2.3 Проверка маршрутов</a></li>
-<li><a href="#section-2_4">2.4 Сериализатор модели</a></li>
-</ul>
-</li>
-<li><a href="#section-optional-block">Необязательный блок</a></li>
-</ul>
-<hr>
 </div>
-
-<!-- Основной контент справа -->
 <div class="content">
-<h1 id="-1-работа-с-api-через-view"><a name="section-1"></a> 1. Работа с API, через view</h1>
+<h1 id="1-api-view">1. Работа с API, через view</h1>
 <p>Перед тем как работать с <code>Django Rest Framework</code> сначала посмотрим как бы можно было сделать
 решение задачи доступа к ресурсам через методы <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, без него.</p>
 <p>В приложении <code>db_train_alternative</code> во <code>views.py</code> пропишем пару отображений для работы с данными.</p>
 <p>Создадим возможность работы с БД (отображения, изменения) таблиц приложения <code>db_train_alternative</code></p>
 <p>Поработаем над таблицей Author, там всего 2 поля <code>name</code> и <code>email</code> особых сложностей не должно быть.</p>
-<h2 id="-11-get-запрос"><a name="section-1_1"></a> 1.1 GET запрос</h2>
+<h2 id="11-get">1.1 GET запрос</h2>
 <p>Во <code>views.py</code> приложения <code>db_train_alternative</code> создадим отображение <code>AuthorREST</code> возвращающее json,
 пропишем пока только GET запрос. Поработаем над базовым классом <code>View</code>, чтобы всё прописать руками.</p>
 <p>Скопируйте во <code>views.py</code> и проанализируйте данный код. Здесь мы по принципу REST сформировали get запрос, т.е.
 есть возможность как получить все данные из БД, так как и какие-то конкретные. После получения данных мы определяем какие
 данные (поля таблицы) будут возвращаться. Если не нашли конкретного автора, то возвращаем JSON с кодом 404 и поясняющим сообщением.</p>
-<div class="code-container">
-    <pre><code class="language-python" id="code-block-1">from django.http import JsonResponse
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-1">from django.http import JsonResponse
 from django.views import View
 from .models import Author
 from django.views.decorators.csrf import csrf_exempt
@@ -99,21 +93,21 @@ class AuthorREST(View):
             data = []
             for author in Author.objects.all():
                 # Производим сериализацию, т.е. определяем, что именно запишется в данные для преобразования в JSON
-                data_author = {&#39;id&#39;: author.id,
-                               &#39;name&#39;: author.name,
-                               &#39;email&#39;: author.email}
+                data_author = {'id': author.id,
+                               'name': author.name,
+                               'email': author.email}
                 data.append(data_author)
         else:
             author = Author.objects.filter(id=id)
             if author:  # Если автор такой есть, т.е. QuerySet не пустой
                 author = author.first()  # Получаем первого автора из QuerySet, так как он там один
                 # Производим сериализацию, т.е. определяем, что именно запишется в данные для преобразования в JSON
-                data = {&#39;id&#39;: author.id,
-                        &#39;name&#39;: author.name,
-                        &#39;email&#39;: author.email}
+                data = {'id': author.id,
+                        'name': author.name,
+                        'email': author.email}
             else:  # Иначе, так как автор не найден (QuerySet пустой), то возвращаем ошибку, с произвольным текстом,
                 # для понимания почему произошла ошибка
-                return JsonResponse({&#39;error&#39;: f&#39;Автора с id={id} не найдено!&#39;},
+                return JsonResponse({'error': f'Автора с id={id} не найдено!'},
                                     status=404,
                                     json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                        &quot;indent&quot;: 4}
@@ -122,126 +116,126 @@ class AuthorREST(View):
         # После того как данные для ответа созданы - возвращаем Json объект с данными
         return JsonResponse(data, safe=False, json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                                  &quot;indent&quot;: 4})
-</code></pre>
-    <button class="copy-button" onclick="copyCode('code-block-1')">Копировать код</button>
-    </div>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-1')">Копировать код</button></div>
+
 <p>Создайте файл <code>urls.py</code> в данном приложении и опишите там пути. Опять же архитектурный стиль REST, одно отображение, но благодаря
 разным методам получаются разные действия.</p>
-
-<div class="code-container">
-    <pre><code class="language-python" id="code-block-2">from django.urls import path
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-2">from django.urls import path
 from .views import AuthorREST
 
 
 urlpatterns = [
-    path(&#39;author/&#39;, AuthorREST.as_view()),
-    path(&#39;author/&lt;int:id&gt;/&#39;, AuthorREST.as_view()),
+    path('author/', AuthorREST.as_view()),
+    path('author/&lt;int:id&gt;/', AuthorREST.as_view()),
 ]
-</code></pre>
-    <button class="copy-button" onclick="copyCode('code-block-2')">Копировать код</button>
-    </div>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-2')">Копировать код</button></div>
+
 <p>Затем добавляем ссылку на приложение в <code>urls.py</code> в папке <code>project</code></p>
-<pre><code class="language-python">urlpatterns = [
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-3">urlpatterns = [
     # ...
-    path(&#39;api_alter/&#39;, include(&#39;apps.db_train_alternative.urls&#39;)),
+    path('api_alter/', include('apps.db_train_alternative.urls')),
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-3')">Копировать код</button></div>
+
 <p>Проверьте работоспособность данного отображения по путям</p>
-<hr>
+<hr />
 <p>Чтобы вывести всех авторов</p>
 <p><a href="http://127.0.0.1:8000/api_alter/author/" target="_blank">http://127.0.0.1:8000/api_alter/author/</a></p>
-<hr>
+<hr />
 <p>Чтобы вывести автора с id=10</p>
 <p><a href="http://127.0.0.1:8000/api_alter/author/10/" target="_blank">http://127.0.0.1:8000/api_alter/author/10/</a></p>
-<hr>
+<hr />
 <p>Чтобы вывести несуществующего автора</p>
 <p><a href="http://127.0.0.1:8000/api_alter/author/0/" target="_blank">http://127.0.0.1:8000/api_alter/author/0/</a></p>
-<hr>
+<hr />
 <p>Формально вот мы и создали свой API endpoint (точку присоединения), чтобы получать нужную нам информацию при GET запросе по адресу
 <code>http://127.0.0.1:8000/api_alter/author/</code></p>
 <p>Туже информацию мы можем получить через <code>requests</code> в python или через <code>curl</code>.</p>
 <p>Напомним как это делается.</p>
-<h3 id="-111-requests"><a name="section-1_1_1"></a> 1.1.1 requests</h3>
+<h3 id="111-requests">1.1.1 requests</h3>
 <p>Для работы с <code>requests</code> воспользуемся <code>Python Console</code>, где пропишем</p>
-
-    <pre><code class="language-python">import requests
-response = requests.get(&#39;http://127.0.0.1:8000/api_alter/author/&#39;)
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-4">import requests
+response = requests.get('<a href="http://127.0.0.1:8000/api_alter/author/')" target="_blank">http://127.0.0.1:8000/api_alter/author/')</a>
 response.status_code
 response.json()
+</code></pre><button class="copy-button" onclick="copyCode('code-block-4')">Копировать код</button></div>
+
+<p><img alt="img.png" src="pic/img.png" /></p>
+<h3 id="112-curl">1.1.2 curl</h3>
+<p>Теперь в терминале (<code>Terminal</code>) обратимся к тому же адресу, но через <code>curl</code></p>
+<pre class="highlight"><code class="language-text linenums">curl <a href="http://127.0.0.1:8000/api_alter/author/" target="_blank">http://127.0.0.1:8000/api_alter/author/</a>
 </code></pre>
 
-<p><img src="pic/img.png" alt="img.png"></p>
-<h3 id="-112-curl"><a name="section-1_1_2"></a> 1.1.2 curl</h3>
-<p>Теперь в терминале (<code>Terminal</code>) обратимся к тому же адресу, но через <code>curl</code></p>
-<pre><code class="language-text">curl http://127.0.0.1:8000/api_alter/author/
-</code></pre>
-<p><img src="pic/img_1.png" alt="img_1.png"></p>
-<h3 id="-113-postman"><a name="section-1_1_3"></a> 1.1.3 postman</h3>
+<p><img alt="img_1.png" src="pic/img_1.png" /></p>
+<h3 id="113-postman">1.1.3 postman</h3>
 <p>Также можно использовать специальные программы на примере Postman, которые позволяют проводить проверку работоспособности
 API и её endpoints. </p>
-<p>Скачайте и установите программу <a href="https://www.postman.com/downloads/">Postman</a> (если вы находитесь в классе ВИШ, то спросите у преподавателя,
+<p>Скачайте и установите программу <a href="<a href="https://www.postman.com/downloads/">Postman" target="_blank">https://www.postman.com/downloads/">Postman</a></a> (если вы находитесь в классе ВИШ, то спросите у преподавателя,
 где находится файл установки на компьютере). Нужна именно версия на компьютере, а не web версия, так как web версия не позволяет
 обрабатывать запросы на localhost.</p>
 <p>Зарегистрируйтесь или нажмите на использование легковесного клиента(при использовании легковесного клиента ваши запросы не сохранятся
 на сервере Postman, что может быть не так удобно при использовании программы на другом компьютере)</p>
-<p><img src="pic/img_2.png" alt="img_2.png"></p>
+<p><img alt="img_2.png" src="pic/img_2.png" /></p>
 <p>Создадим коллекцию, это своего рода папка с запросами на одну тему</p>
-<p><img src="pic/img_3.png" alt="img_3.png"></p>
+<p><img alt="img_3.png" src="pic/img_3.png" /></p>
 <p>Назовем нашу коллекцию, допустим <code>Тестирование db_alternative</code></p>
 <p>Теперь добавим запросов в нашу коллекцию</p>
-<p><img src="pic/img_4.png" alt="img_4.png"></p>
+<p><img alt="img_4.png" src="pic/img_4.png" /></p>
 <p>Назовем наш запрос, допустим <code>Get Authors</code> так как планируем создать GET запрос к таблице Author</p>
-<p><img src="pic/img_5.png" alt="img_5.png"></p>
+<p><img alt="img_5.png" src="pic/img_5.png" /></p>
 <p>И в форме прописываем адрес для запроса и нажимаем <code>Send</code></p>
-<pre><code class="language-text">http://127.0.0.1:8000/api_alter/author/
+<pre class="highlight"><code class="language-text linenums"><a href="http://127.0.0.1:8000/api_alter/author/" target="_blank">http://127.0.0.1:8000/api_alter/author/</a>
 </code></pre>
+
 <p>В форме ниже получаем результат. Можно сохранить данный запрос, чтобы не нужно было его заново вводить</p>
-<p><img src="pic/img_6.png" alt="img_6.png"></p>
+<p><img alt="img_6.png" src="pic/img_6.png" /></p>
 <p>Postman позволяет удобно работать с группами запросов и удобно тестировать их.</p>
-<h2 id="-12-post-запрос"><a name="section-1_2"></a> 1.2 POST запрос</h2>
+<h2 id="12-post">1.2 POST запрос</h2>
 <p>Настало время передать информацию и создать нового автора в REST стиле, для этого в <code>AuthorREST</code> добавим метод <code>post</code></p>
-<pre><code class="language-python">class AuthorREST(View):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-5">class AuthorREST(View):
     def get(self, request):
         # код что был
 
     def post(self, request):
         try:
             data = json.loads(request.body)
-            author = Author.objects.create(name=data[&#39;name&#39;], email=data[&#39;email&#39;])
+            author = Author.objects.create(name=data['name'], email=data['email'])
             response_data = {
-                &#39;message&#39;: f&#39;Автор успешно создан&#39;,
-                &#39;id&#39;: author.id,
-                &#39;name&#39;: author.name,
-                &#39;email&#39;: author.email
+                'message': f'Автор успешно создан',
+                'id': author.id,
+                'name': author.name,
+                'email': author.email
             }
             return JsonResponse(response_data, status=201,
                             json_dumps_params={&quot;ensure_ascii&quot;: False,
                                               &quot;indent&quot;: 4}
                             )
         except Exception as e:
-            return JsonResponse({&#39;error&#39;: str(e)}, status=400,
+            return JsonResponse({'error': str(e)}, status=400,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                   &quot;indent&quot;: 4}
                                 )
-</code></pre>
-<p>Новую маршрутизацию проводить не нужно, так как о добавлении данных Django понимает из метода запроса POST, мы же о
+</code></pre><button class="copy-button" onclick="copyCode('code-block-5')">Копировать код</button></div>
+
+<p>Новую маршрутизацию проводить не нужно, так как о добавлении данных Django понимает из метода запроса POST, мы же о 
 REST принципе говорим.</p>
 <p>Теперь проверим как работает новый метод <code>post</code></p>
 <p>Вручную через адресную строку не проверить <code>post</code> запрос, поэтому посмотрим так как умеем</p>
-<h3 id="-121-requests"><a name="section-1_2_1"></a> 1.2.1 requests</h3>
+<h3 id="121-requests">1.2.1 requests</h3>
 <p>Сначала с библиотекой <code>requests</code> в <code>PythonConsole</code></p>
-<pre><code class="language-python">import requests
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-6">import requests
 import json
-data = {&#39;name&#39;: &#39;user123&#39;, &#39;email&#39;: &#39;user123&#39;}
-url = &#39;http://127.0.0.1:8000/api_alter/author/&#39;
+data = {'name': 'user123', 'email': 'user123'}
+url = '<a href="http://127.0.0.1:8000/api_alter/author/'" target="_blank">http://127.0.0.1:8000/api_alter/author/'</a>
 response = requests.post(url=url, data=json.dumps(data))
 response.status_code
-</code></pre>
-<p><img src="pic/img_7.png" alt="img_7.png"></p>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-6')">Копировать код</button></div>
+
+<p><img alt="img_7.png" src="pic/img_7.png" /></p>
 <p>Получили ошибку 403, связанную с тем, что Django любые небезопасные запросы (те, что что-то меняют, допустим POST, PUT, DELETE)
 не пропускает без csrf токена, для упрощения разработки это временно можно отключить, используя декоратор <code>@csrf_exempt</code> над методом <code>dispatch</code>
 мы отключим обязательное требование этого механизма.</p>
-<pre><code class="language-python">class AuthorREST(View):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-7">class AuthorREST(View):
     @csrf_exempt
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
@@ -251,24 +245,26 @@ response.status_code
 
     def post(self, request):
         # код что был
-</code></pre>
-<p>Метод <code>dispatch</code> в Django-представлениях обрабатывает запросы, направляя их к соответствующим методам обработки (например, GET, POST, PUT, DELETE).
+</code></pre><button class="copy-button" onclick="copyCode('code-block-7')">Копировать код</button></div>
+
+<p>Метод <code>dispatch</code> в Django-представлениях обрабатывает запросы, направляя их к соответствующим методам обработки (например, GET, POST, PUT, DELETE). 
 Он является частью механизма маршрутизации и обработки запросов в Django.</p>
-<p>По умолчанию <code>dispatch</code> определяет, какой метод (GET, POST, PUT, DELETE и т. д.) использовать для обработки входящего запроса.
-Он делает это на основе HTTP-метода, используемого в запросе. Например, если приходит запрос типа GET, то <code>dispatch</code> вызывает метод <code>get</code>.
+<p>По умолчанию <code>dispatch</code> определяет, какой метод (GET, POST, PUT, DELETE и т. д.) использовать для обработки входящего запроса. 
+Он делает это на основе HTTP-метода, используемого в запросе. Например, если приходит запрос типа GET, то <code>dispatch</code> вызывает метод <code>get</code>. 
 Если приходит запрос типа POST, то он вызывает метод <code>post</code>, и так далее.</p>
-<p>В примере выше <code>csrf_exempt</code> используется для временного отключения защиты CSRF (Cross-Site Request Forgery) для данного представления.
-Это делается потому, что мы принимаем данные без проверки CSRF в методах post, put и delete.
+<p>В примере выше <code>csrf_exempt</code> используется для временного отключения защиты CSRF (Cross-Site Request Forgery) для данного представления. 
+Это делается потому, что мы принимаем данные без проверки CSRF в методах post, put и delete. 
 В реальном приложении необходимо активировать CSRF-защиту, но для этого примера она временно отключена для упрощения.</p>
-<pre><code class="language-python">import requests
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-8">import requests
 import json
-data = {&#39;name&#39;: &#39;user123&#39;, &#39;email&#39;: &#39;user123&#39;}
-url = &#39;http://127.0.0.1:8000/api_alter/author/&#39;
+data = {'name': 'user123', 'email': 'user123'}
+url = '<a href="http://127.0.0.1:8000/api_alter/author/'" target="_blank">http://127.0.0.1:8000/api_alter/author/'</a>
 response = requests.post(url=url, data=json.dumps(data))
 response.status_code
 response.json()
-</code></pre>
-<p><img src="pic/img_8.png" alt="img_8.png"></p>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-8')">Копировать код</button></div>
+
+<p><img alt="img_8.png" src="pic/img_8.png" /></p>
 <p>Теперь всё успешно создано, даже в БД есть запись, но вот странно, пользователь создался, но email даже не валидировался,
 так как в БД теперь пользователь с email <code>user123</code>. Это связано с тем, что Django ORM по умолчанию для ускорения записи в БД
 не проводит валидацию и оставляет право за разработчиком проверить поля модели самостоятельно, если это необходимо, чтобы вызвать проверку
@@ -276,55 +272,59 @@ response.json()
 <p>Удалите через админ панель созданного автора в таблице <code>Авторы</code> приложения <code>Db_Train_Alternative</code></p>
 <p>Затем заменить код в методе <code>post</code> на следующий (обратите внимание создание через <code>create</code> было заменено на 2 строки
 объявление объекта author и вызов проверок, так как <code>create</code> не имеет <code>clean_fields()</code>):</p>
-<pre><code class="language-python">def post(self, request):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-9">def post(self, request):
     try:
         data = json.loads(request.body)
 
-        author = Author(name=data[&#39;name&#39;], email=data[&#39;email&#39;])
+        author = Author(name=data['name'], email=data['email'])
         author.clean_fields()  # Запуск валидаций
         author.save()  # Сохранение в БД
 
         response_data = {
-            &#39;message&#39;: f&#39;Автор успешно создан&#39;,
-            &#39;id&#39;: author.id,
-            &#39;name&#39;: author.name,
-            &#39;email&#39;: author.email
+            'message': f'Автор успешно создан',
+            'id': author.id,
+            'name': author.name,
+            'email': author.email
         }
         return JsonResponse(response_data, status=201,
                             json_dumps_params={&quot;ensure_ascii&quot;: False,
                                               &quot;indent&quot;: 4}
                             )
     except Exception as e:
-        return JsonResponse({&#39;error&#39;: str(e)}, status=400,
+        return JsonResponse({'error': str(e)}, status=400,
                             json_dumps_params={&quot;ensure_ascii&quot;: False,
                                               &quot;indent&quot;: 4}
                             )
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-9')">Копировать код</button></div>
+
 <p>А теперь повторяем код в <code>PythonConsole</code></p>
-<pre><code class="language-python">import requests
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-10">import requests
 import json
-data = {&#39;name&#39;: &#39;user123&#39;, &#39;email&#39;: &#39;user123&#39;}
-url = &#39;http://127.0.0.1:8000/api_alter/author/&#39;
+data = {'name': 'user123', 'email': 'user123'}
+url = '<a href="http://127.0.0.1:8000/api_alter/author/'" target="_blank">http://127.0.0.1:8000/api_alter/author/'</a>
 response = requests.post(url=url, data=json.dumps(data))
 response.status_code
 response.json()
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-10')">Копировать код</button></div>
+
 <p>И видим то, что хотели бы увидеть, ошибку, что email не валиден</p>
-<p><img src="pic/img_9.png" alt="img_9.png"></p>
-<h3 id="-122-curl"><a name="section-1_2_2"></a> 1.2.2 curl</h3>
+<p><img alt="img_9.png" src="pic/img_9.png" /></p>
+<h3 id="122-curl">1.2.2 curl</h3>
 <p>Теперь в терминале (<code>Terminal</code>) обратимся к тому же адресу, но через <code>curl</code></p>
-<pre><code class="language-text">curl -X POST http://127.0.0.1:8000/api_alter/author/ -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;: \&quot;user123\&quot;, \&quot;email\&quot;: \&quot;user123@user.com\&quot;}&quot;
+<pre class="highlight"><code class="language-text linenums">curl -X POST <a href="http://127.0.0.1:8000/api_alter/author/" target="_blank">http://127.0.0.1:8000/api_alter/author/</a> -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;: \&quot;user123\&quot;, \&quot;email\&quot;: \&quot;user123@user.com\&quot;}&quot;
 </code></pre>
+
 <p>В этой команде использовано экранирование обратными слэшами () для обеспечения правильного формата JSON</p>
-<p><img src="pic/img_10.png" alt="img_10.png"></p>
-<h3 id="-123-postman"><a name="section-1_2_3"></a> 1.2.3 postman</h3>
+<p><img alt="img_10.png" src="pic/img_10.png" /></p>
+<h3 id="123-postman">1.2.3 postman</h3>
 <p>Нажимаем на + и создаём новый запрос</p>
-<p><img src="pic/img_11.png" alt="img_11.png"></p>
+<p><img alt="img_11.png" src="pic/img_11.png" /></p>
 <p>Вводим адрес</p>
-<pre><code class="language-text">http://127.0.0.1:8000/api_alter/author/
+<pre class="highlight"><code class="language-text linenums"><a href="http://127.0.0.1:8000/api_alter/author/" target="_blank">http://127.0.0.1:8000/api_alter/author/</a>
 </code></pre>
+
 <p>выбираем POST</p>
-<p><img src="pic/img_12.png" alt="img_12.png"></p>
+<p><img alt="img_12.png" src="pic/img_12.png" /></p>
 <p>Далее необходимо прописать в заголовке, что мы отправляем JSON, для этого в <code>Headers</code> пропишем</p>
 <table>
 <thead>
@@ -333,29 +333,32 @@ response.json()
 <th>Value</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Content-Type</td>
 <td>application/json</td>
 </tr>
-</tbody></table>
-<p><img src="pic/img_13.png" alt="img_13.png"></p>
+</tbody>
+</table>
+<p><img alt="img_13.png" src="pic/img_13.png" /></p>
 <p>Далее переходим в <code>Body</code> выбираем <code>raw</code> (обратите внимание, чтобы сбоку стояло JSON) и прописываем там данные для отправки</p>
-<pre><code class="language-text">{
+<pre class="highlight"><code class="language-text linenums">{
     &quot;name&quot;: &quot;user1&quot;,
     &quot;email&quot;: &quot;user1@user.com&quot;
 }
 </code></pre>
+
 <p>Затем нажимаем <code>Send</code></p>
-<p><img src="pic/img_14.png" alt="img_14.png"></p>
+<p><img alt="img_14.png" src="pic/img_14.png" /></p>
 <p>И получаем ответ</p>
-<p><img src="pic/img_15.png" alt="img_15.png"></p>
+<p><img alt="img_15.png" src="pic/img_15.png" /></p>
 <p>Осталось только сохранить данный запрос, для этого нажимаем на Save</p>
-<p><img src="pic/img_16.png" alt="img_16.png"></p>
+<p><img alt="img_16.png" src="pic/img_16.png" /></p>
 <p>В поле <code>Request Name</code> прописываем название запроса <code>Post Author</code> и сохраняем на Save</p>
-<p><img src="pic/img_17.png" alt="img_17.png"></p>
-<h2 id="-13-put-запрос"><a name="section-1_3"></a> 1.3 PUT запрос</h2>
+<p><img alt="img_17.png" src="pic/img_17.png" /></p>
+<h2 id="13-put">1.3 PUT запрос</h2>
 <p>Далее пропишем возможность изменять данные об авторе при помощи <code>put</code> метода</p>
-<pre><code class="language-python">class AuthorREST(View):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-11">class AuthorREST(View):
     @csrf_exempt
     def dispatch(self, *args, **kwargs):
         # ...
@@ -371,72 +374,77 @@ response.json()
             author = Author.objects.get(id=id)
             data = json.loads(request.body)
             # Обновляем поля
-            author.name = data[&#39;name&#39;]
-            author.email = data[&#39;email&#39;]
+            author.name = data['name']
+            author.email = data['email']
             author.clean_fields()  # Запуск валидаций
             author.save()  # Сохранение в БД
 
             response_data = {
-                &#39;message&#39;: f&#39;Данные автора успешно изменены&#39;,
-                &#39;id&#39;: author.id,
-                &#39;name&#39;: author.name,
-                &#39;email&#39;: author.email
+                'message': f'Данные автора успешно изменены',
+                'id': author.id,
+                'name': author.name,
+                'email': author.email
             }
             return JsonResponse(response_data,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
         except Author.DoesNotExist:  # Если получили ошибку
-            return JsonResponse({&#39;error&#39;: &#39;Автор не найден&#39;},
+            return JsonResponse({'error': 'Автор не найден'},
                                 status=404,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
         except Exception as e:  # При любой другой ошибке
-            return JsonResponse({&#39;error&#39;: str(e)},
+            return JsonResponse({'error': str(e)},
                                 status=400,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
-</code></pre>
-<h2 id="-131-requests"><a name="section-1_3_1"></a> 1.3.1 requests</h2>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-11')">Копировать код</button></div>
+
+<h2 id="131-requests">1.3.1 requests</h2>
 <p>Проверим, что при изменении email пользователя на невалидный - произойдет ошибка</p>
 <p>В <code>PythonConsole</code> пропишем</p>
-<pre><code class="language-python">import requests
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-12">import requests
 import json
-data = {&#39;name&#39;: &#39;user123&#39;, &#39;email&#39;: &#39;user123&#39;}
-url = &#39;http://127.0.0.1:8000/api_alter/author/22/&#39;
+data = {'name': 'user123', 'email': 'user123'}
+url = '<a href="http://127.0.0.1:8000/api_alter/author/22/'" target="_blank">http://127.0.0.1:8000/api_alter/author/22/'</a>
 response = requests.put(url=url, data=json.dumps(data))
 response.status_code
 response.json()
-</code></pre>
-<p><img src="pic/img_18.png" alt="img_18.png"></p>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-12')">Копировать код</button></div>
+
+<p><img alt="img_18.png" src="pic/img_18.png" /></p>
 <p>А если прописать нормально, то все поменяется</p>
-<pre><code class="language-python">import requests
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-13">import requests
 import json
-data = {&#39;name&#39;: &#39;user12&#39;, &#39;email&#39;: &#39;user12@user.com&#39;}
-url = &#39;http://127.0.0.1:8000/api_alter/author/22/&#39;
+data = {'name': 'user12', 'email': 'user12@user.com'}
+url = '<a href="http://127.0.0.1:8000/api_alter/author/22/'" target="_blank">http://127.0.0.1:8000/api_alter/author/22/'</a>
 response = requests.put(url=url, data=json.dumps(data))
 response.status_code
 response.json()
-</code></pre>
-<p><img src="pic/img_19.png" alt="img_19.png"></p>
-<h2 id="-132-curl"><a name="section-1_3_2"></a> 1.3.2 curl</h2>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-13')">Копировать код</button></div>
+
+<p><img alt="img_19.png" src="pic/img_19.png" /></p>
+<h2 id="132-curl">1.3.2 curl</h2>
 <p>С curl аналогично</p>
 <p>Теперь в терминале (<code>Terminal</code>) обратимся к тому же адресу, но через <code>curl</code></p>
-<pre><code class="language-text">curl -X PUT http://127.0.0.1:8000/api_alter/author/22/ -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;: \&quot;user123\&quot;, \&quot;email\&quot;: \&quot;user123@user.com\&quot;}&quot;
+<pre class="highlight"><code class="language-text linenums">curl -X PUT <a href="http://127.0.0.1:8000/api_alter/author/22/" target="_blank">http://127.0.0.1:8000/api_alter/author/22/</a> -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;: \&quot;user123\&quot;, \&quot;email\&quot;: \&quot;user123@user.com\&quot;}&quot;
 </code></pre>
-<p><img src="pic/img_20.png" alt="img_20.png"></p>
-<h2 id="-133-postman"><a name="section-1_3_3"></a> 1.3.3 postman</h2>
+
+<p><img alt="img_20.png" src="pic/img_20.png" /></p>
+<h2 id="133-postman">1.3.3 postman</h2>
 <p>Для Postman теперь пропишем запросы для PUT, сделаем их несколько, для проверки как изменения, так и появления ошибок</p>
 <p>Для этого создаём новый запрос нажав на <code>+</code></p>
-<hr>
+<hr />
 <p>По аналогии с POST делаем с PUT</p>
 <p>Вводим адрес</p>
-<pre><code class="language-text">http://127.0.0.1:8000/api_alter/author/22/
+<pre class="highlight"><code class="language-text linenums"><a href="http://127.0.0.1:8000/api_alter/author/22/" target="_blank">http://127.0.0.1:8000/api_alter/author/22/</a>
 </code></pre>
+
 <p>выбираем PUT</p>
-<p><img src="pic/img_21.png" alt="img_21.png"></p>
+<p><img alt="img_21.png" src="pic/img_21.png" /></p>
 <p>Далее необходимо прописать в заголовке, что мы отправляем JSON, для этого в <code>Headers</code> пропишем</p>
 <table>
 <thead>
@@ -445,27 +453,30 @@ response.json()
 <th>Value</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Content-Type</td>
 <td>application/json</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>Далее переходим в <code>Body</code> выбираем <code>raw</code> (обратите внимание, чтобы сбоку стояло JSON) и прописываем там данные для отправки</p>
-<pre><code class="language-text">{
+<pre class="highlight"><code class="language-text linenums">{
     &quot;name&quot;: &quot;user1&quot;,
     &quot;email&quot;: &quot;user2@user.com&quot;
 }
 </code></pre>
+
 <p>Затем нажимаем <code>Send</code></p>
-<p><img src="pic/img_22.png" alt="img_22.png"></p>
-<hr>
+<p><img alt="img_22.png" src="pic/img_22.png" /></p>
+<hr />
 <p>Сохраним данный запрос нажав на Save, напишем имя <code>Put Author Correct</code> и создадим отдельную папку <code>PUT</code>, чтобы сложить туда запросы PUT</p>
-<p><img src="pic/img_23.png" alt="img_23.png"></p>
+<p><img alt="img_23.png" src="pic/img_23.png" /></p>
 <p>И сохраняем в данной папке</p>
 <p>После сохранения появится следующая структура</p>
-<p><img src="pic/img_24.png" alt="img_24.png"></p>
+<p><img alt="img_24.png" src="pic/img_24.png" /></p>
 <p>Теперь создадим ещё 2 PUT запроса, но с проверкой ошибок:</p>
-<hr>
+<hr />
 <p>Проверка ошибки получения автора</p>
 <p>Запрос на адрес  <code>http://127.0.0.1:8000/api_alter/author/0/</code></p>
 <p>В запрос не забудьте про заголовок в <code>Headers</code></p>
@@ -476,21 +487,24 @@ response.json()
 <th>Value</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Content-Type</td>
 <td>application/json</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>В <code>Body</code> в <code>raw</code> пропишите</p>
-<pre><code class="language-text">{
+<pre class="highlight"><code class="language-text linenums">{
     &quot;name&quot;: &quot;user1&quot;,
     &quot;email&quot;: &quot;user2@user.com&quot;
 }
 </code></pre>
+
 <p>Выполните запрос</p>
-<p><img src="pic/img_25.png" alt="img_25.png"></p>
+<p><img alt="img_25.png" src="pic/img_25.png" /></p>
 <p>Сохраните запрос в папку PUT под названием <code>Put Author Incorrect</code></p>
-<hr>
+<hr />
 <p>Проверка получения ошибки валидации email</p>
 <p>Запрос на адрес <code>http://127.0.0.1:8000/api_alter/author/22/</code></p>
 <p>В запрос не забудьте про заголовок в <code>Headers</code></p>
@@ -501,26 +515,29 @@ response.json()
 <th>Value</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Content-Type</td>
 <td>application/json</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>В <code>Body</code> в <code>raw</code> пропишите</p>
-<pre><code class="language-text">{
+<pre class="highlight"><code class="language-text linenums">{
     &quot;name&quot;: &quot;user1&quot;,
     &quot;email&quot;: &quot;user2&quot;
 }
 </code></pre>
+
 <p>Выполните запрос</p>
-<p><img src="pic/img_26.png" alt="img_26.png"></p>
+<p><img alt="img_26.png" src="pic/img_26.png" /></p>
 <p>Сохраните запрос в папку PUT под названием <code>Put Author Incorrect Email</code></p>
-<hr>
+<hr />
 <p>Теперь структура будет выглядеть так</p>
-<p><img src="pic/img_27.png" alt="img_27.png"></p>
-<h2 id="-14-patch-запрос"><a name="section-1_4"></a> 1.4 PATCH запрос</h2>
+<p><img alt="img_27.png" src="pic/img_27.png" /></p>
+<h2 id="14-patch">1.4 PATCH запрос</h2>
 <p>Для частичного обновления данных используют метод <code>patch</code></p>
-<pre><code class="language-python">class AuthorREST(View):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-14">class AuthorREST(View):
     @csrf_exempt
     def dispatch(self, *args, **kwargs):
         # ...
@@ -545,45 +562,47 @@ response.json()
             author.save()  # Сохранение в БД
 
             response_data = {
-                &#39;id&#39;: author.id,
-                &#39;name&#39;: author.name,
-                &#39;email&#39;: author.email
+                'id': author.id,
+                'name': author.name,
+                'email': author.email
             }
             return JsonResponse(response_data,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
         except Author.DoesNotExist:
-            return JsonResponse({&#39;error&#39;: f&#39;Автор с id={author.id} не найден&#39;},
+            return JsonResponse({'error': f'Автор с id={author.id} не найден'},
                                 status=404,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
         except Exception as e:
-            return JsonResponse({&#39;error&#39;: str(e)},
+            return JsonResponse({'error': str(e)},
                                 status=400,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
+</code></pre><button class="copy-button" onclick="copyCode('code-block-14')">Копировать код</button></div>
 
-</code></pre>
-<h2 id="-141-requests"><a name="section-1_4_1"></a> 1.4.1 requests</h2>
+<h2 id="141-requests">1.4.1 requests</h2>
 <p>В <code>PythonConsole</code> пропишем</p>
-<pre><code class="language-python">import requests
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-15">import requests
 import json
-data = {&#39;name&#39;: &#39;superuser&#39;}
-url = &#39;http://127.0.0.1:8000/api_alter/author/22/&#39;
+data = {'name': 'superuser'}
+url = '<a href="http://127.0.0.1:8000/api_alter/author/22/'" target="_blank">http://127.0.0.1:8000/api_alter/author/22/'</a>
 response = requests.patch(url=url, data=json.dumps(data))
 response.status_code
 response.json()
-</code></pre>
-<p><img src="pic/img_28.png" alt="img_28.png"></p>
-<h2 id="-142-curl"><a name="section-1_4_2"></a> 1.4.2 curl</h2>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-15')">Копировать код</button></div>
+
+<p><img alt="img_28.png" src="pic/img_28.png" /></p>
+<h2 id="142-curl">1.4.2 curl</h2>
 <p>Теперь в терминале (<code>Terminal</code>) обратимся к тому же адресу, но через <code>curl</code></p>
-<pre><code class="language-text">curl -X PATCH http://127.0.0.1:8000/api_alter/author/22/ -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;: \&quot;user123\&quot;}&quot;
+<pre class="highlight"><code class="language-text linenums">curl -X PATCH <a href="http://127.0.0.1:8000/api_alter/author/22/" target="_blank">http://127.0.0.1:8000/api_alter/author/22/</a> -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;: \&quot;user123\&quot;}&quot;
 </code></pre>
-<p><img src="pic/img_29.png" alt="img_29.png"></p>
-<h2 id="-143-postman"><a name="section-1_4_3"></a> 1.4.3 postman</h2>
+
+<p><img alt="img_29.png" src="pic/img_29.png" /></p>
+<h2 id="143-postman">1.4.3 postman</h2>
 <p>Метод <code>PATCH</code></p>
 <p>Запрос на адрес <code>http://127.0.0.1:8000/api_alter/author/22/</code></p>
 <p>В запрос не забудьте про заголовок в <code>Headers</code></p>
@@ -594,22 +613,25 @@ response.json()
 <th>Value</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Content-Type</td>
 <td>application/json</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>В <code>Body</code> в <code>raw</code> пропишите</p>
-<pre><code class="language-text">{
+<pre class="highlight"><code class="language-text linenums">{
     &quot;email&quot;: &quot;user2000@user.com&quot;
 }
 </code></pre>
+
 <p>Выполните запрос</p>
-<p><img src="pic/img_30.png" alt="img_30.png"></p>
+<p><img alt="img_30.png" src="pic/img_30.png" /></p>
 <p>Сохраните запрос</p>
-<h2 id="-15-delete-запрос"><a name="section-1_5"></a> 1.5 DELETE запрос</h2>
+<h2 id="15-delete">1.5 DELETE запрос</h2>
 <p>Для удаления данных используют метод <code>delete</code></p>
-<pre><code class="language-python">class AuthorREST(View):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-16">class AuthorREST(View):
     @csrf_exempt
     def dispatch(self, *args, **kwargs):
         # ...
@@ -630,47 +652,50 @@ response.json()
         try:
             author = Author.objects.get(id=id)
             author.delete()
-            return JsonResponse({&#39;message&#39;: &#39;Автор успешно удалён&#39;},
+            return JsonResponse({'message': 'Автор успешно удалён'},
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
         except Author.DoesNotExist:
-            return JsonResponse({&#39;error&#39;: &#39;Автор не найден&#39;},
+            return JsonResponse({'error': 'Автор не найден'},
                                 status=404,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
         except Exception as e:
-            return JsonResponse({&#39;error&#39;: str(e)},
+            return JsonResponse({'error': str(e)},
                                 status=400,
                                 json_dumps_params={&quot;ensure_ascii&quot;: False,
                                                    &quot;indent&quot;: 4},
                                 )
-</code></pre>
-<h2 id="-151-requests"><a name="section-1_5_1"></a> 1.5.1 requests</h2>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-16')">Копировать код</button></div>
+
+<h2 id="151-requests">1.5.1 requests</h2>
 <p>В <code>PythonConsole</code> пропишем</p>
-<pre><code class="language-python">import requests
-url = &#39;http://127.0.0.1:8000/api_alter/author/23/&#39;
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-17">import requests
+url = '<a href="http://127.0.0.1:8000/api_alter/author/23/'" target="_blank">http://127.0.0.1:8000/api_alter/author/23/'</a>
 response = requests.delete(url=url)
 response.status_code
 response.json()
-</code></pre>
-<p><img src="pic/img_31.png" alt="img_31.png"></p>
-<h2 id="-152-curl"><a name="section-1_5_2"></a> 1.5.2 curl</h2>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-17')">Копировать код</button></div>
+
+<p><img alt="img_31.png" src="pic/img_31.png" /></p>
+<h2 id="152-curl">1.5.2 curl</h2>
 <p>Теперь в терминале (<code>Terminal</code>) обратимся к тому же адресу, но через <code>curl</code></p>
-<pre><code class="language-text">curl -X DELETE http://127.0.0.1:8000/api_alter/author/22/
+<pre class="highlight"><code class="language-text linenums">curl -X DELETE <a href="http://127.0.0.1:8000/api_alter/author/22/" target="_blank">http://127.0.0.1:8000/api_alter/author/22/</a>
 </code></pre>
-<p><img src="pic/img_32.png" alt="img_32.png"></p>
-<h2 id="-153-postman"><a name="section-1_5_3"></a> 1.5.3 postman</h2>
+
+<p><img alt="img_32.png" src="pic/img_32.png" /></p>
+<h2 id="153-postman">1.5.3 postman</h2>
 <p>Метод <code>DELETE</code></p>
 <p>Запрос на неверный(такого автора нет, был удален ранее) адрес <code>http://127.0.0.1:8000/api_alter/author/22/</code></p>
 <p>Выполните запрос</p>
-<p><img src="pic/img_33.png" alt="img_33.png"></p>
+<p><img alt="img_33.png" src="pic/img_33.png" /></p>
 <p>Сохраните запрос</p>
-<h2 id="-16-типовые-возвращаемые-статус-коды-и-что-они-значат-материал-для-чтения"><a name="section-1_6"></a> 1.6 Типовые возвращаемые статус коды и что они значат (материал для чтения)</h2>
+<h2 id="16">1.6 Типовые возвращаемые статус коды и что они значат (материал для чтения)</h2>
 <p>В RESTful API обычно используются стандартные HTTP-статусы для индикации успешного или неудачного выполнения операции. </p>
 <p>Вот общепринятые статусы для каждого метода запроса:</p>
-<h3 id="-161-get"><a name="section-1_6_1"></a> 1.6.1 GET</h3>
+<h3 id="161-get">1.6.1 GET</h3>
 <ul>
 <li>Успешный запрос (Successful Request):<ul>
 <li><code>200 OK</code>: Возвращается в случае успешного запроса, когда ресурс найден и возвращается в теле ответа.</li>
@@ -682,7 +707,7 @@ response.json()
 </ul>
 </li>
 </ul>
-<h3 id="-162-post"><a name="section-1_6_2"></a> 1.6.2 POST</h3>
+<h3 id="162-post">1.6.2 POST</h3>
 <ul>
 <li>Успешное создание (Successful Creation):<ul>
 <li><code>201 Created</code>: Возвращается в случае успешного создания ресурса. Новый ресурс обычно создается и его URL возвращается в заголовке ответа Location.</li>
@@ -694,7 +719,7 @@ response.json()
 </ul>
 </li>
 </ul>
-<h3 id="-163-put"><a name="section-1_6_3"></a> 1.6.3 PUT</h3>
+<h3 id="163-put">1.6.3 PUT</h3>
 <ul>
 <li>Успешное обновление (Successful Update):<ul>
 <li><code>200 OK</code>: Возвращается в случае успешного обновления ресурса.</li>
@@ -706,7 +731,7 @@ response.json()
 </ul>
 </li>
 </ul>
-<h3 id="-164-patch"><a name="section-1_6_4"></a> 1.6.4 PATCH</h3>
+<h3 id="164-patch">1.6.4 PATCH</h3>
 <ul>
 <li>Успешное обновление (Successful Update):<ul>
 <li><code>200 OK</code>: Возвращается в случае, когда обновление выполнено успешно и в ответе возвращается обновленный ресурс.</li>
@@ -720,7 +745,7 @@ response.json()
 </ul>
 </li>
 </ul>
-<h3 id="-165-delete"><a name="section-1_6_5"></a> 1.6.5 DELETE</h3>
+<h3 id="165-delete">1.6.5 DELETE</h3>
 <ul>
 <li>Успешное удаление (Successful Deletion):<ul>
 <li><code>200 OK</code>: Возвращается в случае успешного удаления ресурса.</li>
@@ -731,49 +756,55 @@ response.json()
 </ul>
 </li>
 </ul>
-<h3 id="-17-самостоятельно-для-желающих"><a name="section-1_7"></a> 1.7 Самостоятельно (для желающих)</h3>
+<h3 id="17">1.7 Самостоятельно (для желающих)</h3>
 <p>Самостоятельно определите таблицу в БД (из тех, что имеете), с которой будете работать и опишите часть методов вашего представления под REST принцип.
-Настоятельно рекомендуется пока не брать Таблицы, где есть поля с файлами и картинками, так как загрузка файлов на сервер
+Настоятельно рекомендуется пока не брать Таблицы, где есть поля с файлами и картинками, так как загрузка файлов на сервер 
 в API делается немного по-другому. Будет рассмотрено в дополнительных заданиях.</p>
 <p>Протестируйте работоспособность вашего представления через Postman</p>
-<h1 id="-2-работа-с-api-через-django-rest-framework"><a name="section-2"></a> 2. Работа с API через Django REST Framework</h1>
+<h1 id="2-api-django-rest-framework">2. Работа с API через Django REST Framework</h1>
 <p>С пункта 1.1 до 1.5 было формирование представление возвращающее JSON, а пути обработки и методы были сделаны так, чтобы соответствовать
 REST принципу. Вы видели насколько много необходимо прописать кода, чтобы сделать какие-то простейшие действия над данными в БД.</p>
 <p>Чтобы облегчить жизнь в части создания точек подключения (endpoint) используется <code>Django REST Framework</code>.</p>
-<h2 id="-21-начало-работы-с-drf"><a name="section-2_1"></a> 2.1 Начало работы с DRF</h2>
+<h2 id="21-drf">2.1 Начало работы с DRF</h2>
 <p>Установим Django restframework </p>
-<pre><code class="language-python">pip install djangorestframework
-</code></pre>
-<p>Внесём изменения в <code>settings.py</code> и добавим <code>&#39;rest_framework&#39;</code> в установленные приложения <code>INSTALLED_APPS</code></p>
-<p>Если вы собираетесь использовать доступный для просмотра API, вы, вероятно, также захотите добавить представления входа в систему и выхода из системы REST.
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-18">pip install djangorestframework
+</code></pre><button class="copy-button" onclick="copyCode('code-block-18')">Копировать код</button></div>
+
+<p>Внесём изменения в <code>settings.py</code> и добавим <code>'rest_framework'</code> в установленные приложения <code>INSTALLED_APPS</code></p>
+<p>Если вы собираетесь использовать доступный для просмотра API, вы, вероятно, также захотите добавить представления входа в систему и выхода из системы REST. 
 Добавьте следующее в корневой <code>urls.py</code> файл в папке <code>project</code>.</p>
-<pre><code class="language-python">urlpatterns = [
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-19">urlpatterns = [
     ...
-    path(&#39;api-auth/&#39;, include(&#39;rest_framework.urls&#39;, namespace=&#39;rest_framework&#39;))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-19')">Копировать код</button></div>
+
 <p>Сделали всё что необходимо, теперь будем работать в специально выделенном ранее приложении <code>api</code> в папке <code>apps</code>, чтобы не
 смешивать одни представления с другими, и было понимание в отличии подходов <code>JsonResponse</code> и подходов с <code>DRF</code>.</p>
-<h2 id="-22-алгоритм-создания-точки-доступа-к-api"><a name="section-2_2"></a> 2.2 Алгоритм создания точки доступа к API</h2>
-<h3 id="-221-создание-сериализатора"><a name="section-2_2_1"></a> 2.2.1 Создание сериализатора</h3>
+<h2 id="22-api">2.2 Алгоритм создания точки доступа к API</h2>
+<h3 id="221">2.2.1 Создание сериализатора</h3>
 <p>Работа по созданию точек доступа к API в DRF начинается с создания сериализатора.</p>
-<p>Сериализаторы в DRF используются для преобразования данных между форматами, такими как JSON, и объектами Django.
-Они облегчают валидацию данных и их сериализацию для представления в формате, который может быть передан через API.
+<p>Сериализаторы в DRF используются для преобразования данных между форматами, такими как JSON, и объектами Django. 
+Они облегчают валидацию данных и их сериализацию для представления в формате, который может быть передан через API. 
 Сериализаторы состоят из двух основных компонентов: сериализации и десериализации.</p>
 <ul>
-<li><code>Сериализация (Serialization)</code>: Преобразование объектов Django в форматы данных, такие как JSON.</li>
-<li><code>Десериализация (Deserialization)</code>: Преобразование данных, полученных через API, в объекты Django.</li>
+<li>
+<p><code>Сериализация (Serialization)</code>: Преобразование объектов Django в форматы данных, такие как JSON.</p>
+</li>
+<li>
+<p><code>Десериализация (Deserialization)</code>: Преобразование данных, полученных через API, в объекты Django.</p>
+</li>
 </ul>
 <p>В приложении <code>api</code> создадим файл <code>serializers.py</code> в котором будем описывать сериализаторы для приложения. </p>
-<p>Чтобы создать сериализатор, то необходимо создать класс наследующийся от <code>rest_framework.serializers.Serializer</code>, затем
+<p>Чтобы создать сериализатор, то необходимо создать класс наследующийся от <code>rest_framework.serializers.Serializer</code>, затем 
 определяются поля для сериализации и действия, необходимые при работе с сериализацией.</p>
-<p><code>Serializer</code> - Является основным классом сериализатора в DRF. Он предоставляет мощные функциональные возможности для
+<p><code>Serializer</code> - Является основным классом сериализатора в DRF. Он предоставляет мощные функциональные возможности для 
 сериализации и десериализации различных типов данных, включая словари, списки, модели Django и другие.
-Serializer используется для создания сериализаторов, которые могут преобразовывать сложные структуры данных в форматы JSON
+Serializer используется для создания сериализаторов, которые могут преобразовывать сложные структуры данных в форматы JSON 
 или другие форматы для передачи через API.
 Этот класс обычно используется для сериализации единичных объектов или сложных структур данных.</p>
 <p>В <code>serializers.py</code> добавьте следующий код:</p>
-<pre><code class="language-python">from rest_framework import serializers
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-20">from rest_framework import serializers
 from apps.db_train_alternative.models import Author
 
 
@@ -781,77 +812,102 @@ class AuthorSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=200)
     email = serializers.EmailField()
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-20')">Копировать код</button></div>
+
 <p>Таким образом мы определили наш первый сериализатор и поля, которые будут в нём существовать. Видно, что у сериализатора есть поля
 очень похожие на поля при формировании полей в моделях, однако есть и с другим названием. Вот наиболее часто применяемые:</p>
 <ul>
-<li><p><code>CharField</code>: Поле для строковых значений.</p>
+<li>
+<p><code>CharField</code>: Поле для строковых значений.</p>
 </li>
-<li><p><code>IntegerField</code>: Поле для целочисленных значений.</p>
+<li>
+<p><code>IntegerField</code>: Поле для целочисленных значений.</p>
 </li>
-<li><p><code>FloatField</code>: Поле для значений с плавающей запятой.</p>
+<li>
+<p><code>FloatField</code>: Поле для значений с плавающей запятой.</p>
 </li>
-<li><p><code>BooleanField</code>: Поле для логических значений (True/False).</p>
+<li>
+<p><code>BooleanField</code>: Поле для логических значений (True/False).</p>
 </li>
-<li><p><code>DateTimeField</code>: Поле для значений даты и времени.</p>
+<li>
+<p><code>DateTimeField</code>: Поле для значений даты и времени.</p>
 </li>
-<li><p><code>DateField</code>: Поле для значений даты.</p>
+<li>
+<p><code>DateField</code>: Поле для значений даты.</p>
 </li>
-<li><p><code>TimeField</code>: Поле для значений времени.</p>
+<li>
+<p><code>TimeField</code>: Поле для значений времени.</p>
 </li>
-<li><p><code>EmailField</code>: Поле для электронных адресов.</p>
+<li>
+<p><code>EmailField</code>: Поле для электронных адресов.</p>
 </li>
-<li><p><code>URLField</code>: Поле для URL-адресов.</p>
+<li>
+<p><code>URLField</code>: Поле для URL-адресов.</p>
 </li>
-<li><p><code>SerializerMethodField</code>: Поле, которое вычисляется с помощью метода сериализатора.</p>
+<li>
+<p><code>SerializerMethodField</code>: Поле, которое вычисляется с помощью метода сериализатора.</p>
 </li>
-<li><p><code>PrimaryKeyRelatedField</code>: Поле, которое представляет связь с другой моделью по первичному ключу.</p>
+<li>
+<p><code>PrimaryKeyRelatedField</code>: Поле, которое представляет связь с другой моделью по первичному ключу.</p>
 </li>
-<li><p><code>Nested Serializer</code>: Вложенный сериализатор, используемый для сериализации вложенных объектов.</p>
+<li>
+<p><code>Nested Serializer</code>: Вложенный сериализатор, используемый для сериализации вложенных объектов.</p>
 </li>
 </ul>
 <p>В Django REST Framework (DRF) для каждого типа поля доступен набор параметров, которые позволяют настраивать и управлять поведением поля. Ниже перечислены наиболее распространенные параметры полей:</p>
 <ul>
-<li><p><code>required</code>: Определяет, является ли поле обязательным для ввода данных. Значение по умолчанию: True.</p>
+<li>
+<p><code>required</code>: Определяет, является ли поле обязательным для ввода данных. Значение по умолчанию: True.</p>
 </li>
-<li><p><code>read_only</code>: Определяет, может ли поле быть представлено только для чтения (неизменяемым). Полезно для полей, которые автоматически генерируются или заполняются другими способами. Значение по умолчанию: False.</p>
+<li>
+<p><code>read_only</code>: Определяет, может ли поле быть представлено только для чтения (неизменяемым). Полезно для полей, которые автоматически генерируются или заполняются другими способами. Значение по умолчанию: False.</p>
 </li>
-<li><p><code>write_only</code>: Определяет, что поле будет доступно только для записи, и не будет возвращаться в сериализованных данных. Значение по умолчанию: False.</p>
+<li>
+<p><code>write_only</code>: Определяет, что поле будет доступно только для записи, и не будет возвращаться в сериализованных данных. Значение по умолчанию: False.</p>
 </li>
-<li><p><code>default</code>: Устанавливает значение по умолчанию для поля. Может быть константным значением или вызываемым объектом (например, функцией).</p>
+<li>
+<p><code>default</code>: Устанавливает значение по умолчанию для поля. Может быть константным значением или вызываемым объектом (например, функцией).</p>
 </li>
-<li><p><code>allow_null</code>: Позволяет полю принимать значение None. Значение по умолчанию: False.</p>
+<li>
+<p><code>allow_null</code>: Позволяет полю принимать значение None. Значение по умолчанию: False.</p>
 </li>
-<li><p><code>validators</code>: Список валидаторов, применяемых к полю. Валидаторы могут быть предопределенными функциями или кастомными валидаторами.</p>
+<li>
+<p><code>validators</code>: Список валидаторов, применяемых к полю. Валидаторы могут быть предопределенными функциями или кастомными валидаторами.</p>
 </li>
-<li><p><code>label</code>: Задает метку поля для использования в интерфейсе API.</p>
+<li>
+<p><code>label</code>: Задает метку поля для использования в интерфейсе API.</p>
 </li>
-<li><p><code>help_text</code>: Предоставляет краткое пояснение или инструкции по использованию поля.</p>
+<li>
+<p><code>help_text</code>: Предоставляет краткое пояснение или инструкции по использованию поля.</p>
 </li>
-<li><p><code>error_messages</code>: Словарь пользовательских сообщений об ошибках для поля.</p>
+<li>
+<p><code>error_messages</code>: Словарь пользовательских сообщений об ошибках для поля.</p>
 </li>
-<li><p><code>allow_blank</code>: Позволяет полю принимать пустое значение (пустую строку для строковых полей). Значение по умолчанию: False.</p>
+<li>
+<p><code>allow_blank</code>: Позволяет полю принимать пустое значение (пустую строку для строковых полей). Значение по умолчанию: False.</p>
 </li>
-<li><p><code>source</code>: Имя атрибута или метода, которое используется для получения значения поля из экземпляра объекта модели.</p>
+<li>
+<p><code>source</code>: Имя атрибута или метода, которое используется для получения значения поля из экземпляра объекта модели.</p>
 </li>
-<li><p><code>choices</code>: Устанавливает допустимые варианты значений для поля.</p>
+<li>
+<p><code>choices</code>: Устанавливает допустимые варианты значений для поля.</p>
 </li>
 </ul>
-<p>Подробнее про поля и передаваемые параметры можно прочитать в <a href="https://www.django-rest-framework.org/tutorial/1-serialization/">документации</a> или
+<p>Подробнее про поля и передаваемые параметры можно прочитать в <a href="<a href="https://www.django-rest-framework.org/tutorial/1-serialization/">документации" target="_blank">https://www.django-rest-framework.org/tutorial/1-serialization/">документации</a></a> или 
 в файле <code>fields_serializers.md</code> (много информации лучше оставить на свободное время)</p>
 <p>С полями закончили, теперь проверим как работает сериализатор. Для этого запустите файл <code>example_serializer1.py</code> из папки
 <code>files/lab3/example</code></p>
 <p>Рассмотрен пример сериализации и десериализации.</p>
-<p><img src="pic/img_34.png" alt="img_34.png"></p>
+<p><img alt="img_34.png" src="pic/img_34.png" /></p>
 <p>Для того, чтобы работать с моделями недостаточно просто описания полей, необходимо ещё прописать как создаётся объект по этим данным. Смысл сериализации же в том, чтобы из данных Python получить
 Json объект, а в десериализации - наборот, из Json получить Python объект. В нашем случае в роли Python объекта понимается
 объект модели (таблицы) БД.</p>
-<p>Т.е. что происходит. Полями вы описываете какого вида будут данные (строковые, целые и т.д.), эти данные проходят валидацию,
+<p>Т.е. что происходит. Полями вы описываете какого вида будут данные (строковые, целые и т.д.), эти данные проходят валидацию, 
 при помощи метода <code>is_valid()</code> и если всё хорошо, то можно их направлять на создание модели и сохранении её в БД.</p>
 <p>В <code>serialisers.py</code> пропишем методы <code>create</code> и <code>update</code>:</p>
 <p><code>create</code> нужен для создания объекта Python из данных</p>
 <p><code>update</code> - для обновления</p>
-<pre><code class="language-python">class AuthorSerializer(serializers.Serializer):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-21">class AuthorSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=200)
     email = serializers.EmailField()
@@ -866,32 +922,39 @@ Json объект, а в десериализации - наборот, из Jso
         &quot;&quot;&quot;
         Обновить и вернуть существующий объект Author на основе предоставленных проверенных данных.
         &quot;&quot;&quot;
-        instance.name = validated_data.get(&#39;name&#39;, instance.name)
-        instance.email = validated_data.get(&#39;email&#39;, instance.email)
+        instance.name = validated_data.get('name', instance.name)
+        instance.email = validated_data.get('email', instance.email)
         instance.save()
         return instance
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-21')">Копировать код</button></div>
+
 <p>Теперь запустите файл <code>example_serializer2.py</code> из папки <code>files/lab3/example</code></p>
-<p><img src="pic/img_35.png" alt="img_35.png"></p>
-<p>Вот так настроив сериализатор мы смогли создать объект в БД. Преимущество сериализатора в том, что он запишет ровно те поля,
-что прописаны в классе, никах других полей, даже если они и существуют в БД, но не прописаны в классе сериализаторе, то сериализатор
+<p><img alt="img_35.png" src="pic/img_35.png" /></p>
+<p>Вот так настроив сериализатор мы смогли создать объект в БД. Преимущество сериализатора в том, что он запишет ровно те поля, 
+что прописаны в классе, никах других полей, даже если они и существуют в БД, но не прописаны в классе сериализаторе, то сериализатор 
 их не пропустит.</p>
 <p>С сериализатором понятно, но что дальше, как его использовать?</p>
-<h3 id="-222-создание-представления"><a name="section-2_2_2"></a> 2.2.2 Создание представления</h3>
+<h3 id="222">2.2.2 Создание представления</h3>
 <p>После создания сериализатора, следующий шаг, это его применение в представлении, но не обычном, что мы привыкли, а представлении из DRF.</p>
-<p>В DRF для создания точек доступа к API используются классы представлений (views). Они определяют логику обработки запросов и возвращения ответов API.
-DRF предоставляет множество встроенных классов представлений для обработки различных типов запросов (GET, POST, PUT, DELETE) и типов содержимого (JSON, XML и т. д.).
+<p>В DRF для создания точек доступа к API используются классы представлений (views). Они определяют логику обработки запросов и возвращения ответов API. 
+DRF предоставляет множество встроенных классов представлений для обработки различных типов запросов (GET, POST, PUT, DELETE) и типов содержимого (JSON, XML и т. д.). 
 Основные шаги создания точки доступа к API в DRF включают:</p>
 <ul>
-<li>Создание класса представления, унаследованного от одного из предоставляемых классов представлений DRF, таких как <code>APIView</code>, <code>GenericAPIView</code>, <code>ModelViewSe</code>t и других.</li>
-<li>Определение методов, соответствующих различным типам запросов (например, <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code>).</li>
-<li>Реализация логики обработки запросов и формирования ответов API в каждом методе представления.</li>
+<li>
+<p>Создание класса представления, унаследованного от одного из предоставляемых классов представлений DRF, таких как <code>APIView</code>, <code>GenericAPIView</code>, <code>ModelViewSe</code>t и других.</p>
+</li>
+<li>
+<p>Определение методов, соответствующих различным типам запросов (например, <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code>).</p>
+</li>
+<li>
+<p>Реализация логики обработки запросов и формирования ответов API в каждом методе представления.</p>
+</li>
 </ul>
 <p>Базовое представление <code>APIView</code> которое находится в <code>rest_framework.views</code> по своему роду мало чем отличается от привычного нам
-<code>View</code>. Основное отличие от рассматриваемых ранее концепций, это то, что вместо <code>JsonResponse</code> возвращается <code>Response</code> из <code>rest_framework.response</code>,
+<code>View</code>. Основное отличие от рассматриваемых ранее концепций, это то, что вместо <code>JsonResponse</code> возвращается <code>Response</code> из <code>rest_framework.response</code>, 
 остальное всё похоже, чтобы было ранее, только работу с определением какие данные из БД будем записывать в JSON заменяем на работу с сериализатором.</p>
 <p>Во <code>views.py</code> приложения <code>api</code> пропишите</p>
-<pre><code class="language-python">from rest_framework.views import APIView
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-22">from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt  # Чтобы post, put, patch, delete не требовали csrf токена (небезопасно)
@@ -956,110 +1019,138 @@ class AuthorAPIView(APIView):
 
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-22')">Копировать код</button></div>
+
 <p>Судя из кода может возникнуть вопрос. Зачем использовать <code>status=status.HTTP_404_NOT_FOUND</code>, если можно использовать <code>status=404</code> и другие коды статусов?</p>
 <p>Можно использовать как <code>status=404</code>, так и <code>status=status.HTTP_404_NOT_FOUND</code>. Оба варианта эквивалентны.</p>
-<p>Модуль <code>status</code> в Django REST Framework предоставляет набор стандартных статусных кодов HTTP для удобства использования
-в представлениях и сериализаторах. Использование <code>status=status.HTTP_404_NOT_FOUND</code> является более явным и может быть предпочтительным для поддержания читаемости кода
-и уменьшения вероятности ошибок в случае изменения значений статусов в будущем.
+<p>Модуль <code>status</code> в Django REST Framework предоставляет набор стандартных статусных кодов HTTP для удобства использования 
+в представлениях и сериализаторах. Использование <code>status=status.HTTP_404_NOT_FOUND</code> является более явным и может быть предпочтительным для поддержания читаемости кода 
+и уменьшения вероятности ошибок в случае изменения значений статусов в будущем. 
 Однако это не обязательно, и вы можете использовать любой из вариантов в зависимости от предпочтений.</p>
-<p>Сравните подходы в написании <code>View</code> через <code>JsonResponse</code> (на примере AuthorREST из <code>views.py</code> в <code>db_train_alternative</code>)
+<p>Сравните подходы в написании <code>View</code> через <code>JsonResponse</code> (на примере AuthorREST из <code>views.py</code> в <code>db_train_alternative</code>) 
 и <code>APIView</code> с <code>Response</code> (на примере AuthorAPIView из <code>views.py</code> в <code>api</code>)</p>
 <p>После создания представления, то необходимо указать по какому маршруту оно будет вызываться.</p>
-<h3 id="-223-настройка-маршрутизации-url-routing"><a name="section-2_2_3"></a> 2.2.3 Настройка маршрутизации (URL Routing)</h3>
-<p>Для связывания точек доступа к API с конкретными URL-адресами используется механизм маршрутизации. В DRF обычно используется модуль <code>urlpatterns</code> в файле <code>urls.py</code>,
-где определяются URL-шаблоны и их связь с классами представлений.
+<h3 id="223-url-routing">2.2.3 Настройка маршрутизации (URL Routing)</h3>
+<p>Для связывания точек доступа к API с конкретными URL-адресами используется механизм маршрутизации. В DRF обычно используется модуль <code>urlpatterns</code> в файле <code>urls.py</code>, 
+где определяются URL-шаблоны и их связь с классами представлений. 
 Каждой точке доступа к API присваивается свой уникальный URL-шаблон.
 URL-шаблон может содержать дополнительные параметры, такие как идентификаторы ресурсов.</p>
 <p>В <code>urls.py</code> приложения <code>api</code> пропишем </p>
-<pre><code class="language-python">from django.urls import path
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-23">from django.urls import path
 from .views import AuthorAPIView
 
 urlpatterns = [
-    path(&#39;authors/&#39;, AuthorAPIView.as_view(), name=&#39;author-list&#39;),
-    path(&#39;authors/&lt;int:pk&gt;/&#39;, AuthorAPIView.as_view(), name=&#39;author-detail&#39;),
+    path('authors/', AuthorAPIView.as_view(), name='author-list'),
+    path('authors/&lt;int:pk&gt;/', AuthorAPIView.as_view(), name='author-detail'),
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-23')">Копировать код</button></div>
+
 <p>Последнее, что осталось сделать, это зарегистрировать сам роутер для приложения <code>api</code>.</p>
 <p>Для этого в <code>urls.py</code> папки <code>project</code> пропишем</p>
-<pre><code class="language-python">urlpatterns = [
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-24">urlpatterns = [
     # ...
-    path(&#39;api/&#39;, include(&#39;apps.api.urls&#39;)),
+    path('api/', include('apps.api.urls')),
 ]
-</code></pre>
-<h2 id="-23-проверка-маршрутов"><a name="section-2_3"></a> 2.3 Проверка маршрутов</h2>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-24')">Копировать код</button></div>
+
+<h2 id="23">2.3 Проверка маршрутов</h2>
 <p>Если перейти на ссылку</p>
-<p><a href="http://127.0.0.1:8000/api/authors/">http://127.0.0.1:8000/api/authors/</a></p>
-<p>То вид формы изменится, это произошло, так как ранее мы прописали <code>path(&#39;api-auth/&#39;, include(&#39;rest_framework.urls&#39;, namespace=&#39;rest_framework&#39;))</code>,
+<p><a href="http://127.0.0.1:8000/api/authors/" target="_blank">http://127.0.0.1:8000/api/authors/</a></p>
+<p>То вид формы изменится, это произошло, так как ранее мы прописали <code>path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))</code>, 
 это аналог админ панели, но для DRF.</p>
-<p><img src="pic/img_36.png" alt="img_36.png"></p>
+<p><img alt="img_36.png" src="pic/img_36.png" /></p>
 <p>При этом прошлые точки на JsonResponse отображаются как и ранее</p>
-<p><a href="http://127.0.0.1:8000/api_alter/author/">http://127.0.0.1:8000/api_alter/author/</a></p>
+<p><a href="http://127.0.0.1:8000/api_alter/author/" target="_blank">http://127.0.0.1:8000/api_alter/author/</a></p>
 <p>В DRF панели возможно выполнять аналогичные действия, что и в Postman.</p>
 <p>Допустим необходимо создать нового автора, через эту панель, тогда используем POST запрос с данными</p>
-<pre><code class="language-text">{
+<pre class="highlight"><code class="language-text linenums">{
     &quot;name&quot;: &quot;user10&quot;,
     &quot;email&quot;: &quot;user10@user.com&quot;
 }
 </code></pre>
-<p><img src="pic/img_37.png" alt="img_37.png"></p>
+
+<p><img alt="img_37.png" src="pic/img_37.png" /></p>
 <p>Новый автор создан</p>
-<p><img src="pic/img_38.png" alt="img_38.png"></p>
+<p><img alt="img_38.png" src="pic/img_38.png" /></p>
 <p>Всё аналогично Postman, только с урезанным функционалом.</p>
-<h2 id="-24-сериализатор-модели"><a name="section-2_4"></a> 2.4 Сериализатор модели</h2>
-<p>Если вы работаете с моделью, то для этого в сериализаторе можно отнаследоваться не от <code>serializers.Serializer</code>, а от
+<h2 id="24">2.4 Сериализатор модели</h2>
+<p>Если вы работаете с моделью, то для этого в сериализаторе можно отнаследоваться не от <code>serializers.Serializer</code>, а от 
 <code>serializers.ModelSerializer</code></p>
-<p><code>ModelSerializer</code> и <code>Serializer</code> - это два основных класса сериализаторов в Django REST Framework (DRF), и они оба используются
+<p><code>ModelSerializer</code> и <code>Serializer</code> - это два основных класса сериализаторов в Django REST Framework (DRF), и они оба используются 
 для преобразования данных между объектами Python и форматом JSON (или другими форматами данных).</p>
 <p>Вот основные различия между ними:</p>
 <p><em>ModelSerializer</em>:</p>
 <ul>
-<li>ModelSerializer является подклассом Serializer, специально оптимизированным для работы с моделями Django.</li>
-<li>Он автоматически создает поля сериализатора на основе полей модели.</li>
-<li>Предоставляет встроенную поддержку для создания и обновления объектов модели.</li>
-<li>Обычно используется для простой сериализации и десериализации моделей Django в JSON и обратно.</li>
+<li>
+<p>ModelSerializer является подклассом Serializer, специально оптимизированным для работы с моделями Django.</p>
+</li>
+<li>
+<p>Он автоматически создает поля сериализатора на основе полей модели.</p>
+</li>
+<li>
+<p>Предоставляет встроенную поддержку для создания и обновления объектов модели.</p>
+</li>
+<li>
+<p>Обычно используется для простой сериализации и десериализации моделей Django в JSON и обратно.</p>
+</li>
 </ul>
 <p><em>Serializer</em>:</p>
 <ul>
-<li>Serializer - это более общий класс, который позволяет более гибко определять поля сериализатора вручную.</li>
-<li>Он не связан прямо с моделями Django и не предоставляет встроенной поддержки для создания и обновления объектов модели.</li>
-<li>Это полезно в случаях, когда вам нужно сделать что-то более сложное, чем просто отображение полей модели, или когда вам нужна сериализация данных, которые не связаны с моделями Django.</li>
+<li>
+<p>Serializer - это более общий класс, который позволяет более гибко определять поля сериализатора вручную.</p>
+</li>
+<li>
+<p>Он не связан прямо с моделями Django и не предоставляет встроенной поддержки для создания и обновления объектов модели.</p>
+</li>
+<li>
+<p>Это полезно в случаях, когда вам нужно сделать что-то более сложное, чем просто отображение полей модели, или когда вам нужна сериализация данных, которые не связаны с моделями Django.</p>
+</li>
 </ul>
 <p>Основное преимущество <code>ModelSerializer</code> в том, что поля генерируются автоматически на основании модели, но всегда необходимо указать какие поля будем использовать</p>
 <p>В <code>serializers.py</code> создадим новый класс <code>AuthorModelSerializer</code>, аналогичный <code>AuthorSerializer</code>, но уже наследующийся от <code>serializers.ModelSerializer</code></p>
-<pre><code class="language-python">class AuthorModelSerializer(serializers.ModelSerializer):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-25">class AuthorModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = [&#39;id&#39;, &#39;name&#39;, &#39;email&#39;]  # или можно прописать &#39;__all__&#39; если нужны все поля
-</code></pre>
+        fields = ['id', 'name', 'email']  # или можно прописать '__all__' если нужны все поля
+</code></pre><button class="copy-button" onclick="copyCode('code-block-25')">Копировать код</button></div>
+
 <p>Код приведенный выше аналогичен коду написанному в <code>AuthorSerializer</code></p>
 <p>Все настройки в классе от <code>serializers.ModelSerializer</code> проходят в мета классе <code>class Meta</code></p>
-<p><code>ModelSerializer</code> в <code>DRF</code> предоставляет несколько настроек для определения поведения сериализатора при работе с моделями
+<p><code>ModelSerializer</code> в <code>DRF</code> предоставляет несколько настроек для определения поведения сериализатора при работе с моделями 
 Django. Вот некоторые из основных настроек и их назначение:</p>
 <ul>
-<li><p><code>model</code>: Определяет модель, с которой работает сериализатор. Это обязательная настройка.</p>
+<li>
+<p><code>model</code>: Определяет модель, с которой работает сериализатор. Это обязательная настройка.</p>
 </li>
-<li><p><code>fields</code>: Список имен полей модели, которые должны быть включены в сериализатор. Если не указано, будут использованы все поля модели.</p>
+<li>
+<p><code>fields</code>: Список имен полей модели, которые должны быть включены в сериализатор. Если не указано, будут использованы все поля модели.</p>
 </li>
-<li><p><code>exclude</code>: Список имен полей модели, которые должны быть исключены из сериализатора.</p>
+<li>
+<p><code>exclude</code>: Список имен полей модели, которые должны быть исключены из сериализатора.</p>
 </li>
-<li><p><code>read_only_fields</code>: Список имен полей модели, которые должны быть доступны только для чтения.</p>
+<li>
+<p><code>read_only_fields</code>: Список имен полей модели, которые должны быть доступны только для чтения.</p>
 </li>
-<li><p><code>write_only_fields</code>: Список имен полей модели, которые должны быть доступны только для записи.</p>
+<li>
+<p><code>write_only_fields</code>: Список имен полей модели, которые должны быть доступны только для записи.</p>
 </li>
-<li><p><code>validators</code>: Дополнительные валидаторы, которые будут применяться к данным модели.</p>
+<li>
+<p><code>validators</code>: Дополнительные валидаторы, которые будут применяться к данным модели.</p>
 </li>
-<li><p><code>error_messages</code>: Пользовательские сообщения об ошибках для полей модели.</p>
+<li>
+<p><code>error_messages</code>: Пользовательские сообщения об ошибках для полей модели.</p>
 </li>
-<li><p><code>extra_kwargs</code>: Дополнительные параметры для каждого поля, такие как <code>required</code>, <code>allow_null</code>, <code>read_only</code>, <code>write_only</code> и т. д.</p>
+<li>
+<p><code>extra_kwargs</code>: Дополнительные параметры для каждого поля, такие как <code>required</code>, <code>allow_null</code>, <code>read_only</code>, <code>write_only</code> и т. д.</p>
 </li>
 </ul>
 <p>Ради интереса во <code>views.py</code> приложения <code>api</code> в <code>AuthorAPIView</code> замените <code>AuthorSerializer</code> на <code>AuthorModelSerializer</code> (не забудьте импортировать AuthorModelSerializer)</p>
 <p>Функционал не поменяется, а сериализатор при создании стал короче.</p>
-<h1 id="практика-окончена">Практика окончена</h1>
-<hr>
-<!-- # <a name="section-optional-block"></a> <u>Необязательный блок</u> (выполнение по желанию, на результат следующих практик влиять не будет) -->
+<h1 id="_1">Практика окончена</h1>
+<hr />
+<!-- # <u>Необязательный блок</u> (выполнение по желанию, на результат следующих практик влиять не будет) -->
 
 </div>
-</body>
-</html>
+        </body>
+        </html>
+    

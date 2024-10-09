@@ -37,15 +37,23 @@
 </div>
 <div class="content">
 <p>Вернем авторов на место (загрузим их из фикстуры), так как ранее частично удаляли их</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py loaddata files/lab1/data_author.json
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-1">python manage.py loaddata files/lab1/data_author.json
+</code></pre><button class="copy-button" onclick="copyCode('code-block-1')">Копировать код</button></div>
 
 <h1 id="1">1. Отношения таблиц</h1>
 <p>В Django, существует несколько типов отношений между таблицами, которые 
-определяются с помощью ORM модели данных. Отношения могут быть:
-* один-к-одному(One-to-One), 
-* один-ко-многим(One-to-Many),
-* многие-ко-многим(Many-to-Many). </p>
+определяются с помощью ORM модели данных. Отношения могут быть:</p>
+<ul>
+<li>
+<p>один-к-одному(One-to-One), </p>
+</li>
+<li>
+<p>один-ко-многим(One-to-Many),</p>
+</li>
+<li>
+<p>многие-ко-многим(Many-to-Many). </p>
+</li>
+</ul>
 <p>Давайте рассмотрим каждый тип:</p>
 <h2 id="11-one-to-one">1.1 Связь <code>Один-к-одному (One-to-One)</code>:</h2>
 <p>В отношении "один-к-одному" каждая запись одной таблицы связана с одной записью в другой таблице.
@@ -55,13 +63,13 @@
 таблицу <code>AuthorProfile</code> и связать её с <code>Author</code> отношением один-к-одному. Таким образом ещё возможно разграничить доступ к таблицам, 
 допустим к таблице <code>Author</code> есть доступ у всех, а к <code>AuthorProfile</code>, только у определенных пользователей.</p>
 <p>В <code>models.py</code> приложения <code>apps/db_train</code> добавьте следующую таблицу.</p>
-<pre class="highlight"><code class="language-python linenums">class AuthorProfile(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-2">class AuthorProfile(models.Model):
     author = models.OneToOneField('Author')
     stage = models.IntegerField(default=0, 
                                 blank=True,
                                 verbose_name=&quot;Стаж&quot;,
                                 help_text=&quot;Стаж в годах&quot;)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-2')">Копировать код</button></div>
 
 <p>Через некоторое время выйдет предупреждение, что пропущен позиционный аргумент <code>'on_delete'</code>, Django хочет знать, что делать с данным связанным полем после удаления.</p>
 <p><img alt="img_1.png" src="pic/img_1.png" /></p>
@@ -91,105 +99,105 @@
 </li>
 </ul>
 <p>Воспользуемся чаще всего используемым параметром <code>models.CASCADE</code>, говорящей о том, что если автор будет удалён, то и его профиль тоже будет удалён.</p>
-<pre class="highlight"><code class="language-python linenums">class AuthorProfile(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-3">class AuthorProfile(models.Model):
     author = models.OneToOneField('Author', on_delete=models.CASCADE)
     stage = models.IntegerField(default=0, 
                                 blank=True,
                                 verbose_name=&quot;Стаж&quot;,
                                 help_text=&quot;Стаж в годах&quot;)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-3')">Копировать код</button></div>
 
 <p>Теперь две таблицы связаны отношением один к одному.</p>
 <p>Создайте миграцию</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-4">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-4')">Копировать код</button></div>
 
 <p>И перенесите её в БД</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-5">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-5')">Копировать код</button></div>
 
 <h2 id="12-one-to-many">1.2. Связь <code>Один-ко-многим (One-to-Many)</code>:</h2>
 <p>В отношении "один-ко-многим" каждая запись одной таблицы связана с несколькими записями в другой таблице. В Django это можно реализовать с помощью поля <code>ForeignKey</code>.</p>
 <p>Пример: Создадим таблицу Entry(статья) которая будет связана с автором, но автор может создать несколько статей, и все они будут привязаны к автору, здесь
 поможет отношение "один-ко-многим", где один автор может написать много статей.</p>
 <p>В <code>models.py</code> приложения <code>apps/db_train</code> добавьте следующую таблицу.</p>
-<pre class="highlight"><code class="language-python linenums">class Entry(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-6">class Entry(models.Model):
     text = models.TextField(verbose_name=&quot;Текст статьи&quot;,
                             )
     author = models.ForeignKey(&quot;Author&quot;, on_delete=models.CASCADE, related_name='entries')
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-6')">Копировать код</button></div>
 
 <p>Здесь <code>related_name</code> используется для более удобному обращению к записям, через автора, т.е. в объекта автор появится мнимое поле, 
 которого не существует в БД, но будет связь со всеми его статьями через поле <code>'entries'</code> эту связь также называют обратная связь.</p>
 <p>Создайте миграцию</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-7">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-7')">Копировать код</button></div>
 
 <p>И перенесите её в БД</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-8">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-8')">Копировать код</button></div>
 
 <h2 id="13-many-to-many">1.3. Связь <code>Многие-ко-многим (Many-to-Many)</code>:</h2>
 <p>В отношении "многие-ко-многим" несколько записей одной таблицы связаны с несколькими записями в другой таблице. В Django это реализуется с использованием поля <code>ManyToManyField</code>.</p>
 <p>Пример: Создадим таблицу Tag(тэг) которая будет связана со статьей, но в одной статье может быть несколько тегов, а один тег использоваться в нескольких статьях, 
 здесь поможет отношение "многие-ко-многим".</p>
 <p>В <code>models.py</code> приложения <code>apps/db_train</code> добавьте следующую таблицу.</p>
-<pre class="highlight"><code class="language-python linenums">class Tag(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-9">class Tag(models.Model):
     name = models.CharField(max_length=50,
                             verbose_name=&quot;Название&quot;,
                             )
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-9')">Копировать код</button></div>
 
 <p>Теперь в <code>Entry</code> добавим поле <code>tags</code> чтобы хранить там ключи к тегам.</p>
-<pre class="highlight"><code class="language-python linenums">class Entry(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-10">class Entry(models.Model):
     # ...
     tags = models.ManyToManyField(&quot;Tag&quot;, related_name='entries')
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-10')">Копировать код</button></div>
 
 <p>Создайте миграцию</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-11">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-11')">Копировать код</button></div>
 
 <p>И перенесите её в БД</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-12">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-12')">Копировать код</button></div>
 
 <p>Далее покажем созданные таблицы в админ панели. (Вспомните на основе прошлой практики как регистрировать модели в <code>admin.py</code> для отображения в админ панели)</p>
 <p>Теперь зайдём через админ панель и создадим пару строк в БД.</p>
 <p>Начнем с тегов. Создадим 3 тега. "Кино", "Музыка", "Искусство"</p>
 <p>Переопределите метод <code>__str__</code> в классах <code>AuthorProfile</code>, <code>Entry</code>, <code>Tag</code> по своему желанию, для более читаемого отображения строк в админ панели.</p>
 <p>Если это необходимо, то к полям связанной модели можно обращаться через <code>.</code>, допустим так для <code>__str__</code> модели <code>AuthorProfile</code></p>
-<pre class="highlight"><code class="language-python linenums">class AuthorProfile(models.Model):
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-13">class AuthorProfile(models.Model):
     # ...
 
     def __str__(self):
         return f&quot;Автор: {self.author.username}; Стаж: {self.stage} лет&quot;
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-13')">Копировать код</button></div>
 
 <p>Затем создайте пару записей в таблице <code>Entrys</code> в админ панели. Чтобы выбрать несколько тегов, зажмите <code>Ctrl</code>.</p>
 <p>И создайте пару записей в <code>Authors profile</code></p>
 <p>Далее будем работать с запросами с БД, и нужны общие данные, чтобы проверить правильность выполнения запросов, поэтому чтобы не терять ваш
 труд, то скопируем (<code>dumpdata</code>) данные из таблицы <code>db_train</code> в фикстуру, для этого выполним команду</p>
-<pre class="highlight"><code class="language-python linenums">python -Xutf8 manage.py dumpdata --indent 4 db_train &gt; my_db_train.json
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-14">python -Xutf8 manage.py dumpdata --indent 4 db_train &gt; my_db_train.json
+</code></pre><button class="copy-button" onclick="copyCode('code-block-14')">Копировать код</button></div>
 
 <p>Можете посмотреть созданный файл, что скопировалась только таблица <code>db_train</code> с вашими данными. Флаг <code>-Xutf8</code> используется
 для переноса в кодировке utf-8, чтобы кириллица нормально отображалась.</p>
 <p>Затем вставим данные в БД, чтобы заполнение было одинаковое.</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py loaddata files/lab2/db_train.json
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-15">python manage.py loaddata files/lab2/db_train.json
+</code></pre><button class="copy-button" onclick="copyCode('code-block-15')">Копировать код</button></div>
 
 <p><img alt="img_2.png" src="pic/img_2.png" /></p>
 <h1 id="2">2. Создание запросов</h1>
 <p>Чтобы полноценно ознакомиться с запросами и работой со связанными таблицами скопируем приложение <code>db_train_alternative</code> из
 <code>files/lab2</code> в папку <code>apps</code>, затем добавим <code>'apps.db_train_alternative'</code> в <code>settings.py</code> в <code>INSTALLED_APPS</code></p>
 <p>Затем создадим миграции</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py makemigrations
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-16">python manage.py makemigrations
+</code></pre><button class="copy-button" onclick="copyCode('code-block-16')">Копировать код</button></div>
 
 <p>Применим эти миграции</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-17">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-17')">Копировать код</button></div>
 
 <p>И начнем заполнять БД при помощи python скрипта. Для упрощения работы создадим json файл с данными для записи, а затем уже считаем этот файл 
 и построчно запишем данные в БД.</p>
@@ -205,15 +213,15 @@
 <p>Запустите <code>fill_data_alter_in_db.py</code> и получите ошибку, что значения не соответствуют требованиям уникальности.</p>
 <p>Затем откатим миграцию. Так как в приложение <code>db_train_alternative</code> была всего одна миграция, то откатим первую, т.е. вернем к состоянию до добавления миграции. Соответственно 
 все данные связанные с данным приложением добавленные после миграции тоже исчезнут.</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate db_train_alternative zero 
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-18">python manage.py migrate db_train_alternative zero 
+</code></pre><button class="copy-button" onclick="copyCode('code-block-18')">Копировать код</button></div>
 
 <p>В данном случае <code>zero</code> означает полный откат всех миграций что были в приложении <code>db_train_alternative</code>, если нужно было бы откатить к какой-то конкретной, то
 в таком случае написали бы номер миграции, допустим 0001.</p>
 <p><img alt="img_3.png" src="pic/img_3.png" /></p>
 <p>Теперь просто заново применим миграцию</p>
-<pre class="highlight"><code class="language-python linenums">python manage.py migrate
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-19">python manage.py migrate
+</code></pre><button class="copy-button" onclick="copyCode('code-block-19')">Копировать код</button></div>
 
 <p><img alt="img_4.png" src="pic/img_4.png" /></p>
 <p>И заново запустим скрипт записи данных в БД <code>fill_data_alter_in_db.py</code></p>
@@ -230,11 +238,11 @@
 из папки <code>files/lab2</code></p>
 <p>Для начала необходимо подгрузить модели</p>
 <p>Во <code>views.py</code> приложения <code>db_train</code> пропишем:</p>
-<pre class="highlight"><code class="language-python linenums">from .models import Author, AuthorProfile, Entry, Tag
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-20">from .models import Author, AuthorProfile, Entry, Tag
+</code></pre><button class="copy-button" onclick="copyCode('code-block-20')">Копировать код</button></div>
 
 <p>Затем в класс <code>TrainView</code> внесите следующие изменения:</p>
-<pre class="highlight"><code class="language-python linenums">from django.db.models import Q, Max, Min, Avg, Count
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-21">from django.db.models import Q, Max, Min, Avg, Count
 
 class TrainView(View):
     def get(self, request):
@@ -253,11 +261,11 @@ class TrainView(View):
         context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
 
         return render(request, 'train_db/training_db.html', context=context)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-21')">Копировать код</button></div>
 
 <p>Данная конструкция </p>
-<pre class="highlight"><code class="language-python linenums">context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-22">context = {f'answer{index}': self.__dict__[f'answer{index}'] for index in range(1, 11)}
+</code></pre><button class="copy-button" onclick="copyCode('code-block-22')">Копировать код</button></div>
 
 <p>была написана из-за лени, чтобы не создавать словарь большого размера вручную.</p>
 <p>Для тренировки напишите запросы и ответьте на следующие вопросы (Ответ на первый вопрос будет ниже, над остальными думаем самостоятельно.
@@ -273,51 +281,51 @@ class TrainView(View):
 9. Какие авторы имеют возраст младше 25 лет?
 10. Сколько статей написано каждым автором?</p>
 <p>Ответом на первый вопрос будет</p>
-<pre class="highlight"><code class="language-python linenums">max_self_esteem = Author.objects.aggregate(max_self_esteem=Max('self_esteem'))
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-23">max_self_esteem = Author.objects.aggregate(max_self_esteem=Max('self_esteem'))
 self.answer1 = Author.objects.filter(self_esteem=max_self_esteem['max_self_esteem'])
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-23')">Копировать код</button></div>
 
 <p><img alt="img_5.png" src="pic/img_5.png" /></p>
-<p>При переходе на главную страницу на вкладку <code>Запросы</code> или по адресу http://127.0.0.1:8000/train/db/
+<p>При переходе на главную страницу на вкладку <code>Запросы</code> или по адресу <a href="http://127.0.0.1:8000/train/db/" target="_blank">http://127.0.0.1:8000/train/db/</a>
 появятся ваши отображения результатов запросов.</p>
 <p><img alt="img_6.png" src="pic/img_6.png" /></p>
 <p>Остальные ответы заполните самостоятельно. Можете менять шаблон <code>training_db.html</code> под ваши нужны и запросы.</p>
 <h1 id="4-django-debug-tool-bar">4. Работа с Django debug tool bar</h1>
 <p>Последнее, что осталось, это как-то мониторить то, что делаете в БД, для этого 
 воспользуемся библиотекой <code>django debug toolbar</code> </p>
-<p>https://django-debug-toolbar.readthedocs.io/en/latest/installation.html</p>
+<p><a href="https://django-debug-toolbar.readthedocs.io/en/latest/installation.html" target="_blank">https://django-debug-toolbar.readthedocs.io/en/latest/installation.html</a></p>
 <pre class="highlight"><code class="linenums">pip install django-debug-toolbar
 </code></pre>
 
 <p>Затем в settings.py необходимо прописать</p>
 <p>в INSTALLED_APPS</p>
-<pre class="highlight"><code class="language-python linenums">INSTALLED_APPS = [
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-24">INSTALLED_APPS = [
     # ...
     &quot;debug_toolbar&quot;,
     # ...
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-24')">Копировать код</button></div>
 
 <p>в MIDDLEWARE в конец списка добавьте</p>
-<pre class="highlight"><code class="language-python linenums">MIDDLEWARE = [
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-25">MIDDLEWARE = [
     # ...
     &quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;,
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-25')">Копировать код</button></div>
 
 <p><img alt="img_7.png" src="pic/img_7.png" /></p>
 <p>В конце <code>settings.py</code> добавьте</p>
-<pre class="highlight"><code class="language-python linenums">INTERNAL_IPS = [
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-26">INTERNAL_IPS = [
     &quot;127.0.0.1&quot;,
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-26')">Копировать код</button></div>
 
 <p>В корневой <code>urls.py</code> в <code>if settings.DEBUG:</code> необходимо добавить</p>
-<pre class="highlight"><code class="language-python linenums"># После urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-27"># После urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path(&quot;__debug__/&quot;, include(&quot;debug_toolbar.urls&quot;)),
 ]
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-27')">Копировать код</button></div>
 
 <p><img alt="img_8.png" src="pic/img_8.png" /></p>
 <p>Теперь если зайти на любую страницу, то появится дополнительное окно, где можно 
@@ -328,39 +336,39 @@ urlpatterns += [
 <p><img alt="img.png" src="pic/img_13.png" /></p>
 <p>То решение этой задачи следующее:</p>
 <p>Зайдите в <code>settings.py</code> папки <code>project</code> и в конце файла пропишите</p>
-<pre class="highlight"><code class="language-python linenums">import mimetypes
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-28">import mimetypes
 
 mimetypes.add_type(&quot;application/javascript&quot;, &quot;.js&quot;, True)
 
 DEBUG_TOOLBAR_CONFIG = {
     &quot;INTERCEPT_REDIRECTS&quot;: False,
 }
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-28')">Копировать код</button></div>
 
 <p>Теперь панель должна отображаться в браузере при переходе на сайт (Если не отображается, то попробуйте перезагрузить страницу с перезагрузкой статических файлов.
 В большинстве браузеров это сочетание <code>Ctrl+Shift+R</code>)</p>
 <hr />
 <p>Пример для главной страницы</p>
 <p><img alt="img_9.png" src="pic/img_9.png" /></p>
-<p>Для страницы http://127.0.0.1:8000/train/db/ при одном ответе будет такой результат</p>
+<p>Для страницы <a href="http://127.0.0.1:8000/train/db/" target="_blank">http://127.0.0.1:8000/train/db/</a> при одном ответе будет такой результат</p>
 <p><img alt="img_10.png" src="pic/img_10.png" /></p>
 <p>Посмотрите как в зависимости от сложности запросов будет отличаться время и число запросов в БД.</p>
 <h2 id="41">4.1 Отображение запросов в консоли</h2>
 <p>Также есть возможность отображения дополнительный информации в консоли при работе с ORM</p>
 <p>Для этого вызовите </p>
-<pre class="highlight"><code class="language-python linenums">python manage.py debugsqlshell
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-29">python manage.py debugsqlshell
+</code></pre><button class="copy-button" onclick="copyCode('code-block-29')">Копировать код</button></div>
 
 <p>Появится интерактивная консоль с возможность создания запросов и отображения их через ORM</p>
 <p>Выполните следующий запрос в этой консоле</p>
-<pre class="highlight"><code class="language-python linenums">from apps.db_train.models import Entry
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-30">from apps.db_train.models import Entry
 Entry.objects.get(id=1)
-</code></pre>
+</code></pre><button class="copy-button" onclick="copyCode('code-block-30')">Копировать код</button></div>
 
 <p><img alt="img_11.png" src="pic/img_11.png" /></p>
 <p>Посмотрите как ORM трансформирует запрос в SQL запрос для других запросов, допустим тех, что вы писали при ответе на вопросы. </p>
-<pre class="highlight"><code class="language-python linenums">Entry.objects.values('author__username', 'text').get(id=1)
-</code></pre>
+<div class="code-container"><pre class="highlight"><code class="language-python linenums" id="code-block-31">Entry.objects.values('author__username', 'text').get(id=1)
+</code></pre><button class="copy-button" onclick="copyCode('code-block-31')">Копировать код</button></div>
 
 <p><img alt="img_12.png" src="pic/img_12.png" /></p>
 <h1 id="_1">Практика окончена</h1>
