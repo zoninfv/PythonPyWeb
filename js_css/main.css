@@ -1,0 +1,91 @@
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+code {
+    color: white;               /* Цвет текста */
+    background-color: #333;     /* Темно-серый фон */
+    padding: 2px 4px;           /* Добавим немного внутреннего отступа для улучшения восприятия */
+    border-radius: 3px;         /* Закруглим углы для эстетики */
+}
+
+/* Левая панель для оглавления */
+.sidebar {
+    width: 25%;
+    padding: 20px;
+    background-color: #f4f4f4;
+    height: 100vh; /* Высота панели по высоте окна */
+    overflow-y: auto; /* Скролл при переполнении */
+    position: fixed; /* Фиксированное положение */
+}
+
+/* Уменьшение отступов для списков только внутри sidebar */
+.sidebar ul {
+    margin-left: -20px; /* Начальный отступ для первого уровня списка */
+    list-style-type: disc;
+}
+
+.sidebar ul ul {
+    margin-left: -15px; /* Уменьшаем отступ для вложенных уровней */
+    list-style-type: circle;
+}
+
+.sidebar ul ul ul {
+    margin-left: -10px; /* Ещё меньше отступ для глубоких уровней */
+    list-style-type: square;
+}
+
+/* Стиль для элементов списка внутри sidebar */
+.sidebar li {
+    margin: 5px 0;
+}
+
+
+/* Правая часть для текста */
+.content {
+    margin-left: 30%; /* Отступ для отображения текста */
+    padding: 20px;
+    width: 65%;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    margin: 10px 0;
+}
+
+a:hover {
+    color: #007bff;
+}
+
+h2, h3, h4 {
+    margin-top: 60px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.code-container {
+    position: relative;
+    margin: 40px 0px 10px 0px;
+}
+
+.copy-button {
+    position: absolute;
+    right: 0px;
+    top: -25px;
+    padding: 5px 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background-color: #0056b3;
+}
