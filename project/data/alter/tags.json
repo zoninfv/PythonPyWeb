@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Путешествие",
+        "slug_name": "puteshestvie"
+    },
+    {
+        "name": "История",
+        "slug_name": "istoria"
+    },
+    {
+        "name": "Кулинария",
+        "slug_name": "kulinariya"
+    },
+    {
+        "name": "Мода",
+        "slug_name": "moda"
+    },
+    {
+        "name": "Фитнес",
+        "slug_name": "fitnes"
+    },
+    {
+        "name": "Стиль",
+        "slug_name": "stil"
+    },
+    {
+        "name": "Технологии",
+        "slug_name": "technologii"
+    },
+    {
+        "name": "Образование",
+        "slug_name": "obrazovanie"
+    },
+    {
+        "name": "Новости",
+        "slug_name": "novosti"
+    },
+    {
+        "name": "Здоровье",
+        "slug_name": "zdorovie"
+    }
+]
