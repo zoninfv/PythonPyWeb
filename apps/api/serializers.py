@@ -21,3 +21,8 @@ class AuthorSerializer(serializers.Serializer):
         instance.email = validated_data.get('email', instance.email)
         instance.save()
         return instance
+
+class AuthorModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ['id', 'name', 'email']  # или можно прописать '__all__' если нужны все поля
