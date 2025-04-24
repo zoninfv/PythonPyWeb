@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-#x%01s7&6@_&duo#swv0u_#lp!&-t*g_-%cm6+$-$k0gze5a=!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'activate.adobe.com']
 
 
 # Application definition
