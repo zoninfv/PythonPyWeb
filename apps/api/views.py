@@ -13,7 +13,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters,permissions
+from rest_framework import filters,permissions,authentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class AuthorAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -101,6 +102,7 @@ class AuthorGenericAPIView(GenericAPIView, RetrieveModelMixin, ListModelMixin, C
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer
     permission_classes = [CustomPermission]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request, *args, **kwargs):
         if kwargs.get(self.lookup_field):
